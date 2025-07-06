@@ -1,369 +1,358 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tableau de Commandes - دار حسنا</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>دار حسنا - مطعم مغربي أصيل</title>
+  <!-- خطوط عربية -->
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Lateef:wght@400;600&display=swap" rel="stylesheet">
+  <!-- أيقونات زخرفية -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
+    /* أنماط مغربية شعبية أصيلة */
     :root {
       --color-primary: #9c2e2e; /* أحمر مغربي */
       --color-secondary: #e67e22; /* برتقالي مغربي */
       --color-accent: #daa520; /* ذهبي تقليدي */
       --color-text: #5d4037; /* بني خشبي */
       --color-light: #f8f1e9; /* كريمي */
-      --color-pending: #9c2e2e; /* أحمر مغربي */
-      --color-preparing: #e67e22; /* برتقالي مغربي */
-      --color-ready: #2e7d32; /* أخضر */
-      --color-delivered: #5d4037; /* بني خشبي */
-      --color-danger: #c62828; /* أحمر داكن */
+    }
+    
+    * {
+      box-sizing: border-box;
     }
     
     body {
-      font-family: 'Lateef', 'Arial', sans-serif;
+      font-family: 'Lateef', cursive;
       background-color: var(--color-light);
       background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/morocco-blue.png');
+      color: var(--color-text);
       margin: 0;
-      padding: 20px;
-      direction: rtl;
+      padding: 0;
+      font-size: 18px;
+      line-height: 1.6;
     }
     
     .container {
-      max-width: 1200px;
+      width: 100%;
       margin: 0 auto;
       background-color: rgba(255, 255, 255, 0.95);
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      border: 2px solid var(--color-primary);
+      padding: 15px;
+      border-radius: 0;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border: none;
+      position: relative;
+      overflow: hidden;
     }
     
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px dashed var(--color-secondary);
+    /* عناوين مغربية */
+    h1, h2, h3 {
+      color: var(--color-primary);
+      text-align: center;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+      font-family: 'Amiri', serif;
     }
     
     h1 {
-      color: var(--color-primary);
-      margin: 0;
-      font-family: 'Amiri', serif;
+      margin: 10px 0;
       font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
     }
     
-    .clock {
-      font-size: 1.2em;
-      font-weight: bold;
+    .subtitle {
+      text-align: center;
       color: var(--color-text);
-      text-align: left;
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+      position: relative;
+      font-style: italic;
     }
     
-    .stats-bar {
-      display: flex;
-      justify-content: space-around;
+    /* بطاقات الأصناف */
+    .menu-section {
+      margin-bottom: 30px;
       background-color: rgba(255, 248, 240, 0.7);
       padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 8px;
+      border-radius: 5px;
       border: 2px dashed var(--color-secondary);
     }
     
-    .stat-item {
-      text-align: center;
-      padding: 0 15px;
-    }
-    
-    .stat-value {
-      font-size: 1.8em;
-      font-weight: bold;
-      font-family: 'Amiri', serif;
-    }
-    
-    .pending { color: var(--color-pending); }
-    .preparing { color: var(--color-preparing); }
-    .ready { color: var(--color-ready); }
-    .delivered { color: var(--color-delivered); }
-    
-    .status-tabs {
-      display: flex;
+    .menu-section h3 {
+      position: relative;
+      padding-bottom: 10px;
       margin-bottom: 20px;
-      overflow-x: auto;
-      gap: 5px;
+      color: var(--color-primary);
+      font-size: 1.8rem;
     }
     
-    .tab-btn {
-      padding: 10px 15px;
-      border: none;
-      background-color: var(--color-light);
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      padding: 12px;
       border-radius: 5px;
-      cursor: pointer;
-      white-space: nowrap;
-      font-family: 'Amiri', serif;
-      font-size: 1.1rem;
       transition: all 0.3s;
+      cursor: pointer;
+      border: 1px solid transparent;
+      flex-wrap: wrap;
     }
     
-    .tab-btn.active {
-      background-color: var(--color-primary);
-      color: white;
-    }
-    
-    .commandes-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-      gap: 15px;
-    }
-    
-    .commande {
+    .menu-item:hover {
+      transform: translateX(-5px);
       background-color: rgba(255, 248, 240, 0.9);
       border: 1px solid var(--color-secondary);
-      border-radius: 8px;
-      padding: 15px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      position: relative;
-      transition: transform 0.2s;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
     }
     
-    .commande:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      border-color: var(--color-primary);
+    .menu-item.selected {
+      background-color: rgba(156, 46, 46, 0.1);
+      border: 1px solid var(--color-primary);
+      transform: translateX(-5px);
     }
     
-    .commande-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      position: relative;
-    }
-    
-    .table-number-container {
-      display: flex;
-      justify-content: center;
-      flex-grow: 1;
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      pointer-events: none;
-    }
-    
-    .table-number {
+    .item-name {
       font-weight: bold;
       color: var(--color-primary);
-      font-size: 1.3em;
-      font-family: 'Amiri', serif;
-      text-align: center;
-      background-color: rgba(255, 248, 240, 0.8);
-      padding: 0 10px;
-      border-radius: 4px;
+      font-size: 1.3rem;
+      width: 70%;
     }
     
-    .order-time {
-      color: var(--color-text);
-      font-size: 0.9em;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      width: 100px;
-      z-index: 1;
-    }
-    
-    .time-ago {
-      font-size: 0.8em;
-      color: var(--color-secondary);
-    }
-    
-    .order-items {
-      margin: 10px 0;
-    }
-    
-    .order-item {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 5px;
-      padding-bottom: 5px;
-      border-bottom: 1px dashed var(--color-secondary);
-    }
-    
-    .item-quantity {
+    .item-price {
+      color: var(--color-primary);
       font-weight: bold;
-      margin-left: 5px;
-    }
-    
-    .order-notes {
-      margin: 10px 0;
-      padding: 10px;
-      background-color: rgba(255, 248, 240, 0.7);
-      border-radius: 5px;
-      border-right: 3px solid var(--color-pending);
-    }
-    
-    .order-total {
-      font-weight: bold;
+      font-size: 1.3rem;
+      width: 30%;
       text-align: left;
-      margin: 10px 0;
-      padding-top: 5px;
-      border-top: 1px solid var(--color-secondary);
-      font-family: 'Amiri', serif;
+    }
+    
+    .item-desc {
+      font-size: 1.1rem;
+      color: var(--color-text);
+      margin-top: 5px;
+      width: 100%;
+    }
+    
+    /* النموذج */
+    form {
+      background-color: rgba(255, 248, 240, 0.9);
+      padding: 20px;
+      border-radius: 5px;
+      margin-top: 30px;
+      border: 2px solid var(--color-primary);
+    }
+    
+    label {
+      display: block;
+      margin: 15px 0 8px;
+      font-weight: bold;
+      color: var(--color-primary);
       font-size: 1.2rem;
     }
     
-    .order-status {
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--color-secondary);
-    }
-    
-    .status-select {
+    input, select, textarea {
       width: 100%;
-      padding: 8px;
-      border-radius: 4px;
-      border: 1px solid var(--color-secondary);
-      margin-top: 5px;
-      cursor: pointer;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1.1rem;
       font-family: 'Lateef', cursive;
-      background-color: white;
     }
     
-    .delete-btn {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background-color: var(--color-danger);
+    button {
+      background-color: var(--color-primary);
       color: white;
       border: none;
-      padding: 3px 8px;
-      border-radius: 4px;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 0.8em;
-      opacity: 0.7;
-      transition: opacity 0.2s;
-      z-index: 2;
+      font-size: 1.3rem;
+      width: 100%;
+      transition: all 0.3s;
+      font-weight: bold;
+      font-family: 'Amiri', serif;
     }
     
-    .delete-btn:hover {
-      opacity: 1;
+    button:hover {
+      background-color: var(--color-secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.1);
     }
     
-    .new-order-badge {
-      position: absolute;
-      top: -5px;
-      left: -5px;
-      background-color: var(--color-danger);
-      color: white;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
+    .confirmation {
+      display: none;
+      background-color: rgba(212, 237, 218, 0.9);
+      color: #155724;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 20px;
+      text-align: center;
+      border: 1px solid #c3e6cb;
+      font-size: 1.2rem;
+    }
+    
+    .commande-item {
+      background-color: rgba(240, 240, 240, 0.9);
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 5px;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 0.7em;
-      animation: pulse 1.5s infinite;
-      z-index: 2;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      border-right: 4px solid var(--color-secondary);
     }
     
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
+    .remove-item {
+      color: var(--color-primary);
+      cursor: pointer;
+      font-weight: bold;
+      margin-right: 10px;
+      font-size: 1.3rem;
     }
     
-    @media (max-width: 768px) {
-      .commandes-container {
-        grid-template-columns: 1fr;
-      }
-      
-      .header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .clock {
-        margin-top: 10px;
-        align-self: flex-start;
-      }
-      
-      .stats-bar {
-        flex-wrap: wrap;
-      }
-      
-      .stat-item {
-        flex: 1 0 45%;
-        margin-bottom: 10px;
-      }
+    #listeCommandes {
+      margin-top: 20px;
     }
     
-    @media print {
-      .no-print, .status-tabs, .delete-btn, .tab-btn, .stats-bar {
-        display: none !important;
-      }
-      
+    .total {
+      font-weight: bold;
+      text-align: left;
+      margin-top: 15px;
+      font-size: 1.5rem;
+      color: var(--color-primary);
+    }
+    
+    /* زخارف مغربية */
+    .moroccan-decoration {
+      text-align: center;
+      margin: 20px 0;
+      color: var(--color-secondary);
+      font-size: 1.5rem;
+      letter-spacing: 10px;
+    }
+    
+    #selected-item {
+      margin: 15px 0;
+      padding: 12px;
+      background-color: rgba(156, 46, 46, 0.1);
+      border-radius: 5px;
+      display: none;
+      font-size: 1.1rem;
+    }
+    
+    /* تحسينات للشاشات الصغيرة جدًا */
+    @media (max-width: 480px) {
       body {
-        background-color: white;
-        padding: 0;
+        font-size: 16px;
       }
       
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .subtitle {
+        font-size: 1.2rem;
+      }
+      
+      .menu-section h3 {
+        font-size: 1.5rem;
+      }
+      
+      .item-name, .item-price {
+        font-size: 1.1rem;
+      }
+      
+      .item-desc {
+        font-size: 1rem;
+      }
+      
+      button {
+        font-size: 1.1rem;
+        padding: 12px;
+      }
+    }
+    
+    /* تحسينات للشاشات الكبيرة */
+    @media (min-width: 768px) {
       .container {
-        box-shadow: none;
-        padding: 0;
+        max-width: 750px;
+        padding: 30px;
+        margin: 20px auto;
+        border-radius: 5px;
+        border: 3px solid var(--color-primary);
       }
       
-      .commande {
-        page-break-inside: avoid;
-        border: 1px solid #000;
+      h1 {
+        font-size: 3rem;
       }
+      
+      .menu-item {
+        flex-wrap: nowrap;
+      }
+      
+      .item-name {
+        width: auto;
+      }
+      
+      .item-price {
+        width: auto;
+        text-align: right;
+      }
+    }
+    
+    /* أنماط إضافية للتحميل */
+    .loading {
+      text-align: center;
+      padding: 20px;
+      font-size: 1.2rem;
+      color: var(--color-text);
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h1>لوحة التحكم - دار حسنا</h1>
-      <div class="clock" id="liveClock"></div>
+    <div class="moroccan-decoration">✻ ❁ ✻ ❁ ✻</div>
+    
+    <h1>دار حسنا</h1>
+    <p class="subtitle">مطبخ مغربي أصيل منذ 1985</p>
+    
+    <h2>قائمتنا الشهية</h2>
+    
+    <!-- سيتم تعبئة القائمة ديناميكياً هنا -->
+    <div id="menuContainer">
+      <div class="loading">جاري تحميل القائمة...</div>
     </div>
     
-    <div class="stats-bar no-print">
-      <div class="stat-item">
-        <div class="stat-value pending" id="pending-count">0</div>
-        <div>في الانتظار</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value preparing" id="preparing-count">0</div>
-        <div>قيد التحضير</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value ready" id="ready-count">0</div>
-        <div>جاهزة</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value delivered" id="delivered-count">0</div>
-        <div>تم التسليم</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value" id="total-count">0</div>
-        <div>المجموع</div>
-      </div>
-    </div>
+    <div class="moroccan-decoration">❁ ✻ ❁ ✻ ❁</div>
     
-    <div class="status-tabs no-print">
-      <button class="tab-btn active" data-status="all">الكل</button>
-      <button class="tab-btn" data-status="En attente">في الانتظار</button>
-      <button class="tab-btn" data-status="En préparation">قيد التحضير</button>
-      <button class="tab-btn" data-status="Prêt">جاهزة</button>
-      <button class="tab-btn" data-status="Sortie">تم التسليم</button>
-    </div>
-    
-    <div class="commandes-container" id="liste-commandes"></div>
+    <form id="commandeForm">
+      <h2>تقديم الطلب</h2>
+      
+      <label for="table">رقم الطاولة:</label>
+      <input type="number" id="table" min="1" required>
+      
+      <label for="notes">ملاحظة:</label>
+      <input type="text" id="notes" placeholder="أي ملاحظات إضافية حول الطلب">
+      
+      <div id="listeCommandes"></div>
+      
+      <div class="total" id="totalCommande">المجموع: 0 درهم</div>
+      
+      <button type="submit">
+        تأكيد الطلب
+      </button>
+      
+      <div id="confirmation" class="confirmation"></div>
+    </form>
   </div>
 
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
   <script>
+    // Configuration Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDpSF4J0bsd6T0ImMpse0KQQRADaxiYUQw",
       authDomain: "darhassna-484c3.firebaseapp.com",
@@ -374,287 +363,188 @@
       appId: "1:141393162149:web:0717227eac221f5ddfc24c"
     };
 
+    // Initialiser Firebase
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    const commandesContainer = document.getElementById("liste-commandes");
-    
-    let allOrders = {};
-    const statusCount = {
-      'En attente': 0,
-      'En préparation': 0,
-      'Prêt': 0,
-      'Sortie': 0,
-      'total': 0
-    };
-    
-    const notificationSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3');
-    const statusChangeSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-positive-interface-beep-221.mp3');
+    const database = firebase.database();
 
-    function updateClock() {
-      const now = new Date();
-      const timeString = now.toLocaleTimeString('ar-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      const dateString = now.toLocaleDateString('ar-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-      document.getElementById('liveClock').innerHTML = `${dateString}<br>${timeString}`;
-    }
+    // متغيرات لتخزين الطلبات
+    let commandes = [];
+    let total = 0;
 
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    function formatOrderTime(timestamp) {
-      const now = new Date();
-      const orderDate = new Date(timestamp);
-      const timeString = orderDate.toLocaleTimeString('ar-AR', { hour: '2-digit', minute: '2-digit' });
-      
-      const diffInMinutes = Math.floor((now - orderDate) / (1000 * 60));
-      let timeAgo = '';
-      
-      if (diffInMinutes < 1) {
-        timeAgo = 'الآن';
-      } else if (diffInMinutes < 60) {
-        timeAgo = `منذ ${diffInMinutes} دقيقة`;
-      } else {
-        const diffInHours = Math.floor(diffInMinutes / 60);
-        timeAgo = `منذ ${diffInHours} ساعة`;
-      }
-      
-      return {
-        time: timeString,
-        ago: timeAgo
-      };
-    }
-    
-    function updateStatusCounters() {
-      document.getElementById('pending-count').textContent = statusCount['En attente'];
-      document.getElementById('preparing-count').textContent = statusCount['En préparation'];
-      document.getElementById('ready-count').textContent = statusCount['Prêt'];
-      document.getElementById('delivered-count').textContent = statusCount['Sortie'];
-      document.getElementById('total-count').textContent = statusCount['total'];
-    }
-    
-    function resetStatusCounters() {
-      statusCount['En attente'] = 0;
-      statusCount['En préparation'] = 0;
-      statusCount['Prêt'] = 0;
-      statusCount['Sortie'] = 0;
-      statusCount['total'] = 0;
-      updateStatusCounters();
-    }
-    
-    function filterOrders(status) {
-      const allOrdersDivs = document.querySelectorAll('.commande');
-      
-      allOrdersDivs.forEach(div => {
-        const orderStatus = div.querySelector('.status-select').value;
+    // دالة لتحميل وعرض القائمة من Firebase
+    function loadAndDisplayMenu() {
+      database.ref('menu').on('value', (snapshot) => {
+        const menuData = snapshot.val();
+        const menuContainer = document.getElementById('menuContainer');
         
-        if (status === 'all' || orderStatus === status) {
-          div.style.display = 'block';
+        if (menuData && menuData.length > 0) {
+          menuContainer.innerHTML = '';
+          
+          menuData.forEach(section => {
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'menu-section';
+            sectionDiv.innerHTML = `<h3>${section.section}</h3>`;
+            
+            section.items.forEach(item => {
+              const itemDiv = document.createElement('div');
+              itemDiv.className = 'menu-item';
+              itemDiv.setAttribute('data-plat', item.plat);
+              itemDiv.setAttribute('data-prix', item.prix);
+              itemDiv.innerHTML = `
+                <div>
+                  <div class="item-name">${item.plat}</div>
+                  <div class="item-desc">${item.description}</div>
+                </div>
+                <div class="item-price">${item.prix} درهم</div>
+              `;
+              sectionDiv.appendChild(itemDiv);
+            });
+            
+            menuContainer.appendChild(sectionDiv);
+          });
+          
+          // إعادة ربط أحداث النقر على العناصر
+          attachMenuItemsEvents();
         } else {
-          div.style.display = 'none';
-        }
-      });
-      
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.status === status) {
-          btn.classList.add('active');
+          menuContainer.innerHTML = '<div class="loading">لا توجد عناصر في القائمة حالياً</div>';
         }
       });
     }
-    
-    function updateCommandeUI(key, status) {
-      const commandeDiv = document.getElementById(`commande-${key}`);
-      if (commandeDiv) {
-        const select = commandeDiv.querySelector('.status-select');
-        if (select) {
-          select.value = status;
-        }
-        commandeDiv.className = `commande status-${status.replace(/\s+/g, '-').toLowerCase()}`;
-        commandeDiv.dataset.status = status;
-      }
+
+    // دالة لربط أحداث النقر على عناصر القائمة
+    function attachMenuItemsEvents() {
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+          // إزالة التحديد من جميع الأطباق
+          document.querySelectorAll('.menu-item').forEach(i => {
+            i.classList.remove('selected');
+          });
+          
+          // إضافة التحديد للطبق المختار
+          this.classList.add('selected');
+          
+          // إضافة الطبق المختار إلى الطلب مباشرة
+          const plat = this.getAttribute('data-plat');
+          const prix = parseInt(this.getAttribute('data-prix'));
+          
+          // إضافة إلى قائمة الطلبات
+          commandes.push({
+            plat: plat,
+            quantite: 1, // كمية افتراضية
+            prix: prix
+          });
+          
+          // تحديث العرض
+          afficherCommandes();
+          
+          // إزالة التحديد بعد إضافة الطبق
+          setTimeout(() => {
+            this.classList.remove('selected');
+          }, 300);
+        });
+      });
     }
-    
-    function createOrderElement(key, data) {
-      const currentStatus = data.etat || data.statut || "En attente";
-      const timeInfo = formatOrderTime(data.timestamp);
+
+    // عرض قائمة الطلبات
+    function afficherCommandes() {
+      const listeCommandes = document.getElementById('listeCommandes');
+      listeCommandes.innerHTML = '';
+      total = 0;
       
-      const div = document.createElement("div");
-      div.className = `commande status-${currentStatus.replace(/\s+/g, '-').toLowerCase()}`;
-      div.id = `commande-${key}`;
-      div.dataset.status = currentStatus;
-      
-      let itemsHTML = data.commandes.map(item => `
-        <div class="order-item">
+      commandes.forEach((commande, index) => {
+        const sousTotal = commande.quantite * commande.prix;
+        total += sousTotal;
+        
+        const div = document.createElement('div');
+        div.className = 'commande-item';
+        div.innerHTML = `
           <div>
-            ${item.plat}
-            <span class="item-quantity">${item.quantite}x</span>
+            ${commande.quantite} × ${commande.plat} (${commande.prix} درهم)
           </div>
-          <div>${item.prix * item.quantite} درهم</div>
-        </div>
-      `).join('');
-      
-      let notesHTML = '';
-      if (data.notes && data.notes.trim() !== '') {
-        notesHTML = `
-          <div class="order-notes">
-            <strong>ملاحظة:</strong> ${data.notes}
+          <div>
+            ${sousTotal} درهم 
+            <span class="remove-item" data-index="${index}">×</span>
+            <span class="change-quantity" data-index="${index}" data-action="increase">+</span>
+            <span class="change-quantity" data-index="${index}" data-action="decrease">-</span>
           </div>
         `;
-      }
+        listeCommandes.appendChild(div);
+      });
       
-      div.innerHTML = `
-        <button class="delete-btn no-print" data-key="${key}">×</button>
-        <div class="commande-header">
-          <div class="order-time">
-            <span>${timeInfo.time}</span>
-            <span class="time-ago">${timeInfo.ago}</span>
-          </div>
-          <div class="table-number-container">
-            <div class="table-number">طاولة ${data.table}</div>
-          </div>
-        </div>
-        
-        <div class="order-items">
-          ${itemsHTML}
-        </div>
-        
-        ${notesHTML}
-        
-        <div class="order-total">المجموع: ${data.total} درهم</div>
-        
-        <div class="order-status">
-          <label>الحالة:</label>
-          <select class="status-select" data-key="${key}">
-            <option value="En attente" ${currentStatus === "En attente" ? "selected" : ""}>🕐 في الانتظار</option>
-            <option value="En préparation" ${currentStatus === "En préparation" ? "selected" : ""}>👨‍🍳 قيد التحضير</option>
-            <option value="Prêt" ${currentStatus === "Prêt" ? "selected" : ""}>✅ جاهزة</option>
-            <option value="Sortie" ${currentStatus === "Sortie" ? "selected" : ""}>🚪 تم التسليم</option>
-          </select>
-        </div>
-      `;
+      // تحديث المجموع الكلي
+      document.getElementById('totalCommande').textContent = `المجموع: ${total} درهم`;
       
-      if (Date.now() - data.timestamp < 30000) {
-        const badge = document.createElement('div');
-        badge.className = 'new-order-badge';
-        badge.textContent = '!';
-        div.appendChild(badge);
-        
-        notificationSound.play().catch(e => console.log("Audio playback error:", e));
-        
-        setTimeout(() => {
-          badge.remove();
-        }, 30000);
-      }
-      
-      div.querySelector('.status-select').addEventListener("change", function() {
-        const newStatus = this.value;
-        db.ref("commandes/" + key).update({ 
-          etat: newStatus,
-          statut: newStatus
+      // إضافة أحداث لحذف الأصناف
+      document.querySelectorAll('.remove-item').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          commandes.splice(index, 1);
+          afficherCommandes();
         });
-        
-        statusChangeSound.play().catch(e => console.log("Audio playback error:", e));
       });
       
-      div.querySelector('.delete-btn')?.addEventListener("click", function() {
-        if (confirm("هل تريد حقاً حذف هذه الطلبية؟")) {
-          db.ref("commandes/" + key).remove();
-        }
+      // إضافة أحداث لتغيير الكمية
+      document.querySelectorAll('.change-quantity').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          const action = this.getAttribute('data-action');
+          
+          if (action === 'increase') {
+            commandes[index].quantite += 1;
+          } else if (action === 'decrease' && commandes[index].quantite > 1) {
+            commandes[index].quantite -= 1;
+          }
+          
+          afficherCommandes();
+        });
       });
-      
-      return div;
     }
-    
-    function initFirebaseListeners() {
-      resetStatusCounters();
 
-      db.ref("commandes").orderByChild("timestamp").limitToLast(50).on("child_added", (snapshot) => {
-        const data = snapshot.val();
-        const key = snapshot.key;
-        
-        if (!data.etat && !data.statut) {
-          const updates = {
-            etat: "En attente",
-            statut: "En attente"
-          };
-          db.ref("commandes/" + key).update(updates);
-          data.etat = "En attente";
-          data.statut = "En attente";
-        }
-        
-        let currentStatus = data.etat || data.statut;
-        
-        if (currentStatus === "Livré") {
-          currentStatus = "Sortie";
-          db.ref("commandes/" + key).update({ 
-            etat: "Sortie",
-            statut: "Sortie"
-          });
-        }
-        
-        if (!allOrders[key]) {
-          statusCount[currentStatus]++;
-          statusCount['total']++;
-          updateStatusCounters();
-        }
-        
-        allOrders[key] = { ...data, status: currentStatus };
-        const orderElement = createOrderElement(key, data);
-        commandesContainer.prepend(orderElement);
-      });
+    // عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', function() {
+      // تحميل وعرض القائمة من Firebase
+      loadAndDisplayMenu();
       
-      db.ref("commandes").on("child_changed", (snapshot) => {
-        const data = snapshot.val();
-        const key = snapshot.key;
-        let currentStatus = data.etat || data.statut;
+      // معالجة إرسال النموذج
+      document.getElementById('commandeForm').addEventListener('submit', function(e) {
+        e.preventDefault();
         
-        if (currentStatus === "Livré") {
-          currentStatus = "Sortie";
-          db.ref("commandes/" + key).update({ 
-            etat: "Sortie",
-            statut: "Sortie"
-          });
+        const table = document.getElementById('table').value;
+        const notes = document.getElementById('notes').value;
+        
+        if (!table || commandes.length === 0) {
+          alert('الرجاء تحديد رقم الطاولة وإضافة طلب واحد على الأقل');
+          return;
         }
         
-        if (allOrders[key] && allOrders[key].status !== currentStatus) {
-          statusCount[allOrders[key].status]--;
-          statusCount[currentStatus]++;
-          updateStatusCounters();
-          allOrders[key].status = currentStatus;
-        }
-        
-        updateCommandeUI(key, currentStatus);
-      });
-      
-      db.ref("commandes").on("child_removed", (snapshot) => {
-        const key = snapshot.key;
-        if (allOrders[key]) {
-          statusCount[allOrders[key].status]--;
-          statusCount['total']--;
-          updateStatusCounters();
-          delete allOrders[key];
-        }
-        
-        const commandeDiv = document.getElementById(`commande-${key}`);
-        if (commandeDiv) {
-          commandeDiv.remove();
-        }
-      });
-    }
-    
-    function initFilterTabs() {
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          filterOrders(btn.dataset.status);
+        // إرسال البيانات إلى Firebase
+        database.ref('commandes').push({
+          table: table,
+          notes: notes,
+          commandes: commandes,
+          total: total,
+          timestamp: firebase.database.ServerValue.TIMESTAMP,
+          statut: 'في الانتظار'
         });
+        
+        // عرض رسالة التأكيد
+        const confirmation = document.getElementById('confirmation');
+        confirmation.textContent = `تم تأكيد الطلب للطاولة ${table}! المجموع: ${total} درهم` + 
+                                 (notes ? `\nملاحظة: ${notes}` : '');
+        confirmation.style.display = 'block';
+        
+        // إعادة تعيين النموذج
+        commandes = [];
+        afficherCommandes();
+        document.getElementById('table').value = '';
+        document.getElementById('notes').value = '';
+        
+        // إخفاء رسالة التأكيد بعد 5 ثواني
+        setTimeout(() => {
+          confirmation.style.display = 'none';
+        }, 5000);
       });
-    }
-    
-    function initApp() {
-      initFirebaseListeners();
-      initFilterTabs();
-    }
-    
-    window.addEventListener('DOMContentLoaded', initApp);
+    });
   </script>
 </body>
 </html>

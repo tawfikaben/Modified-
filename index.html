@@ -24,70 +24,113 @@
     h1 {
       color: #9c2e2e;
       text-align: center;
+      margin-bottom: 30px;
     }
     .menu-section {
       margin-bottom: 30px;
       border: 1px solid #ddd;
       padding: 15px;
       border-radius: 5px;
+      background-color: #fff9f9;
+    }
+    .section-title {
+      font-size: 1.5em;
+      color: #9c2e2e;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+      border-bottom: 2px dashed #e67e22;
     }
     .menu-item {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 10px;
-      padding: 10px;
+      align-items: center;
+      margin-bottom: 15px;
+      padding: 12px;
       background: #f9f9f9;
-      border-radius: 3px;
+      border-radius: 5px;
+      border-right: 3px solid #e67e22;
     }
-    input[type="text"], input[type="number"] {
-      padding: 8px;
-      width: 200px;
+    .item-details {
+      flex-grow: 1;
+    }
+    .item-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    input[type="text"], input[type="number"], textarea {
+      padding: 8px 12px;
       border: 1px solid #ddd;
-      border-radius: 3px;
+      border-radius: 4px;
+      font-family: 'Amiri', serif;
+      font-size: 1.1em;
+    }
+    input[type="text"] {
+      width: 250px;
+      font-weight: bold;
+    }
+    input[type="number"] {
+      width: 80px;
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      margin-top: 8px;
+      min-height: 60px;
     }
     button {
       background: #9c2e2e;
       color: white;
       border: none;
-      padding: 10px 15px;
-      border-radius: 3px;
+      padding: 10px 20px;
+      border-radius: 4px;
       cursor: pointer;
-      margin-top: 20px;
+      font-family: 'Amiri', serif;
+      font-size: 1.1em;
+      transition: all 0.3s;
     }
     button:hover {
       background: #7a2424;
+      transform: translateY(-2px);
     }
-    .login-form {
-      max-width: 400px;
-      margin: 50px auto;
-      text-align: center;
-    }
-    .login-form input {
+    .save-btn {
+      background: #2e7d32;
+      font-size: 1.2em;
+      padding: 12px 30px;
+      margin: 20px auto;
       display: block;
-      width: 100%;
-      margin: 10px 0;
-      padding: 10px;
     }
-    .hidden {
-      display: none;
+    .save-btn:hover {
+      background: #1b5e20;
+    }
+    .add-item-btn {
+      background: #1565c0;
+      margin-bottom: 15px;
+    }
+    .add-item-btn:hover {
+      background: #0d47a1;
+    }
+    .delete-btn {
+      background: #c62828;
+      padding: 8px 12px;
+    }
+    .delete-btn:hover {
+      background: #b71c1c;
+    }
+    .price-container {
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div id="loginSection" class="login-form">
-      <h2>تسجيل الدخول للإدارة</h2>
-      <input type="password" id="adminPassword" placeholder="كلمة المرور">
-      <button onclick="login()">دخول</button>
-      <p id="loginError" style="color:red; display:none;">كلمة المرور غير صحيحة</p>
-    </div>
-
-    <div id="adminPanel" class="hidden">
-      <h1>إدارة قائمة الطعام</h1>
-      <button onclick="saveChanges()">حفظ التغييرات</button>
-      <div id="menuEditor"></div>
-      <button onclick="saveChanges()">حفظ التغييرات</button>
-    </div>
+    <h1>إدارة قائمة الطعام - دار حسنا</h1>
+    
+    <div id="menuEditor"></div>
+    
+    <button class="save-btn" onclick="saveAllChanges()">حفظ جميع التغييرات</button>
   </div>
 
   <!-- Firebase SDK -->
@@ -110,58 +153,64 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // كلمة مرور الإدارة (يمكن تغييرها)
-    const ADMIN_PASSWORD = "admin123";
-
     // عناصر DOM
-    const loginSection = document.getElementById('loginSection');
-    const adminPanel = document.getElementById('adminPanel');
     const menuEditor = document.getElementById('menuEditor');
-    const adminPassword = document.getElementById('adminPassword');
-    const loginError = document.getElementById('loginError');
+    let currentMenuData = [];
 
-    // تسجيل الدخول
-    function login() {
-      if (adminPassword.value === ADMIN_PASSWORD) {
-        loginSection.classList.add('hidden');
-        adminPanel.classList.remove('hidden');
-        loadMenu();
-      } else {
-        loginError.style.display = 'block';
-      }
-    }
+    // عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', function() {
+      loadMenu();
+    });
 
     // تحميل القائمة من Firebase
     function loadMenu() {
       database.ref('menu').once('value').then(snapshot => {
-        const menuData = snapshot.val();
-        renderMenuEditor(menuData);
+        currentMenuData = snapshot.val() || [];
+        renderMenuEditor();
       });
     }
 
     // عرض واجهة تعديل القائمة
-    function renderMenuEditor(menuData) {
+    function renderMenuEditor() {
       menuEditor.innerHTML = '';
       
-      menuData.forEach((section, sectionIndex) => {
+      currentMenuData.forEach((section, sectionIndex) => {
         const sectionDiv = document.createElement('div');
         sectionDiv.className = 'menu-section';
-        sectionDiv.innerHTML = `<h3>${section.section}</h3>`;
         
+        // عنوان القسم
+        const sectionHeader = document.createElement('div');
+        sectionHeader.className = 'section-header';
+        sectionHeader.innerHTML = `
+          <div class="section-title">${section.section}</div>
+          <button class="add-item-btn" onclick="addNewItem(${sectionIndex})">
+            + إضافة صنف جديد
+          </button>
+        `;
+        sectionDiv.appendChild(sectionHeader);
+        
+        // عناصر القسم
         section.items.forEach((item, itemIndex) => {
           const itemDiv = document.createElement('div');
           itemDiv.className = 'menu-item';
           itemDiv.innerHTML = `
-            <div>
+            <div class="item-details">
               <input type="text" value="${item.plat}" 
-                onchange="updateItem(${sectionIndex}, ${itemIndex}, 'plat', this.value)">
+                onchange="updateItem(${sectionIndex}, ${itemIndex}, 'plat', this.value)"
+                placeholder="اسم الطبق">
               <textarea onchange="updateItem(${sectionIndex}, ${itemIndex}, 'description', this.value)"
-                style="width:100%; margin-top:5px;">${item.description}</textarea>
+                placeholder="وصف الطبق">${item.description || ''}</textarea>
             </div>
-            <div>
-              <input type="number" value="${item.prix}" 
-                onchange="updateItem(${sectionIndex}, ${itemIndex}, 'prix', parseInt(this.value))">
-              <span>درهم</span>
+            <div class="item-controls">
+              <div class="price-container">
+                <input type="number" value="${item.prix}" 
+                  onchange="updateItem(${sectionIndex}, ${itemIndex}, 'prix', parseInt(this.value) || 0)"
+                  placeholder="السعر">
+                <span>درهم</span>
+              </div>
+              <button class="delete-btn" onclick="deleteItem(${sectionIndex}, ${itemIndex})">
+                حذف
+              </button>
             </div>
           `;
           sectionDiv.appendChild(itemDiv);
@@ -173,20 +222,42 @@
 
     // تحديث عنصر في الذاكرة
     function updateItem(sectionIndex, itemIndex, field, value) {
-      database.ref('menu').once('value').then(snapshot => {
-        const menuData = snapshot.val();
-        menuData[sectionIndex].items[itemIndex][field] = value;
-        
-        // حفظ التغييرات مباشرة في Firebase
-        database.ref('menu').set(menuData)
-          .then(() => console.log('تم تحديث العنصر بنجاح'))
-          .catch(error => console.error('حدث خطأ في التحديث:', error));
+      currentMenuData[sectionIndex].items[itemIndex][field] = value;
+    }
+
+    // إضافة صنف جديد
+    function addNewItem(sectionIndex) {
+      if (!currentMenuData[sectionIndex].items) {
+        currentMenuData[sectionIndex].items = [];
+      }
+      
+      currentMenuData[sectionIndex].items.push({
+        plat: 'صنف جديد',
+        prix: 0,
+        description: ''
       });
+      
+      renderMenuEditor();
+    }
+
+    // حذف صنف
+    function deleteItem(sectionIndex, itemIndex) {
+      if (confirm('هل أنت متأكد من حذف هذا الصنف؟')) {
+        currentMenuData[sectionIndex].items.splice(itemIndex, 1);
+        renderMenuEditor();
+      }
     }
 
     // حفظ جميع التغييرات
-    function saveChanges() {
-      alert('تم حفظ التغييرات تلقائياً عند كل تعديل');
+    function saveAllChanges() {
+      database.ref('menu').set(currentMenuData)
+        .then(() => {
+          alert('تم حفظ جميع التغييرات بنجاح');
+          window.location.reload(); // لتحديث العرض بأي تغييرات
+        })
+        .catch(error => {
+          alert('حدث خطأ أثناء الحفظ: ' + error.message);
+        });
     }
   </script>
 </body>

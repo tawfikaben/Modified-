@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة قائمة المطعم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #9c2e2e;
+            --secondary-color: #e67e22;
+            --accent-color: #daa520;
+            --text-color: #333;
+            --light-bg: #f8f1e9;
+            --white: #fff;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 0 5px 5px 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            margin-left: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .edit-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>نظام إدارة قائمة المطعم</h1>
+            <p>إدارة الأطباق والمشروبات وتحديثها مباشرة على Firebase</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="add">إضافة صنف جديد</div>
+            <div class="tab" data-tab="view">عرض وتعديل الأصناف</div>
+        </div>
+        
+        <div id="add" class="tab-content active">
+            <div id="addAlert" class="alert"></div>
+            
+            <form id="addItemForm">
+                <div class="form-group">
+                    <label for="itemType">نوع الصنف:</label>
+                    <select id="itemType" required>
+                        <option value="">-- اختر نوع الصنف --</option>
+                        <option value="breakfast">وجبة الفطور</option>
+                        <option value="lunch">وجبة الغداء</option>
+                        <option value="dinner">وجبة العشاء</option>
+                        <option value="drinks">المشروبات</option>
+                        <option value="desserts">الحلويات</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemName">اسم الصنف:</label>
+                    <input type="text" id="itemName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemPrice">السعر (درهم):</label>
+                    <input type="number" id="itemPrice" min="1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemDescription">وصف الصنف:</label>
+                    <textarea id="itemDescription" rows="3"></textarea>
+                </div>
+                
+                <button type="submit">حفظ الصنف</button>
+            </form>
+        </div>
+        
+        <div id="view" class="tab-content">
+            <div id="editAlert" class="alert"></div>
+            
+            <div class="form-group">
+                <label for="filterType">تصفية حسب النوع:</label>
+                <select id="filterType">
+                    <option value="">جميع الأصناف</option>
+                    <option value="breakfast">وجبة الفطور</option>
+                    <option value="lunch">وجبة الغداء</option>
+                    <option value="dinner">وجبة العشاء</option>
+                    <option value="drinks">المشروبات</option>
+                    <option value="desserts">الحلويات</option>
+                </select>
+            </div>
+            
+            <table id="menuTable">
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th>النوع</th>
+                        <th>السعر</th>
+                        <th>الوصف</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="menuItems">
+                    <!-- سيتم ملؤها بالبيانات من Firebase -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        // تهيئة Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDpSF4J0bsd6T0ImMpse0KQQRADaxiYUQw",
+            authDomain: "darhassna-484c3.firebaseapp.com",
+            databaseURL: "https://darhassna-484c3-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "darhassna-484c3",
+            storageBucket: "darhassna-484c3.firebasestorage.app",
+            messagingSenderId: "141393162149",
+            appId: "1:141393162149:web:0717227eac221f5ddfc24c"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const menuRef = database.ref('menu');
+
+        // متغير لتخزين العنصر الذي يتم تعديله
+        let editingItemId = null;
+
+        // تبديل بين التبويبات
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+                
+                if (tab.dataset.tab === 'view') {
+                    loadMenuItems();
+                }
+            });
+        });
+
+        // تصفية الأصناف
+        document.getElementById('filterType').addEventListener('change', loadMenuItems);
+
+        // إضافة صنف جديد
+        document.getElementById('addItemForm').addEventListener('submit', e => {
+            e.preventDefault();
+            
+            const itemType = document.getElementById('itemType').value;
+            const itemName = document.getElementById('itemName').value;
+            const itemPrice = document.getElementById('itemPrice').value;
+            const itemDescription = document.getElementById('itemDescription').value;
+            
+            if (!itemType || !itemName || !itemPrice) {
+                showAlert('addAlert', 'الرجاء ملء جميع الحقول المطلوبة', 'danger');
+                return;
+            }
+            
+            const newItem = {
+                type: itemType,
+                name: itemName,
+                price: parseFloat(itemPrice),
+                description: itemDescription,
+                createdAt: firebase.database.ServerValue.TIMESTAMP
+            };
+            
+            if (editingItemId) {
+                // تعديل صنف موجود
+                menuRef.child(editingItemId).update(newItem)
+                    .then(() => {
+                        showAlert('addAlert', 'تم تعديل الصنف بنجاح', 'success');
+                        resetForm();
+                        editingItemId = null;
+                    })
+                    .catch(error => {
+                        showAlert('addAlert', 'حدث خطأ أثناء التعديل: ' + error.message, 'danger');
+                    });
+            } else {
+                // إضافة صنف جديد
+                menuRef.push(newItem)
+                    .then(() => {
+                        showAlert('addAlert', 'تم إضافة الصنف بنجاح', 'success');
+                        resetForm();
+                    })
+                    .catch(error => {
+                        showAlert('addAlert', 'حدث خطأ أثناء الإضافة: ' + error.message, 'danger');
+                    });
+            }
+        });
+
+        // تحميل الأصناف من Firebase
+        function loadMenuItems() {
+            const filterType = document.getElementById('filterType').value;
+            const menuItemsTbody = document.getElementById('menuItems');
+            menuItemsTbody.innerHTML = '<tr><td colspan="5" style="text-align:center">جاري التحميل...</td></tr>';
+            
+            let query = menuRef.orderByChild('createdAt');
+            
+            query.once('value', snapshot => {
+                menuItemsTbody.innerHTML = '';
+                
+                if (!snapshot.exists()) {
+                    menuItemsTbody.innerHTML = '<tr><td colspan="5" style="text-align:center">لا توجد أصناف مسجلة</td></tr>';
+                    return;
+                }
+                
+                snapshot.forEach(childSnapshot => {
+                    const item = childSnapshot.val();
+                    const itemId = childSnapshot.key;
+                    
+                    if (filterType && item.type !== filterType) {
+                        return;
+                    }
+                    
+                    const typeName = getTypeName(item.type);
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${item.name}</td>
+                        <td>${typeName}</td>
+                        <td>${item.price} درهم</td>
+                        <td>${item.description || '-'}</td>
+                        <td>
+                            <button class="action-btn edit-btn" data-id="${itemId}">
+                                <i class="fas fa-edit"></i> تعديل
+                            </button>
+                            <button class="action-btn delete-btn" data-id="${itemId}">
+                                <i class="fas fa-trash"></i> حذف
+                            </button>
+                        </td>
+                    `;
+                    
+                    menuItemsTbody.appendChild(tr);
+                });
+                
+                // إضافة أحداث لأزرار التعديل والحذف
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', () => editItem(btn.dataset.id));
+                });
+                
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', () => deleteItem(btn.dataset.id));
+                });
+            });
+        }
+
+        // تعديل صنف
+        function editItem(itemId) {
+            menuRef.child(itemId).once('value', snapshot => {
+                const item = snapshot.val();
+                
+                document.getElementById('itemType').value = item.type;
+                document.getElementById('itemName').value = item.name;
+                document.getElementById('itemPrice').value = item.price;
+                document.getElementById('itemDescription').value = item.description || '';
+                
+                editingItemId = itemId;
+                
+                // التبديل إلى تبويب الإضافة
+                document.querySelector('.tab[data-tab="add"]').click();
+                
+                // تغيير نص زر الحفظ
+                document.querySelector('#addItemForm button').textContent = 'تحديث الصنف';
+            });
+        }
+
+        // حذف صنف
+        function deleteItem(itemId) {
+            if (confirm('هل أنت متأكد من رغبتك في حذف هذا الصنف؟')) {
+                menuRef.child(itemId).remove()
+                    .then(() => {
+                        showAlert('editAlert', 'تم حذف الصنف بنجاح', 'success');
+                        loadMenuItems();
+                    })
+                    .catch(error => {
+                        showAlert('editAlert', 'حدث خطأ أثناء الحذف: ' + error.message, 'danger');
+                    });
+            }
+        }
+
+        // عرض رسالة تنبيه
+        function showAlert(elementId, message, type) {
+            const alertElement = document.getElementById(elementId);
+            alertElement.textContent = message;
+            alertElement.className = `alert alert-${type}`;
+            alertElement.style.display = 'block';
+            
+            setTimeout(() => {
+                alertElement.style.display = 'none';
+            }, 5000);
+        }
+
+        // إعادة تعيين النموذج
+        function resetForm() {
+            document.getElementById('addItemForm').reset();
+            document.querySelector('#addItemForm button').textContent = 'حفظ الصنف';
+        }
+
+        // الحصول على اسم نوع الصنف
+        function getTypeName(type) {
+            const types = {
+                'breakfast': 'وجبة الفطور',
+                'lunch': 'وجبة الغداء',
+                'dinner': 'وجبة العشاء',
+                'drinks': 'المشروبات',
+                'desserts': 'الحلويات'
+            };
+            
+            return types[type] || type;
+        }
+
+        // تحميل الأصناف عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', loadMenuItems);
+    </script>
+</body>
+</html>

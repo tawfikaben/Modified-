@@ -2,349 +2,135 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>دار حسنا - مطعم مغربي أصيل</title>
-  <!-- خطوط عربية -->
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Lateef:wght@400;600&display=swap" rel="stylesheet">
-  <!-- أيقونات زخرفية -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدارة القائمة - دار حسنا</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* أنماط مغربية شعبية أصيلة */
-    :root {
-      --color-primary: #9c2e2e; /* أحمر مغربي */
-      --color-secondary: #e67e22; /* برتقالي مغربي */
-      --color-accent: #daa520; /* ذهبي تقليدي */
-      --color-text: #5d4037; /* بني خشبي */
-      --color-light: #f8f1e9; /* كريمي */
-    }
-    
-    * {
-      box-sizing: border-box;
-    }
-    
     body {
-      font-family: 'Lateef', cursive;
-      background-color: var(--color-light);
-      background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/morocco-blue.png');
-      color: var(--color-text);
-      margin: 0;
-      padding: 0;
-      font-size: 18px;
-      line-height: 1.6;
-    }
-    
-    .container {
-      width: 100%;
-      margin: 0 auto;
-      background-color: rgba(255, 255, 255, 0.95);
-      padding: 15px;
-      border-radius: 0;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      border: none;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    /* عناوين مغربية */
-    h1, h2, h3 {
-      color: var(--color-primary);
-      text-align: center;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
       font-family: 'Amiri', serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+      color: #333;
     }
-    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
     h1 {
-      margin: 10px 0;
-      font-size: 2.2rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-    
-    .subtitle {
+      color: #9c2e2e;
       text-align: center;
-      color: var(--color-text);
-      margin-bottom: 20px;
-      font-size: 1.4rem;
-      position: relative;
-      font-style: italic;
+      margin-bottom: 30px;
     }
-    
-    /* بطاقات الأصناف */
     .menu-section {
       margin-bottom: 30px;
-      background-color: rgba(255, 248, 240, 0.7);
+      border: 1px solid #ddd;
       padding: 15px;
       border-radius: 5px;
-      border: 2px dashed var(--color-secondary);
+      background-color: #fff9f9;
     }
-    
-    .menu-section h3 {
-      position: relative;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-      color: var(--color-primary);
-      font-size: 1.8rem;
+    .section-title {
+      font-size: 1.5em;
+      color: #9c2e2e;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+      border-bottom: 2px dashed #e67e22;
     }
-    
     .menu-item {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 15px;
       padding: 12px;
+      background: #f9f9f9;
       border-radius: 5px;
-      transition: all 0.3s;
-      cursor: pointer;
-      border: 1px solid transparent;
-      flex-wrap: wrap;
+      border-right: 3px solid #e67e22;
     }
-    
-    .menu-item:hover {
-      transform: translateX(-5px);
-      background-color: rgba(255, 248, 240, 0.9);
-      border: 1px solid var(--color-secondary);
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    .item-details {
+      flex-grow: 1;
     }
-    
-    .menu-item.selected {
-      background-color: rgba(156, 46, 46, 0.1);
-      border: 1px solid var(--color-primary);
-      transform: translateX(-5px);
+    .item-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    
-    .item-name {
-      font-weight: bold;
-      color: var(--color-primary);
-      font-size: 1.3rem;
-      width: 70%;
-    }
-    
-    .item-price {
-      color: var(--color-primary);
-      font-weight: bold;
-      font-size: 1.3rem;
-      width: 30%;
-      text-align: left;
-    }
-    
-    .item-desc {
-      font-size: 1.1rem;
-      color: var(--color-text);
-      margin-top: 5px;
-      width: 100%;
-    }
-    
-    /* النموذج */
-    form {
-      background-color: rgba(255, 248, 240, 0.9);
-      padding: 20px;
-      border-radius: 5px;
-      margin-top: 30px;
-      border: 2px solid var(--color-primary);
-    }
-    
-    label {
-      display: block;
-      margin: 15px 0 8px;
-      font-weight: bold;
-      color: var(--color-primary);
-      font-size: 1.2rem;
-    }
-    
-    input, select, textarea {
-      width: 100%;
-      padding: 12px;
+    input[type="text"], input[type="number"], textarea {
+      padding: 8px 12px;
       border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 1.1rem;
-      font-family: 'Lateef', cursive;
+      border-radius: 4px;
+      font-family: 'Amiri', serif;
+      font-size: 1.1em;
     }
-    
+    input[type="text"] {
+      width: 250px;
+      font-weight: bold;
+    }
+    input[type="number"] {
+      width: 80px;
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      margin-top: 8px;
+      min-height: 60px;
+    }
     button {
-      background-color: var(--color-primary);
+      background: #9c2e2e;
       color: white;
       border: none;
-      padding: 15px;
-      margin-top: 20px;
-      border-radius: 5px;
+      padding: 10px 20px;
+      border-radius: 4px;
       cursor: pointer;
-      font-size: 1.3rem;
-      width: 100%;
-      transition: all 0.3s;
-      font-weight: bold;
       font-family: 'Amiri', serif;
+      font-size: 1.1em;
+      transition: all 0.3s;
     }
-    
     button:hover {
-      background-color: var(--color-secondary);
+      background: #7a2424;
       transform: translateY(-2px);
-      box-shadow: 0 5px 10px rgba(0,0,0,0.1);
     }
-    
-    .confirmation {
-      display: none;
-      background-color: rgba(212, 237, 218, 0.9);
-      color: #155724;
-      padding: 15px;
-      border-radius: 5px;
-      margin-top: 20px;
-      text-align: center;
-      border: 1px solid #c3e6cb;
-      font-size: 1.2rem;
+    .save-btn {
+      background: #2e7d32;
+      font-size: 1.2em;
+      padding: 12px 30px;
+      margin: 20px auto;
+      display: block;
     }
-    
-    .commande-item {
-      background-color: rgba(240, 240, 240, 0.9);
-      padding: 12px;
-      margin-bottom: 12px;
-      border-radius: 5px;
+    .save-btn:hover {
+      background: #1b5e20;
+    }
+    .add-item-btn {
+      background: #1565c0;
+      margin-bottom: 15px;
+    }
+    .add-item-btn:hover {
+      background: #0d47a1;
+    }
+    .delete-btn {
+      background: #c62828;
+      padding: 8px 12px;
+    }
+    .delete-btn:hover {
+      background: #b71c1c;
+    }
+    .price-container {
       display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      border-right: 4px solid var(--color-secondary);
-    }
-    
-    .remove-item {
-      color: var(--color-primary);
-      cursor: pointer;
-      font-weight: bold;
-      margin-right: 10px;
-      font-size: 1.3rem;
-    }
-    
-    #listeCommandes {
-      margin-top: 20px;
-    }
-    
-    .total {
-      font-weight: bold;
-      text-align: left;
-      margin-top: 15px;
-      font-size: 1.5rem;
-      color: var(--color-primary);
-    }
-    
-    /* زخارف مغربية */
-    .moroccan-decoration {
-      text-align: center;
-      margin: 20px 0;
-      color: var(--color-secondary);
-      font-size: 1.5rem;
-      letter-spacing: 10px;
-    }
-    
-    #selected-item {
-      margin: 15px 0;
-      padding: 12px;
-      background-color: rgba(156, 46, 46, 0.1);
-      border-radius: 5px;
-      display: none;
-      font-size: 1.1rem;
-    }
-    
-    /* تحسينات للشاشات الصغيرة جدًا */
-    @media (max-width: 480px) {
-      body {
-        font-size: 16px;
-      }
-      
-      h1 {
-        font-size: 1.8rem;
-      }
-      
-      .subtitle {
-        font-size: 1.2rem;
-      }
-      
-      .menu-section h3 {
-        font-size: 1.5rem;
-      }
-      
-      .item-name, .item-price {
-        font-size: 1.1rem;
-      }
-      
-      .item-desc {
-        font-size: 1rem;
-      }
-      
-      button {
-        font-size: 1.1rem;
-        padding: 12px;
-      }
-    }
-    
-    /* تحسينات للشاشات الكبيرة */
-    @media (min-width: 768px) {
-      .container {
-        max-width: 750px;
-        padding: 30px;
-        margin: 20px auto;
-        border-radius: 5px;
-        border: 3px solid var(--color-primary);
-      }
-      
-      h1 {
-        font-size: 3rem;
-      }
-      
-      .menu-item {
-        flex-wrap: nowrap;
-      }
-      
-      .item-name {
-        width: auto;
-      }
-      
-      .item-price {
-        width: auto;
-        text-align: right;
-      }
-    }
-    
-    /* أنماط إضافية للتحميل */
-    .loading {
-      text-align: center;
-      padding: 20px;
-      font-size: 1.2rem;
-      color: var(--color-text);
+      align-items: center;
+      gap: 5px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="moroccan-decoration">✻ ❁ ✻ ❁ ✻</div>
+    <h1>إدارة قائمة الطعام - دار حسنا</h1>
     
-    <h1>دار حسنا</h1>
-    <p class="subtitle">مطبخ مغربي أصيل منذ 1985</p>
+    <div id="menuEditor"></div>
     
-    <h2>قائمتنا الشهية</h2>
-    
-    <!-- سيتم تعبئة القائمة ديناميكياً هنا -->
-    <div id="menuContainer">
-      <div class="loading">جاري تحميل القائمة...</div>
-    </div>
-    
-    <div class="moroccan-decoration">❁ ✻ ❁ ✻ ❁</div>
-    
-    <form id="commandeForm">
-      <h2>تقديم الطلب</h2>
-      
-      <label for="table">رقم الطاولة:</label>
-      <input type="number" id="table" min="1" required>
-      
-      <label for="notes">ملاحظة:</label>
-      <input type="text" id="notes" placeholder="أي ملاحظات إضافية حول الطلب">
-      
-      <div id="listeCommandes"></div>
-      
-      <div class="total" id="totalCommande">المجموع: 0 درهم</div>
-      
-      <button type="submit">
-        تأكيد الطلب
-      </button>
-      
-      <div id="confirmation" class="confirmation"></div>
-    </form>
+    <button class="save-btn" onclick="saveAllChanges()">حفظ جميع التغييرات</button>
   </div>
 
   <!-- Firebase SDK -->
@@ -352,7 +138,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
   <script>
-    // Configuration Firebase
+    // تكوين Firebase (نفس تكوين الصفحة الرئيسية)
     const firebaseConfig = {
       apiKey: "AIzaSyDpSF4J0bsd6T0ImMpse0KQQRADaxiYUQw",
       authDomain: "darhassna-484c3.firebaseapp.com",
@@ -363,188 +149,116 @@
       appId: "1:141393162149:web:0717227eac221f5ddfc24c"
     };
 
-    // Initialiser Firebase
+    // تهيئة Firebase
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // متغيرات لتخزين الطلبات
-    let commandes = [];
-    let total = 0;
-
-    // دالة لتحميل وعرض القائمة من Firebase
-    function loadAndDisplayMenu() {
-      database.ref('menu').on('value', (snapshot) => {
-        const menuData = snapshot.val();
-        const menuContainer = document.getElementById('menuContainer');
-        
-        if (menuData && menuData.length > 0) {
-          menuContainer.innerHTML = '';
-          
-          menuData.forEach(section => {
-            const sectionDiv = document.createElement('div');
-            sectionDiv.className = 'menu-section';
-            sectionDiv.innerHTML = `<h3>${section.section}</h3>`;
-            
-            section.items.forEach(item => {
-              const itemDiv = document.createElement('div');
-              itemDiv.className = 'menu-item';
-              itemDiv.setAttribute('data-plat', item.plat);
-              itemDiv.setAttribute('data-prix', item.prix);
-              itemDiv.innerHTML = `
-                <div>
-                  <div class="item-name">${item.plat}</div>
-                  <div class="item-desc">${item.description}</div>
-                </div>
-                <div class="item-price">${item.prix} درهم</div>
-              `;
-              sectionDiv.appendChild(itemDiv);
-            });
-            
-            menuContainer.appendChild(sectionDiv);
-          });
-          
-          // إعادة ربط أحداث النقر على العناصر
-          attachMenuItemsEvents();
-        } else {
-          menuContainer.innerHTML = '<div class="loading">لا توجد عناصر في القائمة حالياً</div>';
-        }
-      });
-    }
-
-    // دالة لربط أحداث النقر على عناصر القائمة
-    function attachMenuItemsEvents() {
-      document.querySelectorAll('.menu-item').forEach(item => {
-        item.addEventListener('click', function() {
-          // إزالة التحديد من جميع الأطباق
-          document.querySelectorAll('.menu-item').forEach(i => {
-            i.classList.remove('selected');
-          });
-          
-          // إضافة التحديد للطبق المختار
-          this.classList.add('selected');
-          
-          // إضافة الطبق المختار إلى الطلب مباشرة
-          const plat = this.getAttribute('data-plat');
-          const prix = parseInt(this.getAttribute('data-prix'));
-          
-          // إضافة إلى قائمة الطلبات
-          commandes.push({
-            plat: plat,
-            quantite: 1, // كمية افتراضية
-            prix: prix
-          });
-          
-          // تحديث العرض
-          afficherCommandes();
-          
-          // إزالة التحديد بعد إضافة الطبق
-          setTimeout(() => {
-            this.classList.remove('selected');
-          }, 300);
-        });
-      });
-    }
-
-    // عرض قائمة الطلبات
-    function afficherCommandes() {
-      const listeCommandes = document.getElementById('listeCommandes');
-      listeCommandes.innerHTML = '';
-      total = 0;
-      
-      commandes.forEach((commande, index) => {
-        const sousTotal = commande.quantite * commande.prix;
-        total += sousTotal;
-        
-        const div = document.createElement('div');
-        div.className = 'commande-item';
-        div.innerHTML = `
-          <div>
-            ${commande.quantite} × ${commande.plat} (${commande.prix} درهم)
-          </div>
-          <div>
-            ${sousTotal} درهم 
-            <span class="remove-item" data-index="${index}">×</span>
-            <span class="change-quantity" data-index="${index}" data-action="increase">+</span>
-            <span class="change-quantity" data-index="${index}" data-action="decrease">-</span>
-          </div>
-        `;
-        listeCommandes.appendChild(div);
-      });
-      
-      // تحديث المجموع الكلي
-      document.getElementById('totalCommande').textContent = `المجموع: ${total} درهم`;
-      
-      // إضافة أحداث لحذف الأصناف
-      document.querySelectorAll('.remove-item').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const index = parseInt(this.getAttribute('data-index'));
-          commandes.splice(index, 1);
-          afficherCommandes();
-        });
-      });
-      
-      // إضافة أحداث لتغيير الكمية
-      document.querySelectorAll('.change-quantity').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const index = parseInt(this.getAttribute('data-index'));
-          const action = this.getAttribute('data-action');
-          
-          if (action === 'increase') {
-            commandes[index].quantite += 1;
-          } else if (action === 'decrease' && commandes[index].quantite > 1) {
-            commandes[index].quantite -= 1;
-          }
-          
-          afficherCommandes();
-        });
-      });
-    }
+    // عناصر DOM
+    const menuEditor = document.getElementById('menuEditor');
+    let currentMenuData = [];
 
     // عند تحميل الصفحة
     document.addEventListener('DOMContentLoaded', function() {
-      // تحميل وعرض القائمة من Firebase
-      loadAndDisplayMenu();
+      loadMenu();
+    });
+
+    // تحميل القائمة من Firebase
+    function loadMenu() {
+      database.ref('menu').once('value').then(snapshot => {
+        currentMenuData = snapshot.val() || [];
+        renderMenuEditor();
+      });
+    }
+
+    // عرض واجهة تعديل القائمة
+    function renderMenuEditor() {
+      menuEditor.innerHTML = '';
       
-      // معالجة إرسال النموذج
-      document.getElementById('commandeForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+      currentMenuData.forEach((section, sectionIndex) => {
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'menu-section';
         
-        const table = document.getElementById('table').value;
-        const notes = document.getElementById('notes').value;
+        // عنوان القسم
+        const sectionHeader = document.createElement('div');
+        sectionHeader.className = 'section-header';
+        sectionHeader.innerHTML = `
+          <div class="section-title">${section.section}</div>
+          <button class="add-item-btn" onclick="addNewItem(${sectionIndex})">
+            + إضافة صنف جديد
+          </button>
+        `;
+        sectionDiv.appendChild(sectionHeader);
         
-        if (!table || commandes.length === 0) {
-          alert('الرجاء تحديد رقم الطاولة وإضافة طلب واحد على الأقل');
-          return;
-        }
-        
-        // إرسال البيانات إلى Firebase
-        database.ref('commandes').push({
-          table: table,
-          notes: notes,
-          commandes: commandes,
-          total: total,
-          timestamp: firebase.database.ServerValue.TIMESTAMP,
-          statut: 'في الانتظار'
+        // عناصر القسم
+        section.items.forEach((item, itemIndex) => {
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'menu-item';
+          itemDiv.innerHTML = `
+            <div class="item-details">
+              <input type="text" value="${item.plat}" 
+                onchange="updateItem(${sectionIndex}, ${itemIndex}, 'plat', this.value)"
+                placeholder="اسم الطبق">
+              <textarea onchange="updateItem(${sectionIndex}, ${itemIndex}, 'description', this.value)"
+                placeholder="وصف الطبق">${item.description || ''}</textarea>
+            </div>
+            <div class="item-controls">
+              <div class="price-container">
+                <input type="number" value="${item.prix}" 
+                  onchange="updateItem(${sectionIndex}, ${itemIndex}, 'prix', parseInt(this.value) || 0)"
+                  placeholder="السعر">
+                <span>درهم</span>
+              </div>
+              <button class="delete-btn" onclick="deleteItem(${sectionIndex}, ${itemIndex})">
+                حذف
+              </button>
+            </div>
+          `;
+          sectionDiv.appendChild(itemDiv);
         });
         
-        // عرض رسالة التأكيد
-        const confirmation = document.getElementById('confirmation');
-        confirmation.textContent = `تم تأكيد الطلب للطاولة ${table}! المجموع: ${total} درهم` + 
-                                 (notes ? `\nملاحظة: ${notes}` : '');
-        confirmation.style.display = 'block';
-        
-        // إعادة تعيين النموذج
-        commandes = [];
-        afficherCommandes();
-        document.getElementById('table').value = '';
-        document.getElementById('notes').value = '';
-        
-        // إخفاء رسالة التأكيد بعد 5 ثواني
-        setTimeout(() => {
-          confirmation.style.display = 'none';
-        }, 5000);
+        menuEditor.appendChild(sectionDiv);
       });
-    });
+    }
+
+    // تحديث عنصر في الذاكرة
+    function updateItem(sectionIndex, itemIndex, field, value) {
+      currentMenuData[sectionIndex].items[itemIndex][field] = value;
+    }
+
+    // إضافة صنف جديد
+    function addNewItem(sectionIndex) {
+      if (!currentMenuData[sectionIndex].items) {
+        currentMenuData[sectionIndex].items = [];
+      }
+      
+      currentMenuData[sectionIndex].items.push({
+        plat: 'صنف جديد',
+        prix: 0,
+        description: ''
+      });
+      
+      renderMenuEditor();
+    }
+
+    // حذف صنف
+    function deleteItem(sectionIndex, itemIndex) {
+      if (confirm('هل أنت متأكد من حذف هذا الصنف؟')) {
+        currentMenuData[sectionIndex].items.splice(itemIndex, 1);
+        renderMenuEditor();
+      }
+    }
+
+    // حفظ جميع التغييرات
+    function saveAllChanges() {
+      database.ref('menu').set(currentMenuData)
+        .then(() => {
+          alert('تم حفظ جميع التغييرات بنجاح');
+          window.location.reload(); // لتحديث العرض بأي تغييرات
+        })
+        .catch(error => {
+          alert('حدث خطأ أثناء الحفظ: ' + error.message);
+        });
+    }
   </script>
 </body>
 </html>

@@ -3,134 +3,513 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>إدارة القائمة - دار حسنا</title>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <title>لوحة التحكم - دار حسنا</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      font-family: 'Amiri', serif;
-      background-color: #f5f5f5;
+    :root {
+      --primary: #E94560;
+      --primary-light: #ff7b8f;
+      --secondary: #0F3460;
+      --secondary-light: #3a5a8a;
+      --light: #F8F5F2;
+      --dark: #16213E;
+      --dark-light: #2a3a6b;
+      --gold: #FFD32D;
+      --text: #2D3748;
+      --text-light: #4a5568;
+      --white: #FFFFFF;
+      --gray: #EDF2F7;
+      --gray-dark: #e2e8f0;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.12);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
       margin: 0;
-      padding: 20px;
-      color: #333;
+      padding: 0;
+      box-sizing: border-box;
     }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background-color: #f9fafb;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
     .container {
-      max-width: 1000px;
+      max-width: 1200px;
       margin: 0 auto;
-      background: white;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 2rem;
     }
-    h1 {
-      color: #9c2e2e;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .menu-section {
-      margin-bottom: 30px;
-      border: 1px solid #ddd;
-      padding: 15px;
-      border-radius: 5px;
-      background-color: #fff9f9;
-    }
-    .section-title {
-      font-size: 1.5em;
-      color: #9c2e2e;
-      margin-bottom: 15px;
-      padding-bottom: 5px;
-      border-bottom: 2px dashed #e67e22;
-    }
-    .menu-item {
+
+    header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
-      padding: 12px;
-      background: #f9f9f9;
-      border-radius: 5px;
-      border-right: 3px solid #e67e22;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--gray);
     }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: var(--dark);
+      font-weight: 700;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    /* Main Button Styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+      box-shadow: 0 4px 12px rgba(233, 69, 96, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+      box-shadow: 0 6px 16px rgba(233, 69, 96, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--secondary);
+      color: var(--white);
+    }
+
+    .btn-secondary:hover {
+      background: var(--secondary-light);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--secondary);
+      border: 1px solid var(--secondary);
+    }
+
+    .btn-outline:hover {
+      background: rgba(15, 52, 96, 0.05);
+    }
+
+    /* Menu Sections */
+    .menu-editor {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .section-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .section-card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 1.5rem;
+      background: var(--dark);
+      color: var(--white);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .section-input {
+      background: transparent;
+      border: none;
+      color: var(--white);
+      font-size: 1.25rem;
+      font-weight: 600;
+      font-family: 'Tajawal', sans-serif;
+      width: 300px;
+      padding: 0.25rem 0;
+    }
+
+    .section-input:focus {
+      outline: none;
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .section-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .section-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--white);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .section-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
+    }
+
+    .section-btn.delete {
+      background: rgba(233, 69, 96, 0.2);
+    }
+
+    .section-btn.delete:hover {
+      background: rgba(233, 69, 96, 0.3);
+    }
+
+    /* Menu Items */
+    .items-list {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .item-card {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1rem 1.25rem;
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      border-left: 3px solid var(--gold);
+    }
+
+    .item-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .item-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
     .item-details {
-      flex-grow: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
+
+    .item-name {
+      font-weight: 600;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .item-input {
+      border: none;
+      background: transparent;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 1rem;
+      width: 100%;
+      padding: 0.25rem 0;
+    }
+
+    .item-input:focus {
+      outline: none;
+      border-bottom: 1px solid var(--gray-dark);
+    }
+
+    .item-desc {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .item-textarea {
+      border: none;
+      background: transparent;
+      resize: none;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 0.9rem;
+      width: 100%;
+      min-height: 60px;
+      padding: 0.25rem 0;
+    }
+
+    .item-textarea:focus {
+      outline: none;
+    }
+
     .item-controls {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 1rem;
     }
-    input[type="text"], input[type="number"], textarea {
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-family: 'Amiri', serif;
-      font-size: 1.1em;
-    }
-    input[type="text"] {
-      width: 250px;
-      font-weight: bold;
-    }
-    input[type="number"] {
-      width: 80px;
-      text-align: center;
-    }
-    textarea {
-      width: 100%;
-      margin-top: 8px;
-      min-height: 60px;
-    }
-    button {
-      background: #9c2e2e;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: 'Amiri', serif;
-      font-size: 1.1em;
-      transition: all 0.3s;
-    }
-    button:hover {
-      background: #7a2424;
-      transform: translateY(-2px);
-    }
-    .save-btn {
-      background: #2e7d32;
-      font-size: 1.2em;
-      padding: 12px 30px;
-      margin: 20px auto;
-      display: block;
-    }
-    .save-btn:hover {
-      background: #1b5e20;
-    }
-    .add-item-btn {
-      background: #1565c0;
-      margin-bottom: 15px;
-    }
-    .add-item-btn:hover {
-      background: #0d47a1;
-    }
-    .delete-btn {
-      background: #c62828;
-      padding: 8px 12px;
-    }
-    .delete-btn:hover {
-      background: #b71c1c;
-    }
+
     .price-container {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 0.5rem;
+      background: var(--light);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .price-input {
+      width: 70px;
+      text-align: center;
+      border: none;
+      background: transparent;
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 600;
+    }
+
+    .price-input:focus {
+      outline: none;
+    }
+
+    .currency {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--light);
+      color: var(--text-light);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .action-btn:hover {
+      background: var(--gray-dark);
+      color: var(--text);
+    }
+
+    .action-btn.delete {
+      background: rgba(233, 69, 96, 0.1);
+      color: var(--primary);
+    }
+
+    .action-btn.delete:hover {
+      background: rgba(233, 69, 96, 0.2);
+    }
+
+    /* Icon Selector */
+    .icon-selector {
+      position: relative;
+    }
+
+    .icon-selector-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--light);
+      color: var(--text);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .icon-selector-btn:hover {
+      background: var(--gray-dark);
+    }
+
+    .icon-options {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      padding: 0.5rem;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+      width: 200px;
+      z-index: 10;
+      display: none;
+    }
+
+    .icon-option {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--light);
+      color: var(--text);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .icon-option:hover {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    .icon-selector.active .icon-options {
+      display: grid;
+    }
+
+    /* Add Section Button */
+    .add-section {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    /* Save Button */
+    .save-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--gray);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .item-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .item-controls {
+        width: 100%;
+        justify-content: space-between;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>إدارة قائمة الطعام - دار حسنا</h1>
-    
-    <div id="menuEditor"></div>
-    
-    <button class="save-btn" onclick="saveAllChanges()">حفظ جميع التغييرات</button>
+    <header>
+      <div class="header-title">
+        <div class="logo">ح</div>
+        <h1>لوحة تحكم القائمة - دار حسنا</h1>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" onclick="saveAllChanges()">
+          <i class="fas fa-save"></i> حفظ التغييرات
+        </button>
+      </div>
+    </header>
+
+    <div class="menu-editor" id="menuEditor">
+      <!-- Sections will be added here dynamically -->
+      <div class="loading">جاري تحميل القائمة...</div>
+    </div>
+
+    <div class="add-section">
+      <button class="btn btn-primary" onclick="addNewSection()">
+        <i class="fas fa-plus"></i> إضافة قسم جديد
+      </button>
+    </div>
+
+    <div class="save-actions">
+      <button class="btn btn-primary" onclick="saveAllChanges()">
+        <i class="fas fa-save"></i> حفظ جميع التغييرات
+      </button>
+    </div>
   </div>
 
   <!-- Firebase SDK -->
@@ -138,7 +517,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
   <script>
-    // تكوين Firebase (نفس تكوين الصفحة الرئيسية)
+    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyDpSF4J0bsd6T0ImMpse0KQQRADaxiYUQw",
       authDomain: "darhassna-484c3.firebaseapp.com",
@@ -149,20 +528,32 @@
       appId: "1:141393162149:web:0717227eac221f5ddfc24c"
     };
 
-    // تهيئة Firebase
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // عناصر DOM
+    // DOM Elements
     const menuEditor = document.getElementById('menuEditor');
     let currentMenuData = [];
 
-    // عند تحميل الصفحة
+    // Available Icons
+    const sectionIcons = [
+      'utensils', 'drumstick-bite', 'fish', 'leaf', 'ice-cream', 
+      'coffee', 'pizza-slice', 'hamburger', 'wine-glass-alt', 'cheese'
+    ];
+
+    const itemIcons = [
+      'circle', 'star', 'fire', 'heart', 'leaf', 
+      'pepper-hot', 'seedling', 'fish', 'apple-alt', 'wine-bottle'
+    ];
+
+    // On Load
     document.addEventListener('DOMContentLoaded', function() {
       loadMenu();
+      initIconSelectors();
     });
 
-    // تحميل القائمة من Firebase
+    // Load Menu from Firebase
     function loadMenu() {
       database.ref('menu').once('value').then(snapshot => {
         currentMenuData = snapshot.val() || [];
@@ -170,62 +561,194 @@
       });
     }
 
-    // عرض واجهة تعديل القائمة
+    // Render Menu Editor
     function renderMenuEditor() {
       menuEditor.innerHTML = '';
       
+      if (currentMenuData.length === 0) {
+        menuEditor.innerHTML = `
+          <div style="text-align: center; padding: 3rem; color: var(--text-light);">
+            <i class="fas fa-utensils" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+            <p>لا توجد أقسام في القائمة حالياً</p>
+          </div>
+        `;
+        return;
+      }
+      
       currentMenuData.forEach((section, sectionIndex) => {
         const sectionDiv = document.createElement('div');
-        sectionDiv.className = 'menu-section';
+        sectionDiv.className = 'section-card';
         
-        // عنوان القسم
+        // Section Header
         const sectionHeader = document.createElement('div');
         sectionHeader.className = 'section-header';
         sectionHeader.innerHTML = `
-          <div class="section-title">${section.section}</div>
-          <button class="add-item-btn" onclick="addNewItem(${sectionIndex})">
-            + إضافة صنف جديد
-          </button>
+          <div class="section-title">
+            <div class="section-icon">
+              <i class="fas fa-${section.icon || 'utensils'}"></i>
+            </div>
+            <input type="text" class="section-input" value="${section.section}" 
+              onchange="updateSection(${sectionIndex}, 'section', this.value)"
+              placeholder="اسم القسم">
+          </div>
+          <div class="section-actions">
+            <button class="section-btn" onclick="addNewItem(${sectionIndex})">
+              <i class="fas fa-plus"></i>
+            </button>
+            <button class="section-btn delete" onclick="deleteSection(${sectionIndex})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
         `;
         sectionDiv.appendChild(sectionHeader);
         
-        // عناصر القسم
-        section.items.forEach((item, itemIndex) => {
-          const itemDiv = document.createElement('div');
-          itemDiv.className = 'menu-item';
-          itemDiv.innerHTML = `
-            <div class="item-details">
-              <input type="text" value="${item.plat}" 
-                onchange="updateItem(${sectionIndex}, ${itemIndex}, 'plat', this.value)"
-                placeholder="اسم الطبق">
-              <textarea onchange="updateItem(${sectionIndex}, ${itemIndex}, 'description', this.value)"
-                placeholder="وصف الطبق">${item.description || ''}</textarea>
-            </div>
-            <div class="item-controls">
-              <div class="price-container">
-                <input type="number" value="${item.prix}" 
-                  onchange="updateItem(${sectionIndex}, ${itemIndex}, 'prix', parseInt(this.value) || 0)"
-                  placeholder="السعر">
-                <span>درهم</span>
-              </div>
-              <button class="delete-btn" onclick="deleteItem(${sectionIndex}, ${itemIndex})">
-                حذف
-              </button>
+        // Items List
+        const itemsList = document.createElement('div');
+        itemsList.className = 'items-list';
+        
+        if (!section.items || section.items.length === 0) {
+          itemsList.innerHTML = `
+            <div style="text-align: center; padding: 1rem; color: var(--text-light);">
+              <p>لا توجد أصناف في هذا القسم</p>
             </div>
           `;
-          sectionDiv.appendChild(itemDiv);
-        });
+        } else {
+          section.items.forEach((item, itemIndex) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'item-card';
+            itemDiv.innerHTML = `
+              <div class="item-icon">
+                <i class="fas fa-${item.icon || 'circle'}"></i>
+              </div>
+              <div class="item-details">
+                <div class="item-name">
+                  <input type="text" class="item-input" value="${item.plat}" 
+                    onchange="updateItem(${sectionIndex}, ${itemIndex}, 'plat', this.value)"
+                    placeholder="اسم الصنف">
+                </div>
+                <div class="item-desc">
+                  <textarea class="item-textarea" 
+                    onchange="updateItem(${sectionIndex}, ${itemIndex}, 'description', this.value)"
+                    placeholder="وصف الصنف">${item.description || ''}</textarea>
+                </div>
+              </div>
+              <div class="item-controls">
+                <div class="price-container">
+                  <input type="number" class="price-input" value="${item.prix}" 
+                    onchange="updateItem(${sectionIndex}, ${itemIndex}, 'prix', parseInt(this.value) || 0)"
+                    placeholder="السعر">
+                  <span class="currency">درهم</span>
+                </div>
+                <div class="item-actions">
+                  <div class="icon-selector">
+                    <button class="icon-selector-btn" onclick="toggleIconSelector(this)">
+                      <i class="fas fa-${item.icon || 'circle'}"></i>
+                    </button>
+                    <div class="icon-options">
+                      ${itemIcons.map(icon => `
+                        <button class="icon-option" onclick="updateItemIcon(${sectionIndex}, ${itemIndex}, '${icon}')">
+                          <i class="fas fa-${icon}"></i>
+                        </button>
+                      `).join('')}
+                    </div>
+                  </div>
+                  <button class="action-btn delete" onclick="deleteItem(${sectionIndex}, ${itemIndex})">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            `;
+            itemsList.appendChild(itemDiv);
+          });
+        }
         
+        sectionDiv.appendChild(itemsList);
         menuEditor.appendChild(sectionDiv);
       });
     }
 
-    // تحديث عنصر في الذاكرة
+    // Initialize Icon Selectors
+    function initIconSelectors() {
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('.icon-selector-btn')) {
+          document.querySelectorAll('.icon-options').forEach(el => {
+            el.style.display = 'none';
+          });
+        }
+      });
+    }
+
+    // Toggle Icon Selector
+    function toggleIconSelector(btn) {
+      const selector = btn.closest('.icon-selector');
+      const options = selector.querySelector('.icon-options');
+      
+      document.querySelectorAll('.icon-options').forEach(el => {
+        if (el !== options) el.style.display = 'none';
+      });
+      
+      options.style.display = options.style.display === 'grid' ? 'none' : 'grid';
+      selector.classList.toggle('active');
+    }
+
+    // Update Section
+    function updateSection(sectionIndex, field, value) {
+      currentMenuData[sectionIndex][field] = value;
+    }
+
+    // Update Item
     function updateItem(sectionIndex, itemIndex, field, value) {
+      if (!currentMenuData[sectionIndex].items) {
+        currentMenuData[sectionIndex].items = [];
+      }
       currentMenuData[sectionIndex].items[itemIndex][field] = value;
     }
 
-    // إضافة صنف جديد
+    // Update Item Icon
+    function updateItemIcon(sectionIndex, itemIndex, icon) {
+      updateItem(sectionIndex, itemIndex, 'icon', icon);
+      
+      // Update the icon display immediately
+      const itemCards = document.querySelectorAll('.item-card');
+      const targetCard = itemCards[sectionIndex * currentMenuData[sectionIndex].items.length + itemIndex];
+      if (targetCard) {
+        targetCard.querySelector('.item-icon i').className = `fas fa-${icon}`;
+        targetCard.querySelector('.icon-selector-btn i').className = `fas fa-${icon}`;
+      }
+      
+      // Close the icon selector
+      const selector = document.querySelector('.icon-selector.active');
+      if (selector) {
+        selector.querySelector('.icon-options').style.display = 'none';
+        selector.classList.remove('active');
+      }
+    }
+
+    // Add New Section
+    function addNewSection() {
+      currentMenuData.push({
+        section: 'قسم جديد',
+        icon: 'utensils',
+        items: []
+      });
+      renderMenuEditor();
+      
+      // Scroll to the new section
+      setTimeout(() => {
+        const sections = document.querySelectorAll('.section-card');
+        sections[sections.length - 1].scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+
+    // Delete Section
+    function deleteSection(sectionIndex) {
+      if (confirm('هل أنت متأكد من حذف هذا القسم وجميع أصنافه؟')) {
+        currentMenuData.splice(sectionIndex, 1);
+        renderMenuEditor();
+      }
+    }
+
+    // Add New Item
     function addNewItem(sectionIndex) {
       if (!currentMenuData[sectionIndex].items) {
         currentMenuData[sectionIndex].items = [];
@@ -234,13 +757,21 @@
       currentMenuData[sectionIndex].items.push({
         plat: 'صنف جديد',
         prix: 0,
-        description: ''
+        description: '',
+        icon: 'circle'
       });
       
       renderMenuEditor();
+      
+      // Scroll to the new item
+      setTimeout(() => {
+        const sections = document.querySelectorAll('.section-card');
+        const items = sections[sectionIndex].querySelectorAll('.item-card');
+        items[items.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
     }
 
-    // حذف صنف
+    // Delete Item
     function deleteItem(sectionIndex, itemIndex) {
       if (confirm('هل أنت متأكد من حذف هذا الصنف؟')) {
         currentMenuData[sectionIndex].items.splice(itemIndex, 1);
@@ -248,17 +779,84 @@
       }
     }
 
-    // حفظ جميع التغييرات
+    // Save All Changes
     function saveAllChanges() {
       database.ref('menu').set(currentMenuData)
         .then(() => {
-          alert('تم حفظ جميع التغييرات بنجاح');
-          window.location.reload(); // لتحديث العرض بأي تغييرات
+          showNotification('تم حفظ جميع التغييرات بنجاح', 'success');
         })
         .catch(error => {
-          alert('حدث خطأ أثناء الحفظ: ' + error.message);
+          showNotification('حدث خطأ أثناء الحفظ: ' + error.message, 'error');
         });
     }
+
+    // Show Notification
+    function showNotification(message, type) {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+        <span>${message}</span>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.classList.add('show');
+      }, 10);
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+          notification.remove();
+        }, 300);
+      }, 3000);
+    }
+
+    // Add Notification Styles
+    const style = document.createElement('style');
+    style.textContent = `
+      .notification {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100px);
+        background: var(--white);
+        padding: 1rem 1.5rem;
+        border-radius: var(--radius-sm);
+        box-shadow: var(--shadow-hover);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        z-index: 1000;
+        transition: var(--transition);
+      }
+      
+      .notification.show {
+        transform: translateX(-50%) translateY(0);
+      }
+      
+      .notification.success {
+        border-right: 4px solid #2e7d32;
+      }
+      
+      .notification.error {
+        border-right: 4px solid #c62828;
+      }
+      
+      .notification i {
+        font-size: 1.2rem;
+      }
+      
+      .notification.success i {
+        color: #2e7d32;
+      }
+      
+      .notification.error i {
+        color: #c62828;
+      }
+    `;
+    document.head.appendChild(style);
   </script>
 </body>
 </html>

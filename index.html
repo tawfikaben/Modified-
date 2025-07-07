@@ -3,22 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="لوحة تحكم إدارة قائمة الطعام لدار حسنا">
   <title>تسجيل الدخول - دار حسنا</title>
+  
+  <!-- Preconnect to external resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  
+  <!-- Fonts and Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Modern CSS with CSS Variables and better organization -->
   <style>
     :root {
       --primary: #8B5A2B; /* Brown */
+      --primary-hover: #7a4d25;
       --secondary: #D4A76A; /* Light Brown */
       --accent: #A52A2A; /* Red Brown */
       --light: #F8F4E9; /* Cream */
       --dark: #3A3226; /* Dark Brown */
       --text: #4A4541;
+      --text-light: #7A7571;
       --white: #FFFFFF;
       --gray: #E5E0D8;
+      --error: #c62828;
+      --error-bg: rgba(198, 40, 40, 0.1);
+      --success: #2E7D32;
+      --success-bg: rgba(46, 125, 50, 0.1);
       --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 6px 30px rgba(0, 0, 0, 0.12);
       --transition: all 0.3s ease;
       --radius: 8px;
+      --radius-lg: 12px;
     }
 
     * {
@@ -27,54 +44,66 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: 'Tajawal', sans-serif;
       background-color: var(--light);
       color: var(--text);
       line-height: 1.6;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      padding: 1rem;
     }
 
+    /* Authentication Styles */
     .auth-container {
       width: 100%;
       max-width: 500px;
-      padding: 2rem;
+      padding: 1rem;
+      animation: fadeIn 0.5s ease;
     }
 
     .auth-card {
       background: var(--white);
-      border-radius: var(--radius);
+      border-radius: var(--radius-lg);
       box-shadow: var(--shadow);
-      padding: 2.5rem;
+      padding: 2rem;
       text-align: center;
+      transition: var(--transition);
+    }
+
+    .auth-card:hover {
+      box-shadow: var(--shadow-md);
     }
 
     .logo {
-      font-size: 2.5rem;
+      font-size: 2rem;
       color: var(--accent);
       margin-bottom: 1.5rem;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
     }
 
     .logo i {
-      font-size: 2.8rem;
+      font-size: 2.2rem;
     }
 
     .auth-title {
       color: var(--dark);
-      margin-bottom: 2rem;
-      font-size: 1.8rem;
-      font-weight: 500;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
     }
 
     .form-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
       text-align: right;
     }
 
@@ -83,16 +112,18 @@
       margin-bottom: 0.5rem;
       font-weight: 500;
       color: var(--dark);
+      font-size: 0.95rem;
     }
 
     .form-control {
       width: 100%;
-      padding: 1rem;
+      padding: 0.875rem 1rem;
       border: 1px solid var(--gray);
       border-radius: var(--radius);
       font-family: 'Tajawal', sans-serif;
       font-size: 1rem;
       transition: var(--transition);
+      background-color: var(--white);
     }
 
     .form-control:focus {
@@ -102,74 +133,386 @@
     }
 
     .btn {
-      padding: 1rem 2rem;
+      padding: 0.875rem 1.5rem;
       border-radius: var(--radius);
       border: none;
       font-family: 'Tajawal', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1rem;
+      font-weight: 500;
       cursor: pointer;
       transition: var(--transition);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.8rem;
+      gap: 0.5rem;
       width: 100%;
     }
 
     .btn-primary {
       background: var(--primary);
       color: var(--white);
-      margin-top: 1rem;
+      margin-top: 0.5rem;
     }
 
     .btn-primary:hover {
-      background: #7a4d25;
+      background: var(--primary-hover);
       transform: translateY(-2px);
     }
 
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
     .auth-footer {
-      margin-top: 2rem;
-      color: var(--text);
-      font-size: 0.9rem;
+      margin-top: 1.5rem;
+      color: var(--text-light);
+      font-size: 0.85rem;
+      line-height: 1.5;
     }
 
     .auth-footer a {
       color: var(--accent);
       text-decoration: none;
       font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .auth-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Message Styles */
+    .message {
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      margin-bottom: 1.25rem;
+      display: none;
+      text-align: right;
     }
 
     .error-message {
-      color: #c62828;
-      background: rgba(198, 40, 40, 0.1);
-      padding: 0.8rem;
-      border-radius: var(--radius);
-      margin-bottom: 1.5rem;
-      display: none;
+      color: var(--error);
+      background: var(--error-bg);
     }
 
-    /* Admin Panel Styles (hidden initially) */
-    .admin-panel {
-      display: none;
-      width: 100%;
-      height: 100vh;
-      overflow-y: auto;
+    .success-message {
+      color: var(--success);
+      background: var(--success-bg);
     }
 
     /* Loading spinner */
     .spinner {
       display: none;
-      width: 40px;
-      height: 40px;
-      margin: 1rem auto;
-      border: 4px solid rgba(0, 0, 0, 0.1);
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(0, 0, 0, 0.1);
       border-radius: 50%;
-      border-top-color: var(--primary);
+      border-top-color: var(--white);
       animation: spin 1s ease-in-out infinite;
+    }
+
+    /* Admin Panel Styles */
+    .admin-panel {
+      display: none;
+      width: 100%;
+      min-height: 100vh;
+      background-color: var(--light);
+      padding: 1rem;
+    }
+
+    .admin-header {
+      background: var(--white);
+      padding: 1.5rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .admin-header h1 {
+      color: var(--dark);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-header .subtitle {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .logout-btn {
+      position: absolute;
+      left: 1.5rem;
+      top: 1.5rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 500;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logout-btn:hover {
+      opacity: 0.9;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .modal-content {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 500px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      animation: modalFadeIn 0.3s ease;
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--gray);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      font-size: 1.25rem;
+      color: var(--dark);
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-light);
+      transition: var(--transition);
+    }
+
+    .close-modal:hover {
+      color: var(--text);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--gray);
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Menu Sections */
+    .menu-sections {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .section {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 1rem 1.5rem;
+      background: var(--light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--gray);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+    }
+
+    .section-controls {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .section-items {
+      padding: 1rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .menu-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem;
+      background: var(--light);
+      border-radius: var(--radius);
+    }
+
+    .item-icon {
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+
+    .item-details {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .item-name {
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      padding: 0;
+      font-size: 1rem;
+    }
+
+    .item-desc {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      border: none;
+      background: transparent;
+      padding: 0;
+      resize: none;
+    }
+
+    .item-price {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .item-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .select-icon {
+      padding: 0.5rem;
+      border: 1px solid var(--gray);
+      border-radius: var(--radius);
+      font-family: 'Tajawal', sans-serif;
+    }
+
+    /* Save Button */
+    .save-all {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .btn-save {
+      background: var(--success);
+      color: var(--white);
+      max-width: 300px;
+    }
+
+    .btn-save:hover {
+      background: #255928;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-light);
+    }
+
+    .empty-state i {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      opacity: 0.7;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes spin {
       to { transform: rotate(360deg); }
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .auth-card {
+        padding: 1.5rem;
+      }
+      
+      .admin-header h1 {
+        font-size: 1.25rem;
+        padding-right: 2.5rem;
+      }
+      
+      .logout-btn {
+        position: relative;
+        left: auto;
+        top: auto;
+        margin-top: 1rem;
+      }
+      
+      .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .menu-item {
+        grid-template-columns: 1fr;
+      }
+      
+      .item-controls {
+        flex-direction: row;
+        justify-content: flex-end;
+      }
     }
   </style>
 </head>
@@ -183,9 +526,9 @@
       </div>
       <h1 class="auth-title">لوحة التحكم الإدارية</h1>
       
-      <div class="error-message" id="errorMessage"></div>
+      <div class="message error-message" id="errorMessage"></div>
       
-      <form id="loginForm">
+      <form id="loginForm" novalidate>
         <div class="form-group">
           <label for="email" class="form-label">البريد الإلكتروني</label>
           <input type="email" id="email" class="form-control" required placeholder="ادخل بريدك الإلكتروني">
@@ -203,40 +546,41 @@
       </form>
       
       <div class="auth-footer">
-        <p>للحصول على صلاحيات الدخول، يرجى التواصل مع <a href="#">مسؤول النظام</a></p>
+        <p>للحصول على صلاحيات الدخول، يرجى التواصل مع <a href="mailto:admin@darhassna.com">مسؤول النظام</a></p>
       </div>
     </div>
   </div>
 
   <!-- Admin Panel (initially hidden) -->
   <div class="admin-panel" id="adminPanel">
-    <div class="container">
-      <header>
-        <h1><i class="fas fa-utensils"></i> لوحة تحكم دار حسنا</h1>
-        <p class="subtitle">إدارة قائمة الطعام والمشروبات</p>
-        <button id="logoutBtn" style="position: absolute; left: 2rem; top: 2rem; background: var(--accent); color: white; border: none; padding: 0.5rem 1rem; border-radius: var(--radius); cursor: pointer;">
-          <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+    <header class="admin-header">
+      <h1><i class="fas fa-utensils"></i> لوحة تحكم دار حسنا</h1>
+      <p class="subtitle">إدارة قائمة الطعام والمشروبات</p>
+      <button id="logoutBtn" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+      </button>
+    </header>
+
+    <div class="admin-panel-content">
+      <div class="panel-header">
+        <div class="panel-title">قائمة الطعام</div>
+        <button class="btn btn-primary" id="addSectionBtn">
+          <i class="fas fa-plus"></i> إضافة قسم جديد
         </button>
-      </header>
+      </div>
 
-      <div class="admin-panel-content">
-        <div class="panel-header">
-          <div class="panel-title">قائمة الطعام</div>
-          <button class="btn btn-primary" id="addSectionBtn">
-            <i class="fas fa-plus"></i> إضافة قسم جديد
-          </button>
+      <div class="menu-sections" id="menuSections">
+        <!-- Sections will be loaded here -->
+        <div class="empty-state">
+          <i class="fas fa-utensils"></i>
+          <p>لا توجد أقسام في القائمة حالياً</p>
         </div>
+      </div>
 
-        <div class="menu-sections" id="menuSections">
-          <!-- Sections will be loaded here -->
-          <div class="loading">جاري تحميل القائمة...</div>
-        </div>
-
-        <div class="save-all">
-          <button class="btn btn-save" id="saveAllBtn">
-            <i class="fas fa-save"></i> حفظ جميع التغييرات
-          </button>
-        </div>
+      <div class="save-all">
+        <button class="btn btn-save" id="saveAllBtn">
+          <i class="fas fa-save"></i> حفظ جميع التغييرات
+        </button>
       </div>
     </div>
   </div>
@@ -246,16 +590,16 @@
     <div class="modal-content">
       <div class="modal-header">
         <h3>إضافة قسم جديد</h3>
-        <button class="close-modal" id="closeSectionModal">&times;</button>
+        <button class="close-modal" id="closeSectionModal" aria-label="إغلاق">&times;</button>
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label class="form-label">اسم القسم</label>
-          <input type="text" class="form-control" id="sectionName" placeholder="مثال: المقبلات، المشروبات">
+          <label for="sectionName" class="form-label">اسم القسم</label>
+          <input type="text" class="form-control" id="sectionName" placeholder="مثال: المقبلات، المشروبات" required>
         </div>
         <div class="form-group">
-          <label class="form-label">اختر أيقونة</label>
-          <select class="form-control select-icon" id="sectionIcon">
+          <label for="sectionIcon" class="form-label">اختر أيقونة</label>
+          <select class="form-control select-icon" id="sectionIcon" required>
             <option value="utensils">أواني طعام</option>
             <option value="drumstick-bite">لحم</option>
             <option value="fish">سمك</option>
@@ -278,24 +622,24 @@
     <div class="modal-content">
       <div class="modal-header">
         <h3 id="itemModalTitle">إضافة صنف جديد</h3>
-        <button class="close-modal" id="closeItemModal">&times;</button>
+        <button class="close-modal" id="closeItemModal" aria-label="إغلاق">&times;</button>
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label class="form-label">اسم الصنف</label>
-          <input type="text" class="form-control" id="itemName" placeholder="مثال: طاجن لحم، كسكس">
+          <label for="itemName" class="form-label">اسم الصنف</label>
+          <input type="text" class="form-control" id="itemName" placeholder="مثال: طاجن لحم، كسكس" required>
         </div>
         <div class="form-group">
-          <label class="form-label">السعر (درهم)</label>
-          <input type="number" class="form-control" id="itemPrice" placeholder="50">
+          <label for="itemPrice" class="form-label">السعر (درهم)</label>
+          <input type="number" class="form-control" id="itemPrice" placeholder="50" min="0" required>
         </div>
         <div class="form-group">
-          <label class="form-label">الوصف</label>
+          <label for="itemDesc" class="form-label">الوصف</label>
           <textarea class="form-control" id="itemDesc" rows="3" placeholder="وصف مختصر للصنف"></textarea>
         </div>
         <div class="form-group">
-          <label class="form-label">اختر أيقونة</label>
-          <select class="form-control select-icon" id="itemIcon">
+          <label for="itemIcon" class="form-label">اختر أيقونة</label>
+          <select class="form-control select-icon" id="itemIcon" required>
             <option value="circle">دائرة</option>
             <option value="star">نجمة</option>
             <option value="fire">نار</option>
@@ -312,12 +656,13 @@
     </div>
   </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <!-- Firebase SDK with version 9 (modular) -->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
+    import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js';
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
 
-  <script>
     // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyDpSF4J0bsd6T0ImMpse0KQQRADaxiYUQw",
@@ -330,9 +675,9 @@
     };
 
     // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    const auth = firebase.auth();
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const auth = getAuth(app);
 
     // DOM Elements
     const authContainer = document.getElementById('authContainer');
@@ -347,7 +692,7 @@
     const logoutBtn = document.getElementById('logoutBtn');
 
     // Check auth state
-    auth.onAuthStateChanged(user => {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in
         authContainer.style.display = 'none';
@@ -361,66 +706,85 @@
     });
 
     // Login form submission
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const email = emailInput.value;
       const password = passwordInput.value;
       
-      // Show loading state
-      loginText.style.display = 'none';
-      loginSpinner.style.display = 'block';
-      errorMessage.style.display = 'none';
+      // Form validation
+      if (!email || !password) {
+        showError('الرجاء إدخال البريد الإلكتروني وكلمة المرور');
+        return;
+      }
       
-      auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          // Signed in
-          loginText.style.display = 'inline';
-          loginSpinner.style.display = 'none';
-        })
-        .catch((error) => {
-          // Handle Errors
-          loginText.style.display = 'inline';
-          loginSpinner.style.display = 'none';
-          
-          let errorMsg = '';
-          switch(error.code) {
-            case 'auth/invalid-email':
-              errorMsg = 'البريد الإلكتروني غير صحيح';
-              break;
-            case 'auth/user-disabled':
-              errorMsg = 'هذا الحساب معطل';
-              break;
-            case 'auth/user-not-found':
-              errorMsg = 'لا يوجد حساب مرتبط بهذا البريد';
-              break;
-            case 'auth/wrong-password':
-              errorMsg = 'كلمة المرور غير صحيحة';
-              break;
-            default:
-              errorMsg = 'حدث خطأ أثناء تسجيل الدخول';
-          }
-          
-          errorMessage.textContent = errorMsg;
-          errorMessage.style.display = 'block';
-        });
+      // Show loading state
+      toggleLoading(true);
+      
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        // Success handled by auth state change
+      } catch (error) {
+        handleLoginError(error);
+      } finally {
+        toggleLoading(false);
+      }
     });
+
+    // Toggle loading state
+    function toggleLoading(isLoading) {
+      if (isLoading) {
+        loginText.style.display = 'none';
+        loginSpinner.style.display = 'block';
+        loginBtn.disabled = true;
+        errorMessage.style.display = 'none';
+      } else {
+        loginText.style.display = 'inline';
+        loginSpinner.style.display = 'none';
+        loginBtn.disabled = false;
+      }
+    }
+
+    // Show error message
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.style.display = 'block';
+    }
+
+    // Handle login errors
+    function handleLoginError(error) {
+      let errorMsg = '';
+      switch(error.code) {
+        case 'auth/invalid-email':
+          errorMsg = 'البريد الإلكتروني غير صحيح';
+          break;
+        case 'auth/user-disabled':
+          errorMsg = 'هذا الحساب معطل';
+          break;
+        case 'auth/user-not-found':
+          errorMsg = 'لا يوجد حساب مرتبط بهذا البريد';
+          break;
+        case 'auth/wrong-password':
+          errorMsg = 'كلمة المرور غير صحيحة';
+          break;
+        default:
+          errorMsg = 'حدث خطأ أثناء تسجيل الدخول';
+      }
+      
+      showError(errorMsg);
+    }
 
     // Logout button
-    logoutBtn.addEventListener('click', () => {
-      auth.signOut().then(() => {
-        // Sign-out successful
-      }).catch((error) => {
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+      } catch (error) {
         console.error('Logout error:', error);
-      });
+      }
     });
 
-    // Initialize Admin Panel (only called when user is authenticated)
+    // Initialize Admin Panel
     function initializeAdminPanel() {
-      // All the previous admin panel JavaScript code goes here
-      // (the code that handles menu sections, items, modals, etc.)
-      // This is the same as in the previous example, just moved into this function
-      
       // DOM Elements
       const menuSections = document.getElementById('menuSections');
       const addSectionBtn = document.getElementById('addSectionBtn');
@@ -449,7 +813,9 @@
 
       // Load menu data
       function loadMenu() {
-        database.ref('menu').on('value', (snapshot) => {
+        const menuRef = ref(database, 'menu');
+        
+        onValue(menuRef, (snapshot) => {
           menuData = snapshot.val() || [];
           renderMenu();
         });
@@ -457,10 +823,10 @@
 
       // Render menu sections and items
       function renderMenu() {
-        if (menuData.length === 0) {
+        if (!menuData || menuData.length === 0) {
           menuSections.innerHTML = `
-            <div style="text-align: center; padding: 3rem; color: var(--text); opacity: 0.6;">
-              <i class="fas fa-utensils" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+            <div class="empty-state">
+              <i class="fas fa-utensils"></i>
               <p>لا توجد أقسام في القائمة حالياً</p>
             </div>
           `;
@@ -479,15 +845,15 @@
           sectionHeader.innerHTML = `
             <div class="section-title">
               <i class="fas fa-${section.icon || 'utensils'}"></i>
-              <input type="text" class="form-control" value="${section.section}" 
+              <input type="text" class="form-control" value="${section.section || ''}" 
                 onchange="updateSection(${sectionIndex}, 'section', this.value)"
-                style="border: none; background: transparent; font-size: 1.2rem; padding: 0;">
+                style="border: none; background: transparent; font-weight: 600; padding: 0;">
             </div>
             <div class="section-controls">
-              <button class="btn btn-secondary" onclick="openAddItemModal(${sectionIndex})">
+              <button class="btn btn-primary" onclick="openAddItemModal(${sectionIndex})">
                 <i class="fas fa-plus"></i> إضافة صنف
               </button>
-              <button class="btn btn-secondary" onclick="deleteSection(${sectionIndex})" style="background: #c62828; color: white;">
+              <button class="btn btn-save" onclick="deleteSection(${sectionIndex})" style="background: var(--error);">
                 <i class="fas fa-trash"></i> حذف
               </button>
             </div>
@@ -499,7 +865,7 @@
           
           if (!section.items || section.items.length === 0) {
             sectionItems.innerHTML = `
-              <div style="text-align: center; padding: 1.5rem; color: var(--text); opacity: 0.6;">
+              <div class="empty-state">
                 <i class="fas fa-info-circle"></i>
                 <p>لا توجد أصناف في هذا القسم</p>
               </div>
@@ -513,12 +879,12 @@
                   <i class="fas fa-${item.icon || 'circle'}"></i>
                 </div>
                 <div class="item-details">
-                  <input type="text" class="form-control item-name" value="${item.plat}" 
+                  <input type="text" class="item-name" value="${item.plat || ''}" 
                     onchange="updateItem(${sectionIndex}, ${itemIndex}, 'plat', this.value)">
-                  <textarea class="form-control item-desc" 
+                  <textarea class="item-desc" 
                     onchange="updateItem(${sectionIndex}, ${itemIndex}, 'description', this.value)">${item.description || ''}</textarea>
                   <div class="item-price">
-                    <input type="number" class="form-control" value="${item.prix}" 
+                    <input type="number" class="form-control" value="${item.prix || 0}" 
                       onchange="updateItem(${sectionIndex}, ${itemIndex}, 'prix', parseInt(this.value) || 0)"
                       style="width: 80px; display: inline-block;"> درهم
                   </div>
@@ -531,7 +897,7 @@
                     <option value="heart" ${item.icon === 'heart' ? 'selected' : ''}>قلب</option>
                     <option value="leaf" ${item.icon === 'leaf' ? 'selected' : ''}>ورقة</option>
                   </select>
-                  <button class="btn btn-secondary" onclick="deleteItem(${sectionIndex}, ${itemIndex})" style="background: #c62828; color: white;">
+                  <button class="btn btn-save" onclick="deleteItem(${sectionIndex}, ${itemIndex})" style="background: var(--error);">
                     <i class="fas fa-trash"></i> حذف
                   </button>
                 </div>
@@ -547,17 +913,17 @@
       }
 
       // Update section data
-      function updateSection(sectionIndex, field, value) {
+      window.updateSection = function(sectionIndex, field, value) {
         menuData[sectionIndex][field] = value;
       }
 
       // Update item data
-      function updateItem(sectionIndex, itemIndex, field, value) {
+      window.updateItem = function(sectionIndex, itemIndex, field, value) {
         menuData[sectionIndex].items[itemIndex][field] = value;
       }
 
       // Delete section
-      function deleteSection(sectionIndex) {
+      window.deleteSection = function(sectionIndex) {
         if (confirm('هل أنت متأكد من حذف هذا القسم وجميع أصنافه؟')) {
           menuData.splice(sectionIndex, 1);
           renderMenu();
@@ -565,7 +931,7 @@
       }
 
       // Delete item
-      function deleteItem(sectionIndex, itemIndex) {
+      window.deleteItem = function(sectionIndex, itemIndex) {
         if (confirm('هل أنت متأكد من حذف هذا الصنف؟')) {
           menuData[sectionIndex].items.splice(itemIndex, 1);
           renderMenu();
@@ -580,9 +946,10 @@
       });
 
       // Open add item modal
-      function openAddItemModal(sectionIndex) {
+      window.openAddItemModal = function(sectionIndex) {
         currentSectionIndex = sectionIndex;
-        itemModalTitle.textContent = `إضافة صنف جديد إلى ${menuData[sectionIndex].section}`;
+        const sectionTitle = menuData[sectionIndex].section || 'القسم';
+        itemModalTitle.textContent = `إضافة صنف جديد إلى ${sectionTitle}`;
         itemName.value = '';
         itemPrice.value = '';
         itemDesc.value = '';
@@ -644,15 +1011,29 @@
       });
 
       // Save all changes
-      saveAllBtn.addEventListener('click', () => {
-        database.ref('menu').set(menuData)
-          .then(() => {
-            alert('تم حفظ جميع التغييرات بنجاح');
-          })
-          .catch(error => {
-            alert('حدث خطأ أثناء الحفظ: ' + error.message);
-          });
+      saveAllBtn.addEventListener('click', async () => {
+        try {
+          await set(ref(database, 'menu'), menuData);
+          showSuccessMessage('تم حفظ جميع التغييرات بنجاح');
+        } catch (error) {
+          alert('حدث خطأ أثناء الحفظ: ' + error.message);
+        }
       });
+
+      // Show success message
+      function showSuccessMessage(message) {
+        const successMsg = document.createElement('div');
+        successMsg.className = 'message success-message';
+        successMsg.textContent = message;
+        successMsg.style.display = 'block';
+        
+        adminPanel.insertBefore(successMsg, adminPanel.firstChild);
+        
+        setTimeout(() => {
+          successMsg.style.display = 'none';
+          successMsg.remove();
+        }, 3000);
+      }
 
       // Close modals when clicking outside
       window.addEventListener('click', (e) => {

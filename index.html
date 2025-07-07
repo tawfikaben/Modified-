@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة التحكم - دار حسنا</title>
+  <title>تسجيل الدخول - دار حسنا</title>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -32,192 +32,62 @@
       background-color: var(--light);
       color: var(--text);
       line-height: 1.6;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
+    .auth-container {
+      width: 100%;
+      max-width: 500px;
       padding: 2rem;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 3rem;
-      position: relative;
-    }
-
-    header::after {
-      content: "";
-      position: absolute;
-      bottom: -1rem;
-      right: 50%;
-      transform: translateX(50%);
-      width: 100px;
-      height: 2px;
-      background: var(--secondary);
-    }
-
-    h1 {
-      color: var(--accent);
-      font-size: 2.5rem;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-    }
-
-    .subtitle {
-      color: var(--dark);
-      opacity: 0.8;
-    }
-
-    .admin-panel {
+    .auth-card {
       background: var(--white);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      overflow: hidden;
+      padding: 2.5rem;
+      text-align: center;
     }
 
-    .panel-header {
-      background: var(--primary);
-      color: var(--white);
-      padding: 1.5rem;
+    .logo {
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .panel-title {
-      font-size: 1.5rem;
-      font-weight: 500;
-    }
-
-    .btn {
-      padding: 0.7rem 1.5rem;
-      border-radius: var(--radius);
-      border: none;
-      font-family: 'Tajawal', sans-serif;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: var(--white);
-    }
-
-    .btn-primary:hover {
-      background: #8c1f1f;
-      transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-      background: var(--secondary);
-      color: var(--dark);
-    }
-
-    .btn-secondary:hover {
-      background: #c99a5a;
-    }
-
-    .menu-sections {
-      padding: 1.5rem;
-    }
-
-    .section {
-      margin-bottom: 2.5rem;
-      border: 1px solid var(--gray);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-
-    .section-header {
-      background: var(--light);
-      padding: 1.2rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--gray);
-    }
-
-    .section-title {
-      display: flex;
+      justify-content: center;
       align-items: center;
       gap: 1rem;
-      font-size: 1.2rem;
-      font-weight: 500;
+    }
+
+    .logo i {
+      font-size: 2.8rem;
+    }
+
+    .auth-title {
       color: var(--dark);
-    }
-
-    .section-controls {
-      display: flex;
-      gap: 0.8rem;
-    }
-
-    .section-items {
-      padding: 1rem;
-    }
-
-    .menu-item {
-      display: flex;
-      gap: 1.5rem;
-      padding: 1.2rem;
-      border-bottom: 1px dashed var(--gray);
-      transition: var(--transition);
-    }
-
-    .menu-item:last-child {
-      border-bottom: none;
-    }
-
-    .menu-item:hover {
-      background: rgba(212, 167, 106, 0.1);
-    }
-
-    .item-icon {
-      color: var(--secondary);
-      font-size: 1.2rem;
-      margin-top: 0.3rem;
-    }
-
-    .item-details {
-      flex: 1;
-    }
-
-    .item-name {
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
       font-weight: 500;
-      color: var(--dark);
-      margin-bottom: 0.5rem;
-    }
-
-    .item-desc {
-      font-size: 0.9rem;
-      color: var(--text);
-      opacity: 0.8;
-      margin-bottom: 0.8rem;
-    }
-
-    .item-price {
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .item-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      min-width: 120px;
     }
 
     .form-group {
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      text-align: right;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--dark);
     }
 
     .form-control {
       width: 100%;
-      padding: 0.8rem 1rem;
+      padding: 1rem;
       border: 1px solid var(--gray);
       border-radius: var(--radius);
       font-family: 'Tajawal', sans-serif;
@@ -231,139 +101,142 @@
       box-shadow: 0 0 0 3px rgba(212, 167, 106, 0.2);
     }
 
-    .form-label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: var(--dark);
-    }
-
-    .select-icon {
-      padding: 0.5rem;
+    .btn {
+      padding: 1rem 2rem;
       border-radius: var(--radius);
-      border: 1px solid var(--gray);
-      font-family: 'Tajawal';
-      background: var(--white);
-    }
-
-    .save-all {
-      text-align: center;
-      margin-top: 2rem;
-    }
-
-    .btn-save {
-      padding: 1rem 2.5rem;
+      border: none;
+      font-family: 'Tajawal', sans-serif;
       font-size: 1.1rem;
-      background: var(--primary);
-    }
-
-    .btn-save:hover {
-      background: #7a4d25;
-    }
-
-    /* Modal Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(58, 50, 38, 0.8);
-      z-index: 1000;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 0.8rem;
+      width: 100%;
     }
 
-    .modal-content {
-      background: var(--white);
-      width: 90%;
-      max-width: 500px;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      animation: modalFadeIn 0.3s ease;
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+      margin-top: 1rem;
     }
 
-    @keyframes modalFadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .btn-primary:hover {
+      background: #7a4d25;
+      transform: translateY(-2px);
     }
 
-    .modal-header {
-      padding: 1.5rem;
-      border-bottom: 1px solid var(--gray);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-body {
-      padding: 1.5rem;
-    }
-
-    .modal-footer {
-      padding: 1rem 1.5rem;
-      border-top: 1px solid var(--gray);
-      text-align: left;
-    }
-
-    .close-modal {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
+    .auth-footer {
+      margin-top: 2rem;
       color: var(--text);
-      cursor: pointer;
-      opacity: 0.7;
-      transition: var(--transition);
+      font-size: 0.9rem;
     }
 
-    .close-modal:hover {
-      opacity: 1;
+    .auth-footer a {
       color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .container {
-        padding: 1rem;
-      }
-      
-      .menu-item {
-        flex-direction: column;
-        gap: 1rem;
-      }
-      
-      .item-controls {
-        flex-direction: row;
-        justify-content: flex-end;
-      }
+    .error-message {
+      color: #c62828;
+      background: rgba(198, 40, 40, 0.1);
+      padding: 0.8rem;
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+
+    /* Admin Panel Styles (hidden initially) */
+    .admin-panel {
+      display: none;
+      width: 100%;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      display: none;
+      width: 40px;
+      height: 40px;
+      margin: 1rem auto;
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1><i class="fas fa-utensils"></i> لوحة تحكم دار حسنا</h1>
-      <p class="subtitle">إدارة قائمة الطعام والمشروبات</p>
-    </header>
-
-    <div class="admin-panel">
-      <div class="panel-header">
-        <div class="panel-title">قائمة الطعام</div>
-        <button class="btn btn-primary" id="addSectionBtn">
-          <i class="fas fa-plus"></i> إضافة قسم جديد
-        </button>
+  <!-- Authentication Screen -->
+  <div class="auth-container" id="authContainer">
+    <div class="auth-card">
+      <div class="logo">
+        <i class="fas fa-utensils"></i>
+        <span>دار حسنا</span>
       </div>
-
-      <div class="menu-sections" id="menuSections">
-        <!-- Sections will be loaded here -->
-        <div class="loading">جاري تحميل القائمة...</div>
-      </div>
-
-      <div class="save-all">
-        <button class="btn btn-save" id="saveAllBtn">
-          <i class="fas fa-save"></i> حفظ جميع التغييرات
+      <h1 class="auth-title">لوحة التحكم الإدارية</h1>
+      
+      <div class="error-message" id="errorMessage"></div>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email" class="form-label">البريد الإلكتروني</label>
+          <input type="email" id="email" class="form-control" required placeholder="ادخل بريدك الإلكتروني">
+        </div>
+        
+        <div class="form-group">
+          <label for="password" class="form-label">كلمة المرور</label>
+          <input type="password" id="password" class="form-control" required placeholder="ادخل كلمة المرور">
+        </div>
+        
+        <button type="submit" class="btn btn-primary" id="loginBtn">
+          <span id="loginText">تسجيل الدخول</span>
+          <div class="spinner" id="loginSpinner"></div>
         </button>
+      </form>
+      
+      <div class="auth-footer">
+        <p>للحصول على صلاحيات الدخول، يرجى التواصل مع <a href="#">مسؤول النظام</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Panel (initially hidden) -->
+  <div class="admin-panel" id="adminPanel">
+    <div class="container">
+      <header>
+        <h1><i class="fas fa-utensils"></i> لوحة تحكم دار حسنا</h1>
+        <p class="subtitle">إدارة قائمة الطعام والمشروبات</p>
+        <button id="logoutBtn" style="position: absolute; left: 2rem; top: 2rem; background: var(--accent); color: white; border: none; padding: 0.5rem 1rem; border-radius: var(--radius); cursor: pointer;">
+          <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+        </button>
+      </header>
+
+      <div class="admin-panel-content">
+        <div class="panel-header">
+          <div class="panel-title">قائمة الطعام</div>
+          <button class="btn btn-primary" id="addSectionBtn">
+            <i class="fas fa-plus"></i> إضافة قسم جديد
+          </button>
+        </div>
+
+        <div class="menu-sections" id="menuSections">
+          <!-- Sections will be loaded here -->
+          <div class="loading">جاري تحميل القائمة...</div>
+        </div>
+
+        <div class="save-all">
+          <button class="btn btn-save" id="saveAllBtn">
+            <i class="fas fa-save"></i> حفظ جميع التغييرات
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -442,6 +315,7 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
   <script>
     // Firebase Configuration
@@ -458,254 +332,341 @@
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
+    const auth = firebase.auth();
 
     // DOM Elements
-    const menuSections = document.getElementById('menuSections');
-    const addSectionBtn = document.getElementById('addSectionBtn');
-    const saveAllBtn = document.getElementById('saveAllBtn');
-    
-    // Modal Elements
-    const sectionModal = document.getElementById('sectionModal');
-    const itemModal = document.getElementById('itemModal');
-    const closeSectionModal = document.getElementById('closeSectionModal');
-    const closeItemModal = document.getElementById('closeItemModal');
-    const confirmAddSection = document.getElementById('confirmAddSection');
-    const confirmAddItem = document.getElementById('confirmAddItem');
-    
-    // Form Elements
-    const sectionName = document.getElementById('sectionName');
-    const sectionIcon = document.getElementById('sectionIcon');
-    const itemName = document.getElementById('itemName');
-    const itemPrice = document.getElementById('itemPrice');
-    const itemDesc = document.getElementById('itemDesc');
-    const itemIcon = document.getElementById('itemIcon');
-    const itemModalTitle = document.getElementById('itemModalTitle');
+    const authContainer = document.getElementById('authContainer');
+    const adminPanel = document.getElementById('adminPanel');
+    const loginForm = document.getElementById('loginForm');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginText = document.getElementById('loginText');
+    const loginSpinner = document.getElementById('loginSpinner');
+    const errorMessage = document.getElementById('errorMessage');
+    const logoutBtn = document.getElementById('logoutBtn');
 
-    // Menu Data
-    let menuData = [];
-    let currentSectionIndex = -1;
-
-    // Load menu data
-    function loadMenu() {
-      database.ref('menu').on('value', (snapshot) => {
-        menuData = snapshot.val() || [];
-        renderMenu();
-      });
-    }
-
-    // Render menu sections and items
-    function renderMenu() {
-      if (menuData.length === 0) {
-        menuSections.innerHTML = `
-          <div style="text-align: center; padding: 3rem; color: var(--text); opacity: 0.6;">
-            <i class="fas fa-utensils" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-            <p>لا توجد أقسام في القائمة حالياً</p>
-          </div>
-        `;
-        return;
+    // Check auth state
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        // User is signed in
+        authContainer.style.display = 'none';
+        adminPanel.style.display = 'block';
+        initializeAdminPanel();
+      } else {
+        // User is signed out
+        authContainer.style.display = 'flex';
+        adminPanel.style.display = 'none';
       }
+    });
 
-      menuSections.innerHTML = '';
+    // Login form submission
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
       
-      menuData.forEach((section, sectionIndex) => {
-        const sectionDiv = document.createElement('div');
-        sectionDiv.className = 'section';
-        
-        // Section Header
-        const sectionHeader = document.createElement('div');
-        sectionHeader.className = 'section-header';
-        sectionHeader.innerHTML = `
-          <div class="section-title">
-            <i class="fas fa-${section.icon || 'utensils'}"></i>
-            <input type="text" class="form-control" value="${section.section}" 
-              onchange="updateSection(${sectionIndex}, 'section', this.value)"
-              style="border: none; background: transparent; font-size: 1.2rem; padding: 0;">
-          </div>
-          <div class="section-controls">
-            <button class="btn btn-secondary" onclick="openAddItemModal(${sectionIndex})">
-              <i class="fas fa-plus"></i> إضافة صنف
-            </button>
-            <button class="btn btn-secondary" onclick="deleteSection(${sectionIndex})" style="background: #c62828; color: white;">
-              <i class="fas fa-trash"></i> حذف
-            </button>
-          </div>
-        `;
-        
-        // Section Items
-        const sectionItems = document.createElement('div');
-        sectionItems.className = 'section-items';
-        
-        if (!section.items || section.items.length === 0) {
-          sectionItems.innerHTML = `
-            <div style="text-align: center; padding: 1.5rem; color: var(--text); opacity: 0.6;">
-              <i class="fas fa-info-circle"></i>
-              <p>لا توجد أصناف في هذا القسم</p>
-            </div>
-          `;
-        } else {
-          section.items.forEach((item, itemIndex) => {
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'menu-item';
-            itemDiv.innerHTML = `
-              <div class="item-icon">
-                <i class="fas fa-${item.icon || 'circle'}"></i>
-              </div>
-              <div class="item-details">
-                <input type="text" class="form-control item-name" value="${item.plat}" 
-                  onchange="updateItem(${sectionIndex}, ${itemIndex}, 'plat', this.value)">
-                <textarea class="form-control item-desc" 
-                  onchange="updateItem(${sectionIndex}, ${itemIndex}, 'description', this.value)">${item.description || ''}</textarea>
-                <div class="item-price">
-                  <input type="number" class="form-control" value="${item.prix}" 
-                    onchange="updateItem(${sectionIndex}, ${itemIndex}, 'prix', parseInt(this.value) || 0)"
-                    style="width: 80px; display: inline-block;"> درهم
-                </div>
-              </div>
-              <div class="item-controls">
-                <select class="select-icon" onchange="updateItem(${sectionIndex}, ${itemIndex}, 'icon', this.value)">
-                  <option value="circle" ${!item.icon || item.icon === 'circle' ? 'selected' : ''}>دائرة</option>
-                  <option value="star" ${item.icon === 'star' ? 'selected' : ''}>نجمة</option>
-                  <option value="fire" ${item.icon === 'fire' ? 'selected' : ''}>نار</option>
-                  <option value="heart" ${item.icon === 'heart' ? 'selected' : ''}>قلب</option>
-                  <option value="leaf" ${item.icon === 'leaf' ? 'selected' : ''}>ورقة</option>
-                </select>
-                <button class="btn btn-secondary" onclick="deleteItem(${sectionIndex}, ${itemIndex})" style="background: #c62828; color: white;">
-                  <i class="fas fa-trash"></i> حذف
-                </button>
-              </div>
-            `;
-            sectionItems.appendChild(itemDiv);
-          });
-        }
-        
-        sectionDiv.appendChild(sectionHeader);
-        sectionDiv.appendChild(sectionItems);
-        menuSections.appendChild(sectionDiv);
-      });
-    }
-
-    // Update section data
-    function updateSection(sectionIndex, field, value) {
-      menuData[sectionIndex][field] = value;
-    }
-
-    // Update item data
-    function updateItem(sectionIndex, itemIndex, field, value) {
-      menuData[sectionIndex].items[itemIndex][field] = value;
-    }
-
-    // Delete section
-    function deleteSection(sectionIndex) {
-      if (confirm('هل أنت متأكد من حذف هذا القسم وجميع أصنافه؟')) {
-        menuData.splice(sectionIndex, 1);
-        renderMenu();
-      }
-    }
-
-    // Delete item
-    function deleteItem(sectionIndex, itemIndex) {
-      if (confirm('هل أنت متأكد من حذف هذا الصنف؟')) {
-        menuData[sectionIndex].items.splice(itemIndex, 1);
-        renderMenu();
-      }
-    }
-
-    // Open add section modal
-    addSectionBtn.addEventListener('click', () => {
-      sectionName.value = '';
-      sectionIcon.value = 'utensils';
-      sectionModal.style.display = 'flex';
-    });
-
-    // Open add item modal
-    function openAddItemModal(sectionIndex) {
-      currentSectionIndex = sectionIndex;
-      itemModalTitle.textContent = `إضافة صنف جديد إلى ${menuData[sectionIndex].section}`;
-      itemName.value = '';
-      itemPrice.value = '';
-      itemDesc.value = '';
-      itemIcon.value = 'circle';
-      itemModal.style.display = 'flex';
-    }
-
-    // Close modals
-    closeSectionModal.addEventListener('click', () => {
-      sectionModal.style.display = 'none';
-    });
-
-    closeItemModal.addEventListener('click', () => {
-      itemModal.style.display = 'none';
-    });
-
-    // Confirm add section
-    confirmAddSection.addEventListener('click', () => {
-      if (!sectionName.value.trim()) {
-        alert('الرجاء إدخال اسم القسم');
-        return;
-      }
-
-      menuData.push({
-        section: sectionName.value.trim(),
-        icon: sectionIcon.value,
-        items: []
-      });
-
-      renderMenu();
-      sectionModal.style.display = 'none';
-    });
-
-    // Confirm add item
-    confirmAddItem.addEventListener('click', () => {
-      if (!itemName.value.trim()) {
-        alert('الرجاء إدخال اسم الصنف');
-        return;
-      }
-
-      if (!itemPrice.value || isNaN(itemPrice.value)) {
-        alert('الرجاء إدخال سعر صحيح');
-        return;
-      }
-
-      if (!menuData[currentSectionIndex].items) {
-        menuData[currentSectionIndex].items = [];
-      }
-
-      menuData[currentSectionIndex].items.push({
-        plat: itemName.value.trim(),
-        prix: parseInt(itemPrice.value) || 0,
-        description: itemDesc.value.trim(),
-        icon: itemIcon.value
-      });
-
-      renderMenu();
-      itemModal.style.display = 'none';
-    });
-
-    // Save all changes
-    saveAllBtn.addEventListener('click', () => {
-      database.ref('menu').set(menuData)
-        .then(() => {
-          alert('تم حفظ جميع التغييرات بنجاح');
+      const email = emailInput.value;
+      const password = passwordInput.value;
+      
+      // Show loading state
+      loginText.style.display = 'none';
+      loginSpinner.style.display = 'block';
+      errorMessage.style.display = 'none';
+      
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          // Signed in
+          loginText.style.display = 'inline';
+          loginSpinner.style.display = 'none';
         })
-        .catch(error => {
-          alert('حدث خطأ أثناء الحفظ: ' + error.message);
+        .catch((error) => {
+          // Handle Errors
+          loginText.style.display = 'inline';
+          loginSpinner.style.display = 'none';
+          
+          let errorMsg = '';
+          switch(error.code) {
+            case 'auth/invalid-email':
+              errorMsg = 'البريد الإلكتروني غير صحيح';
+              break;
+            case 'auth/user-disabled':
+              errorMsg = 'هذا الحساب معطل';
+              break;
+            case 'auth/user-not-found':
+              errorMsg = 'لا يوجد حساب مرتبط بهذا البريد';
+              break;
+            case 'auth/wrong-password':
+              errorMsg = 'كلمة المرور غير صحيحة';
+              break;
+            default:
+              errorMsg = 'حدث خطأ أثناء تسجيل الدخول';
+          }
+          
+          errorMessage.textContent = errorMsg;
+          errorMessage.style.display = 'block';
         });
     });
 
-    // Close modals when clicking outside
-    window.addEventListener('click', (e) => {
-      if (e.target === sectionModal) {
-        sectionModal.style.display = 'none';
-      }
-      if (e.target === itemModal) {
-        itemModal.style.display = 'none';
-      }
+    // Logout button
+    logoutBtn.addEventListener('click', () => {
+      auth.signOut().then(() => {
+        // Sign-out successful
+      }).catch((error) => {
+        console.error('Logout error:', error);
+      });
     });
 
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Admin Panel (only called when user is authenticated)
+    function initializeAdminPanel() {
+      // All the previous admin panel JavaScript code goes here
+      // (the code that handles menu sections, items, modals, etc.)
+      // This is the same as in the previous example, just moved into this function
+      
+      // DOM Elements
+      const menuSections = document.getElementById('menuSections');
+      const addSectionBtn = document.getElementById('addSectionBtn');
+      const saveAllBtn = document.getElementById('saveAllBtn');
+      
+      // Modal Elements
+      const sectionModal = document.getElementById('sectionModal');
+      const itemModal = document.getElementById('itemModal');
+      const closeSectionModal = document.getElementById('closeSectionModal');
+      const closeItemModal = document.getElementById('closeItemModal');
+      const confirmAddSection = document.getElementById('confirmAddSection');
+      const confirmAddItem = document.getElementById('confirmAddItem');
+      
+      // Form Elements
+      const sectionName = document.getElementById('sectionName');
+      const sectionIcon = document.getElementById('sectionIcon');
+      const itemName = document.getElementById('itemName');
+      const itemPrice = document.getElementById('itemPrice');
+      const itemDesc = document.getElementById('itemDesc');
+      const itemIcon = document.getElementById('itemIcon');
+      const itemModalTitle = document.getElementById('itemModalTitle');
+
+      // Menu Data
+      let menuData = [];
+      let currentSectionIndex = -1;
+
+      // Load menu data
+      function loadMenu() {
+        database.ref('menu').on('value', (snapshot) => {
+          menuData = snapshot.val() || [];
+          renderMenu();
+        });
+      }
+
+      // Render menu sections and items
+      function renderMenu() {
+        if (menuData.length === 0) {
+          menuSections.innerHTML = `
+            <div style="text-align: center; padding: 3rem; color: var(--text); opacity: 0.6;">
+              <i class="fas fa-utensils" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+              <p>لا توجد أقسام في القائمة حالياً</p>
+            </div>
+          `;
+          return;
+        }
+
+        menuSections.innerHTML = '';
+        
+        menuData.forEach((section, sectionIndex) => {
+          const sectionDiv = document.createElement('div');
+          sectionDiv.className = 'section';
+          
+          // Section Header
+          const sectionHeader = document.createElement('div');
+          sectionHeader.className = 'section-header';
+          sectionHeader.innerHTML = `
+            <div class="section-title">
+              <i class="fas fa-${section.icon || 'utensils'}"></i>
+              <input type="text" class="form-control" value="${section.section}" 
+                onchange="updateSection(${sectionIndex}, 'section', this.value)"
+                style="border: none; background: transparent; font-size: 1.2rem; padding: 0;">
+            </div>
+            <div class="section-controls">
+              <button class="btn btn-secondary" onclick="openAddItemModal(${sectionIndex})">
+                <i class="fas fa-plus"></i> إضافة صنف
+              </button>
+              <button class="btn btn-secondary" onclick="deleteSection(${sectionIndex})" style="background: #c62828; color: white;">
+                <i class="fas fa-trash"></i> حذف
+              </button>
+            </div>
+          `;
+          
+          // Section Items
+          const sectionItems = document.createElement('div');
+          sectionItems.className = 'section-items';
+          
+          if (!section.items || section.items.length === 0) {
+            sectionItems.innerHTML = `
+              <div style="text-align: center; padding: 1.5rem; color: var(--text); opacity: 0.6;">
+                <i class="fas fa-info-circle"></i>
+                <p>لا توجد أصناف في هذا القسم</p>
+              </div>
+            `;
+          } else {
+            section.items.forEach((item, itemIndex) => {
+              const itemDiv = document.createElement('div');
+              itemDiv.className = 'menu-item';
+              itemDiv.innerHTML = `
+                <div class="item-icon">
+                  <i class="fas fa-${item.icon || 'circle'}"></i>
+                </div>
+                <div class="item-details">
+                  <input type="text" class="form-control item-name" value="${item.plat}" 
+                    onchange="updateItem(${sectionIndex}, ${itemIndex}, 'plat', this.value)">
+                  <textarea class="form-control item-desc" 
+                    onchange="updateItem(${sectionIndex}, ${itemIndex}, 'description', this.value)">${item.description || ''}</textarea>
+                  <div class="item-price">
+                    <input type="number" class="form-control" value="${item.prix}" 
+                      onchange="updateItem(${sectionIndex}, ${itemIndex}, 'prix', parseInt(this.value) || 0)"
+                      style="width: 80px; display: inline-block;"> درهم
+                  </div>
+                </div>
+                <div class="item-controls">
+                  <select class="select-icon" onchange="updateItem(${sectionIndex}, ${itemIndex}, 'icon', this.value)">
+                    <option value="circle" ${!item.icon || item.icon === 'circle' ? 'selected' : ''}>دائرة</option>
+                    <option value="star" ${item.icon === 'star' ? 'selected' : ''}>نجمة</option>
+                    <option value="fire" ${item.icon === 'fire' ? 'selected' : ''}>نار</option>
+                    <option value="heart" ${item.icon === 'heart' ? 'selected' : ''}>قلب</option>
+                    <option value="leaf" ${item.icon === 'leaf' ? 'selected' : ''}>ورقة</option>
+                  </select>
+                  <button class="btn btn-secondary" onclick="deleteItem(${sectionIndex}, ${itemIndex})" style="background: #c62828; color: white;">
+                    <i class="fas fa-trash"></i> حذف
+                  </button>
+                </div>
+              `;
+              sectionItems.appendChild(itemDiv);
+            });
+          }
+          
+          sectionDiv.appendChild(sectionHeader);
+          sectionDiv.appendChild(sectionItems);
+          menuSections.appendChild(sectionDiv);
+        });
+      }
+
+      // Update section data
+      function updateSection(sectionIndex, field, value) {
+        menuData[sectionIndex][field] = value;
+      }
+
+      // Update item data
+      function updateItem(sectionIndex, itemIndex, field, value) {
+        menuData[sectionIndex].items[itemIndex][field] = value;
+      }
+
+      // Delete section
+      function deleteSection(sectionIndex) {
+        if (confirm('هل أنت متأكد من حذف هذا القسم وجميع أصنافه؟')) {
+          menuData.splice(sectionIndex, 1);
+          renderMenu();
+        }
+      }
+
+      // Delete item
+      function deleteItem(sectionIndex, itemIndex) {
+        if (confirm('هل أنت متأكد من حذف هذا الصنف؟')) {
+          menuData[sectionIndex].items.splice(itemIndex, 1);
+          renderMenu();
+        }
+      }
+
+      // Open add section modal
+      addSectionBtn.addEventListener('click', () => {
+        sectionName.value = '';
+        sectionIcon.value = 'utensils';
+        sectionModal.style.display = 'flex';
+      });
+
+      // Open add item modal
+      function openAddItemModal(sectionIndex) {
+        currentSectionIndex = sectionIndex;
+        itemModalTitle.textContent = `إضافة صنف جديد إلى ${menuData[sectionIndex].section}`;
+        itemName.value = '';
+        itemPrice.value = '';
+        itemDesc.value = '';
+        itemIcon.value = 'circle';
+        itemModal.style.display = 'flex';
+      }
+
+      // Close modals
+      closeSectionModal.addEventListener('click', () => {
+        sectionModal.style.display = 'none';
+      });
+
+      closeItemModal.addEventListener('click', () => {
+        itemModal.style.display = 'none';
+      });
+
+      // Confirm add section
+      confirmAddSection.addEventListener('click', () => {
+        if (!sectionName.value.trim()) {
+          alert('الرجاء إدخال اسم القسم');
+          return;
+        }
+
+        menuData.push({
+          section: sectionName.value.trim(),
+          icon: sectionIcon.value,
+          items: []
+        });
+
+        renderMenu();
+        sectionModal.style.display = 'none';
+      });
+
+      // Confirm add item
+      confirmAddItem.addEventListener('click', () => {
+        if (!itemName.value.trim()) {
+          alert('الرجاء إدخال اسم الصنف');
+          return;
+        }
+
+        if (!itemPrice.value || isNaN(itemPrice.value)) {
+          alert('الرجاء إدخال سعر صحيح');
+          return;
+        }
+
+        if (!menuData[currentSectionIndex].items) {
+          menuData[currentSectionIndex].items = [];
+        }
+
+        menuData[currentSectionIndex].items.push({
+          plat: itemName.value.trim(),
+          prix: parseInt(itemPrice.value) || 0,
+          description: itemDesc.value.trim(),
+          icon: itemIcon.value
+        });
+
+        renderMenu();
+        itemModal.style.display = 'none';
+      });
+
+      // Save all changes
+      saveAllBtn.addEventListener('click', () => {
+        database.ref('menu').set(menuData)
+          .then(() => {
+            alert('تم حفظ جميع التغييرات بنجاح');
+          })
+          .catch(error => {
+            alert('حدث خطأ أثناء الحفظ: ' + error.message);
+          });
+      });
+
+      // Close modals when clicking outside
+      window.addEventListener('click', (e) => {
+        if (e.target === sectionModal) {
+          sectionModal.style.display = 'none';
+        }
+        if (e.target === itemModal) {
+          itemModal.style.display = 'none';
+        }
+      });
+
+      // Initialize admin panel
       loadMenu();
-    });
+    }
   </script>
 </body>
 </html>

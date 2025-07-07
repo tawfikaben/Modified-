@@ -14,19 +14,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Modern CSS with CSS Variables and better organization -->
+  <!-- Modern CSS with CSS Variables matching the original dashboard -->
   <style>
     :root {
-      --primary: #8B5A2B; /* Brown */
-      --primary-hover: #7a4d25;
-      --secondary: #D4A76A; /* Light Brown */
-      --accent: #A52A2A; /* Red Brown */
-      --light: #F8F4E9; /* Cream */
-      --dark: #3A3226; /* Dark Brown */
-      --text: #4A4541;
-      --text-light: #7A7571;
+      --primary: #E94560; /* Original red */
+      --primary-light: #ff6b81;
+      --primary-hover: #d6344f;
+      --secondary: #0F3460; /* Original dark blue */
+      --secondary-light: #1a4b8c;
+      --accent: #FFD32D; /* Original gold */
+      --light: #F8F5F2; /* Original light cream */
+      --dark: #16213E; /* Original dark blue */
+      --text: #2D3748;
+      --text-light: #4A5568;
       --white: #FFFFFF;
-      --gray: #E5E0D8;
+      --gray: #EDF2F7;
+      --gray-dark: #e2e8f0;
       --error: #c62828;
       --error-bg: rgba(198, 40, 40, 0.1);
       --success: #2E7D32;
@@ -50,7 +53,7 @@
 
     body {
       font-family: 'Tajawal', sans-serif;
-      background-color: var(--light);
+      background-color: #f5f7fa;
       color: var(--text);
       line-height: 1.6;
       min-height: 100vh;
@@ -75,6 +78,7 @@
       padding: 2rem;
       text-align: center;
       transition: var(--transition);
+      border-top: 4px solid var(--primary);
     }
 
     .auth-card:hover {
@@ -83,7 +87,7 @@
 
     .logo {
       font-size: 2rem;
-      color: var(--accent);
+      color: var(--primary);
       margin-bottom: 1.5rem;
       display: flex;
       justify-content: center;
@@ -118,7 +122,7 @@
     .form-control {
       width: 100%;
       padding: 0.875rem 1rem;
-      border: 1px solid var(--gray);
+      border: 1px solid var(--gray-dark);
       border-radius: var(--radius);
       font-family: 'Tajawal', sans-serif;
       font-size: 1rem;
@@ -127,9 +131,9 @@
     }
 
     .form-control:focus {
-      border-color: var(--secondary);
+      border-color: var(--primary);
       outline: none;
-      box-shadow: 0 0 0 3px rgba(212, 167, 106, 0.2);
+      box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.2);
     }
 
     .btn {
@@ -163,6 +167,16 @@
       transform: translateY(0);
     }
 
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--gray-dark);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--gray);
+    }
+
     .auth-footer {
       margin-top: 1.5rem;
       color: var(--text-light);
@@ -171,7 +185,7 @@
     }
 
     .auth-footer a {
-      color: var(--accent);
+      color: var(--primary);
       text-decoration: none;
       font-weight: 500;
       transition: var(--transition);
@@ -227,6 +241,7 @@
       box-shadow: var(--shadow);
       margin-bottom: 1.5rem;
       position: relative;
+      border-top: 4px solid var(--primary);
     }
 
     .admin-header h1 {
@@ -247,7 +262,7 @@
       position: absolute;
       left: 1.5rem;
       top: 1.5rem;
-      background: var(--accent);
+      background: var(--primary);
       color: white;
       border: none;
       padding: 0.5rem 1rem;
@@ -262,7 +277,7 @@
     }
 
     .logout-btn:hover {
-      opacity: 0.9;
+      background: var(--primary-hover);
     }
 
     .panel-header {
@@ -301,6 +316,7 @@
       box-shadow: var(--shadow-md);
       overflow: hidden;
       animation: modalFadeIn 0.3s ease;
+      border-top: 4px solid var(--primary);
     }
 
     .modal-header {
@@ -351,6 +367,7 @@
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow);
       overflow: hidden;
+      border-top: 4px solid var(--secondary);
     }
 
     .section-header {
@@ -388,6 +405,7 @@
       padding: 1rem;
       background: var(--light);
       border-radius: var(--radius);
+      border-right: 4px solid var(--accent);
     }
 
     .item-icon {
@@ -406,6 +424,7 @@
       background: transparent;
       padding: 0;
       font-size: 1rem;
+      color: var(--dark);
     }
 
     .item-desc {
@@ -421,6 +440,7 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      color: var(--primary);
     }
 
     .item-controls {
@@ -444,13 +464,23 @@
     }
 
     .btn-save {
-      background: var(--success);
+      background: var(--secondary);
       color: var(--white);
       max-width: 300px;
     }
 
     .btn-save:hover {
-      background: #255928;
+      background: var(--secondary-light);
+    }
+
+    /* Delete Button */
+    .btn-delete {
+      background: var(--error);
+      color: var(--white);
+    }
+
+    .btn-delete:hover {
+      background: #b71c1c;
     }
 
     /* Empty State */
@@ -853,7 +883,7 @@
               <button class="btn btn-primary" onclick="openAddItemModal(${sectionIndex})">
                 <i class="fas fa-plus"></i> إضافة صنف
               </button>
-              <button class="btn btn-save" onclick="deleteSection(${sectionIndex})" style="background: var(--error);">
+              <button class="btn btn-delete" onclick="deleteSection(${sectionIndex})">
                 <i class="fas fa-trash"></i> حذف
               </button>
             </div>
@@ -897,7 +927,7 @@
                     <option value="heart" ${item.icon === 'heart' ? 'selected' : ''}>قلب</option>
                     <option value="leaf" ${item.icon === 'leaf' ? 'selected' : ''}>ورقة</option>
                   </select>
-                  <button class="btn btn-save" onclick="deleteItem(${sectionIndex}, ${itemIndex})" style="background: var(--error);">
+                  <button class="btn btn-delete" onclick="deleteItem(${sectionIndex}, ${itemIndex})">
                     <i class="fas fa-trash"></i> حذف
                   </button>
                 </div>

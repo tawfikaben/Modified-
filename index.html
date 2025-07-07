@@ -4,28 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>لوحة التحكم - دار حسنا</title>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary: #E94560;
-      --primary-light: #ff7b8f;
-      --secondary: #0F3460;
-      --secondary-light: #3a5a8a;
-      --light: #F8F5F2;
-      --dark: #16213E;
-      --dark-light: #2a3a6b;
-      --gold: #FFD32D;
-      --text: #2D3748;
-      --text-light: #4a5568;
+      --primary: #8B5A2B; /* Brown */
+      --secondary: #D4A76A; /* Light Brown */
+      --accent: #A52A2A; /* Red Brown */
+      --light: #F8F4E9; /* Cream */
+      --dark: #3A3226; /* Dark Brown */
+      --text: #4A4541;
       --white: #FFFFFF;
-      --gray: #EDF2F7;
-      --gray-dark: #e2e8f0;
+      --gray: #E5E0D8;
       --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.12);
-      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      --radius: 12px;
-      --radius-sm: 8px;
+      --transition: all 0.3s ease;
+      --radius: 8px;
     }
 
     * {
@@ -36,7 +29,7 @@
 
     body {
       font-family: 'Tajawal', sans-serif;
-      background-color: #f9fafb;
+      background-color: var(--light);
       color: var(--text);
       line-height: 1.6;
     }
@@ -48,434 +41,301 @@
     }
 
     header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2.5rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--gray);
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
     }
 
-    .header-title {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .logo {
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: var(--radius);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--white);
-      font-weight: 700;
-      font-size: 1.2rem;
+    header::after {
+      content: "";
+      position: absolute;
+      bottom: -1rem;
+      right: 50%;
+      transform: translateX(50%);
+      width: 100px;
+      height: 2px;
+      background: var(--secondary);
     }
 
     h1 {
-      font-size: 1.8rem;
-      color: var(--dark);
-      font-weight: 700;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 1rem;
-    }
-
-    /* Main Button Styles */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      border-radius: var(--radius-sm);
+      color: var(--accent);
+      font-size: 2.5rem;
       font-weight: 500;
-      cursor: pointer;
-      transition: var(--transition);
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--dark);
+      opacity: 0.8;
+    }
+
+    .admin-panel {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      background: var(--primary);
+      color: var(--white);
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-title {
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+    .btn {
+      padding: 0.7rem 1.5rem;
+      border-radius: var(--radius);
       border: none;
       font-family: 'Tajawal', sans-serif;
       font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .btn-primary {
-      background: var(--primary);
+      background: var(--accent);
       color: var(--white);
-      box-shadow: 0 4px 12px rgba(233, 69, 96, 0.25);
     }
 
     .btn-primary:hover {
-      background: var(--primary-light);
-      box-shadow: 0 6px 16px rgba(233, 69, 96, 0.35);
+      background: #8c1f1f;
       transform: translateY(-2px);
     }
 
     .btn-secondary {
       background: var(--secondary);
-      color: var(--white);
+      color: var(--dark);
     }
 
     .btn-secondary:hover {
-      background: var(--secondary-light);
-      transform: translateY(-2px);
+      background: #c99a5a;
     }
 
-    .btn-outline {
-      background: transparent;
-      color: var(--secondary);
-      border: 1px solid var(--secondary);
+    .menu-sections {
+      padding: 1.5rem;
     }
 
-    .btn-outline:hover {
-      background: rgba(15, 52, 96, 0.05);
-    }
-
-    /* Menu Sections */
-    .menu-editor {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-    }
-
-    .section-card {
-      background: var(--white);
+    .section {
+      margin-bottom: 2.5rem;
+      border: 1px solid var(--gray);
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
       overflow: hidden;
-      transition: var(--transition);
-    }
-
-    .section-card:hover {
-      box-shadow: var(--shadow-hover);
     }
 
     .section-header {
+      background: var(--light);
+      padding: 1.2rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.25rem 1.5rem;
-      background: var(--dark);
-      color: var(--white);
+      border-bottom: 1px solid var(--gray);
     }
 
     .section-title {
       display: flex;
       align-items: center;
       gap: 1rem;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--dark);
     }
 
-    .section-icon {
-      width: 36px;
-      height: 36px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
+    .section-controls {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      gap: 0.8rem;
     }
 
-    .section-input {
-      background: transparent;
-      border: none;
-      color: var(--white);
-      font-size: 1.25rem;
-      font-weight: 600;
-      font-family: 'Tajawal', sans-serif;
-      width: 300px;
-      padding: 0.25rem 0;
+    .section-items {
+      padding: 1rem;
     }
 
-    .section-input:focus {
-      outline: none;
-      border-bottom: 2px solid var(--gold);
-    }
-
-    .section-actions {
+    .menu-item {
       display: flex;
-      gap: 0.75rem;
-    }
-
-    .section-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--white);
-      border: none;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .section-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.1);
-    }
-
-    .section-btn.delete {
-      background: rgba(233, 69, 96, 0.2);
-    }
-
-    .section-btn.delete:hover {
-      background: rgba(233, 69, 96, 0.3);
-    }
-
-    /* Menu Items */
-    .items-list {
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .item-card {
-      display: flex;
-      align-items: center;
       gap: 1.5rem;
-      padding: 1rem 1.25rem;
-      background: var(--white);
-      border-radius: var(--radius-sm);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      padding: 1.2rem;
+      border-bottom: 1px dashed var(--gray);
       transition: var(--transition);
-      border-left: 3px solid var(--gold);
     }
 
-    .item-card:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      transform: translateY(-2px);
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+
+    .menu-item:hover {
+      background: rgba(212, 167, 106, 0.1);
     }
 
     .item-icon {
-      width: 40px;
-      height: 40px;
-      background: var(--light);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--primary);
-      flex-shrink: 0;
+      color: var(--secondary);
+      font-size: 1.2rem;
+      margin-top: 0.3rem;
     }
 
     .item-details {
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
     }
 
     .item-name {
-      font-weight: 600;
+      font-weight: 500;
       color: var(--dark);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .item-input {
-      border: none;
-      background: transparent;
-      font-family: 'Tajawal', sans-serif;
-      font-size: 1rem;
-      width: 100%;
-      padding: 0.25rem 0;
-    }
-
-    .item-input:focus {
-      outline: none;
-      border-bottom: 1px solid var(--gray-dark);
+      margin-bottom: 0.5rem;
     }
 
     .item-desc {
       font-size: 0.9rem;
-      color: var(--text-light);
+      color: var(--text);
+      opacity: 0.8;
+      margin-bottom: 0.8rem;
     }
 
-    .item-textarea {
-      border: none;
-      background: transparent;
-      resize: none;
-      font-family: 'Tajawal', sans-serif;
-      font-size: 0.9rem;
-      width: 100%;
-      min-height: 60px;
-      padding: 0.25rem 0;
-    }
-
-    .item-textarea:focus {
-      outline: none;
+    .item-price {
+      font-weight: 700;
+      color: var(--accent);
     }
 
     .item-controls {
       display: flex;
-      align-items: center;
-      gap: 1rem;
+      flex-direction: column;
+      gap: 0.8rem;
+      min-width: 120px;
     }
 
-    .price-container {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--light);
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius-sm);
+    .form-group {
+      margin-bottom: 1rem;
     }
 
-    .price-input {
-      width: 70px;
-      text-align: center;
-      border: none;
-      background: transparent;
+    .form-control {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--gray);
+      border-radius: var(--radius);
       font-family: 'Tajawal', sans-serif;
-      font-weight: 600;
+      font-size: 1rem;
+      transition: var(--transition);
     }
 
-    .price-input:focus {
+    .form-control:focus {
+      border-color: var(--secondary);
       outline: none;
+      box-shadow: 0 0 0 3px rgba(212, 167, 106, 0.2);
     }
 
-    .currency {
-      color: var(--text-light);
-      font-size: 0.9rem;
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--dark);
     }
 
-    .item-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .action-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--light);
-      color: var(--text-light);
-      border: none;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .action-btn:hover {
-      background: var(--gray-dark);
-      color: var(--text);
-    }
-
-    .action-btn.delete {
-      background: rgba(233, 69, 96, 0.1);
-      color: var(--primary);
-    }
-
-    .action-btn.delete:hover {
-      background: rgba(233, 69, 96, 0.2);
-    }
-
-    /* Icon Selector */
-    .icon-selector {
-      position: relative;
-    }
-
-    .icon-selector-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--light);
-      color: var(--text);
-      border: none;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .icon-selector-btn:hover {
-      background: var(--gray-dark);
-    }
-
-    .icon-options {
-      position: absolute;
-      top: 100%;
-      right: 0;
-      background: var(--white);
-      border-radius: var(--radius-sm);
-      box-shadow: var(--shadow);
+    .select-icon {
       padding: 0.5rem;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 0.5rem;
-      width: 200px;
-      z-index: 10;
-      display: none;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray);
+      font-family: 'Tajawal';
+      background: var(--white);
     }
 
-    .icon-option {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--light);
-      color: var(--text);
-      border: none;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .icon-option:hover {
-      background: var(--primary);
-      color: var(--white);
-    }
-
-    .icon-selector.active .icon-options {
-      display: grid;
-    }
-
-    /* Add Section Button */
-    .add-section {
-      display: flex;
-      justify-content: center;
+    .save-all {
+      text-align: center;
       margin-top: 2rem;
     }
 
-    /* Save Button */
-    .save-actions {
+    .btn-save {
+      padding: 1rem 2.5rem;
+      font-size: 1.1rem;
+      background: var(--primary);
+    }
+
+    .btn-save:hover {
+      background: #7a4d25;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(58, 50, 38, 0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: var(--white);
+      width: 90%;
+      max-width: 500px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      animation: modalFadeIn 0.3s ease;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--gray);
       display: flex;
-      justify-content: flex-end;
-      margin-top: 3rem;
-      padding-top: 2rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-footer {
+      padding: 1rem 1.5rem;
       border-top: 1px solid var(--gray);
+      text-align: left;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text);
+      cursor: pointer;
+      opacity: 0.7;
+      transition: var(--transition);
+    }
+
+    .close-modal:hover {
+      opacity: 1;
+      color: var(--accent);
     }
 
     /* Responsive */
     @media (max-width: 768px) {
       .container {
-        padding: 1.5rem;
+        padding: 1rem;
       }
-
-      header {
+      
+      .menu-item {
         flex-direction: column;
-        align-items: flex-start;
         gap: 1rem;
       }
-
-      .item-card {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
+      
       .item-controls {
-        width: 100%;
-        justify-content: space-between;
+        flex-direction: row;
+        justify-content: flex-end;
       }
     }
   </style>
@@ -483,32 +343,99 @@
 <body>
   <div class="container">
     <header>
-      <div class="header-title">
-        <div class="logo">ح</div>
-        <h1>لوحة تحكم القائمة - دار حسنا</h1>
-      </div>
-      <div class="header-actions">
-        <button class="btn btn-secondary" onclick="saveAllChanges()">
-          <i class="fas fa-save"></i> حفظ التغييرات
-        </button>
-      </div>
+      <h1><i class="fas fa-utensils"></i> لوحة تحكم دار حسنا</h1>
+      <p class="subtitle">إدارة قائمة الطعام والمشروبات</p>
     </header>
 
-    <div class="menu-editor" id="menuEditor">
-      <!-- Sections will be added here dynamically -->
-      <div class="loading">جاري تحميل القائمة...</div>
-    </div>
+    <div class="admin-panel">
+      <div class="panel-header">
+        <div class="panel-title">قائمة الطعام</div>
+        <button class="btn btn-primary" id="addSectionBtn">
+          <i class="fas fa-plus"></i> إضافة قسم جديد
+        </button>
+      </div>
 
-    <div class="add-section">
-      <button class="btn btn-primary" onclick="addNewSection()">
-        <i class="fas fa-plus"></i> إضافة قسم جديد
-      </button>
-    </div>
+      <div class="menu-sections" id="menuSections">
+        <!-- Sections will be loaded here -->
+        <div class="loading">جاري تحميل القائمة...</div>
+      </div>
 
-    <div class="save-actions">
-      <button class="btn btn-primary" onclick="saveAllChanges()">
-        <i class="fas fa-save"></i> حفظ جميع التغييرات
-      </button>
+      <div class="save-all">
+        <button class="btn btn-save" id="saveAllBtn">
+          <i class="fas fa-save"></i> حفظ جميع التغييرات
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Section Modal -->
+  <div class="modal" id="sectionModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>إضافة قسم جديد</h3>
+        <button class="close-modal" id="closeSectionModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">اسم القسم</label>
+          <input type="text" class="form-control" id="sectionName" placeholder="مثال: المقبلات، المشروبات">
+        </div>
+        <div class="form-group">
+          <label class="form-label">اختر أيقونة</label>
+          <select class="form-control select-icon" id="sectionIcon">
+            <option value="utensils">أواني طعام</option>
+            <option value="drumstick-bite">لحم</option>
+            <option value="fish">سمك</option>
+            <option value="leaf">نباتي</option>
+            <option value="ice-cream">حلويات</option>
+            <option value="coffee">مشروبات</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="confirmAddSection">
+          <i class="fas fa-check"></i> تأكيد الإضافة
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Item Modal -->
+  <div class="modal" id="itemModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="itemModalTitle">إضافة صنف جديد</h3>
+        <button class="close-modal" id="closeItemModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">اسم الصنف</label>
+          <input type="text" class="form-control" id="itemName" placeholder="مثال: طاجن لحم، كسكس">
+        </div>
+        <div class="form-group">
+          <label class="form-label">السعر (درهم)</label>
+          <input type="number" class="form-control" id="itemPrice" placeholder="50">
+        </div>
+        <div class="form-group">
+          <label class="form-label">الوصف</label>
+          <textarea class="form-control" id="itemDesc" rows="3" placeholder="وصف مختصر للصنف"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">اختر أيقونة</label>
+          <select class="form-control select-icon" id="itemIcon">
+            <option value="circle">دائرة</option>
+            <option value="star">نجمة</option>
+            <option value="fire">نار</option>
+            <option value="heart">قلب</option>
+            <option value="leaf">ورقة</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="confirmAddItem">
+          <i class="fas fa-check"></i> تأكيد الإضافة
+        </button>
+      </div>
     </div>
   </div>
 
@@ -533,330 +460,252 @@
     const database = firebase.database();
 
     // DOM Elements
-    const menuEditor = document.getElementById('menuEditor');
-    let currentMenuData = [];
+    const menuSections = document.getElementById('menuSections');
+    const addSectionBtn = document.getElementById('addSectionBtn');
+    const saveAllBtn = document.getElementById('saveAllBtn');
+    
+    // Modal Elements
+    const sectionModal = document.getElementById('sectionModal');
+    const itemModal = document.getElementById('itemModal');
+    const closeSectionModal = document.getElementById('closeSectionModal');
+    const closeItemModal = document.getElementById('closeItemModal');
+    const confirmAddSection = document.getElementById('confirmAddSection');
+    const confirmAddItem = document.getElementById('confirmAddItem');
+    
+    // Form Elements
+    const sectionName = document.getElementById('sectionName');
+    const sectionIcon = document.getElementById('sectionIcon');
+    const itemName = document.getElementById('itemName');
+    const itemPrice = document.getElementById('itemPrice');
+    const itemDesc = document.getElementById('itemDesc');
+    const itemIcon = document.getElementById('itemIcon');
+    const itemModalTitle = document.getElementById('itemModalTitle');
 
-    // Available Icons
-    const sectionIcons = [
-      'utensils', 'drumstick-bite', 'fish', 'leaf', 'ice-cream', 
-      'coffee', 'pizza-slice', 'hamburger', 'wine-glass-alt', 'cheese'
-    ];
+    // Menu Data
+    let menuData = [];
+    let currentSectionIndex = -1;
 
-    const itemIcons = [
-      'circle', 'star', 'fire', 'heart', 'leaf', 
-      'pepper-hot', 'seedling', 'fish', 'apple-alt', 'wine-bottle'
-    ];
-
-    // On Load
-    document.addEventListener('DOMContentLoaded', function() {
-      loadMenu();
-      initIconSelectors();
-    });
-
-    // Load Menu from Firebase
+    // Load menu data
     function loadMenu() {
-      database.ref('menu').once('value').then(snapshot => {
-        currentMenuData = snapshot.val() || [];
-        renderMenuEditor();
+      database.ref('menu').on('value', (snapshot) => {
+        menuData = snapshot.val() || [];
+        renderMenu();
       });
     }
 
-    // Render Menu Editor
-    function renderMenuEditor() {
-      menuEditor.innerHTML = '';
-      
-      if (currentMenuData.length === 0) {
-        menuEditor.innerHTML = `
-          <div style="text-align: center; padding: 3rem; color: var(--text-light);">
-            <i class="fas fa-utensils" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+    // Render menu sections and items
+    function renderMenu() {
+      if (menuData.length === 0) {
+        menuSections.innerHTML = `
+          <div style="text-align: center; padding: 3rem; color: var(--text); opacity: 0.6;">
+            <i class="fas fa-utensils" style="font-size: 2rem; margin-bottom: 1rem;"></i>
             <p>لا توجد أقسام في القائمة حالياً</p>
           </div>
         `;
         return;
       }
+
+      menuSections.innerHTML = '';
       
-      currentMenuData.forEach((section, sectionIndex) => {
+      menuData.forEach((section, sectionIndex) => {
         const sectionDiv = document.createElement('div');
-        sectionDiv.className = 'section-card';
+        sectionDiv.className = 'section';
         
         // Section Header
         const sectionHeader = document.createElement('div');
         sectionHeader.className = 'section-header';
         sectionHeader.innerHTML = `
           <div class="section-title">
-            <div class="section-icon">
-              <i class="fas fa-${section.icon || 'utensils'}"></i>
-            </div>
-            <input type="text" class="section-input" value="${section.section}" 
+            <i class="fas fa-${section.icon || 'utensils'}"></i>
+            <input type="text" class="form-control" value="${section.section}" 
               onchange="updateSection(${sectionIndex}, 'section', this.value)"
-              placeholder="اسم القسم">
+              style="border: none; background: transparent; font-size: 1.2rem; padding: 0;">
           </div>
-          <div class="section-actions">
-            <button class="section-btn" onclick="addNewItem(${sectionIndex})">
-              <i class="fas fa-plus"></i>
+          <div class="section-controls">
+            <button class="btn btn-secondary" onclick="openAddItemModal(${sectionIndex})">
+              <i class="fas fa-plus"></i> إضافة صنف
             </button>
-            <button class="section-btn delete" onclick="deleteSection(${sectionIndex})">
-              <i class="fas fa-trash"></i>
+            <button class="btn btn-secondary" onclick="deleteSection(${sectionIndex})" style="background: #c62828; color: white;">
+              <i class="fas fa-trash"></i> حذف
             </button>
           </div>
         `;
-        sectionDiv.appendChild(sectionHeader);
         
-        // Items List
-        const itemsList = document.createElement('div');
-        itemsList.className = 'items-list';
+        // Section Items
+        const sectionItems = document.createElement('div');
+        sectionItems.className = 'section-items';
         
         if (!section.items || section.items.length === 0) {
-          itemsList.innerHTML = `
-            <div style="text-align: center; padding: 1rem; color: var(--text-light);">
+          sectionItems.innerHTML = `
+            <div style="text-align: center; padding: 1.5rem; color: var(--text); opacity: 0.6;">
+              <i class="fas fa-info-circle"></i>
               <p>لا توجد أصناف في هذا القسم</p>
             </div>
           `;
         } else {
           section.items.forEach((item, itemIndex) => {
             const itemDiv = document.createElement('div');
-            itemDiv.className = 'item-card';
+            itemDiv.className = 'menu-item';
             itemDiv.innerHTML = `
               <div class="item-icon">
                 <i class="fas fa-${item.icon || 'circle'}"></i>
               </div>
               <div class="item-details">
-                <div class="item-name">
-                  <input type="text" class="item-input" value="${item.plat}" 
-                    onchange="updateItem(${sectionIndex}, ${itemIndex}, 'plat', this.value)"
-                    placeholder="اسم الصنف">
-                </div>
-                <div class="item-desc">
-                  <textarea class="item-textarea" 
-                    onchange="updateItem(${sectionIndex}, ${itemIndex}, 'description', this.value)"
-                    placeholder="وصف الصنف">${item.description || ''}</textarea>
+                <input type="text" class="form-control item-name" value="${item.plat}" 
+                  onchange="updateItem(${sectionIndex}, ${itemIndex}, 'plat', this.value)">
+                <textarea class="form-control item-desc" 
+                  onchange="updateItem(${sectionIndex}, ${itemIndex}, 'description', this.value)">${item.description || ''}</textarea>
+                <div class="item-price">
+                  <input type="number" class="form-control" value="${item.prix}" 
+                    onchange="updateItem(${sectionIndex}, ${itemIndex}, 'prix', parseInt(this.value) || 0)"
+                    style="width: 80px; display: inline-block;"> درهم
                 </div>
               </div>
               <div class="item-controls">
-                <div class="price-container">
-                  <input type="number" class="price-input" value="${item.prix}" 
-                    onchange="updateItem(${sectionIndex}, ${itemIndex}, 'prix', parseInt(this.value) || 0)"
-                    placeholder="السعر">
-                  <span class="currency">درهم</span>
-                </div>
-                <div class="item-actions">
-                  <div class="icon-selector">
-                    <button class="icon-selector-btn" onclick="toggleIconSelector(this)">
-                      <i class="fas fa-${item.icon || 'circle'}"></i>
-                    </button>
-                    <div class="icon-options">
-                      ${itemIcons.map(icon => `
-                        <button class="icon-option" onclick="updateItemIcon(${sectionIndex}, ${itemIndex}, '${icon}')">
-                          <i class="fas fa-${icon}"></i>
-                        </button>
-                      `).join('')}
-                    </div>
-                  </div>
-                  <button class="action-btn delete" onclick="deleteItem(${sectionIndex}, ${itemIndex})">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
+                <select class="select-icon" onchange="updateItem(${sectionIndex}, ${itemIndex}, 'icon', this.value)">
+                  <option value="circle" ${!item.icon || item.icon === 'circle' ? 'selected' : ''}>دائرة</option>
+                  <option value="star" ${item.icon === 'star' ? 'selected' : ''}>نجمة</option>
+                  <option value="fire" ${item.icon === 'fire' ? 'selected' : ''}>نار</option>
+                  <option value="heart" ${item.icon === 'heart' ? 'selected' : ''}>قلب</option>
+                  <option value="leaf" ${item.icon === 'leaf' ? 'selected' : ''}>ورقة</option>
+                </select>
+                <button class="btn btn-secondary" onclick="deleteItem(${sectionIndex}, ${itemIndex})" style="background: #c62828; color: white;">
+                  <i class="fas fa-trash"></i> حذف
+                </button>
               </div>
             `;
-            itemsList.appendChild(itemDiv);
+            sectionItems.appendChild(itemDiv);
           });
         }
         
-        sectionDiv.appendChild(itemsList);
-        menuEditor.appendChild(sectionDiv);
+        sectionDiv.appendChild(sectionHeader);
+        sectionDiv.appendChild(sectionItems);
+        menuSections.appendChild(sectionDiv);
       });
     }
 
-    // Initialize Icon Selectors
-    function initIconSelectors() {
-      document.addEventListener('click', function(e) {
-        if (!e.target.closest('.icon-selector-btn')) {
-          document.querySelectorAll('.icon-options').forEach(el => {
-            el.style.display = 'none';
-          });
-        }
-      });
-    }
-
-    // Toggle Icon Selector
-    function toggleIconSelector(btn) {
-      const selector = btn.closest('.icon-selector');
-      const options = selector.querySelector('.icon-options');
-      
-      document.querySelectorAll('.icon-options').forEach(el => {
-        if (el !== options) el.style.display = 'none';
-      });
-      
-      options.style.display = options.style.display === 'grid' ? 'none' : 'grid';
-      selector.classList.toggle('active');
-    }
-
-    // Update Section
+    // Update section data
     function updateSection(sectionIndex, field, value) {
-      currentMenuData[sectionIndex][field] = value;
+      menuData[sectionIndex][field] = value;
     }
 
-    // Update Item
+    // Update item data
     function updateItem(sectionIndex, itemIndex, field, value) {
-      if (!currentMenuData[sectionIndex].items) {
-        currentMenuData[sectionIndex].items = [];
-      }
-      currentMenuData[sectionIndex].items[itemIndex][field] = value;
+      menuData[sectionIndex].items[itemIndex][field] = value;
     }
 
-    // Update Item Icon
-    function updateItemIcon(sectionIndex, itemIndex, icon) {
-      updateItem(sectionIndex, itemIndex, 'icon', icon);
-      
-      // Update the icon display immediately
-      const itemCards = document.querySelectorAll('.item-card');
-      const targetCard = itemCards[sectionIndex * currentMenuData[sectionIndex].items.length + itemIndex];
-      if (targetCard) {
-        targetCard.querySelector('.item-icon i').className = `fas fa-${icon}`;
-        targetCard.querySelector('.icon-selector-btn i').className = `fas fa-${icon}`;
-      }
-      
-      // Close the icon selector
-      const selector = document.querySelector('.icon-selector.active');
-      if (selector) {
-        selector.querySelector('.icon-options').style.display = 'none';
-        selector.classList.remove('active');
-      }
-    }
-
-    // Add New Section
-    function addNewSection() {
-      currentMenuData.push({
-        section: 'قسم جديد',
-        icon: 'utensils',
-        items: []
-      });
-      renderMenuEditor();
-      
-      // Scroll to the new section
-      setTimeout(() => {
-        const sections = document.querySelectorAll('.section-card');
-        sections[sections.length - 1].scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    }
-
-    // Delete Section
+    // Delete section
     function deleteSection(sectionIndex) {
       if (confirm('هل أنت متأكد من حذف هذا القسم وجميع أصنافه؟')) {
-        currentMenuData.splice(sectionIndex, 1);
-        renderMenuEditor();
+        menuData.splice(sectionIndex, 1);
+        renderMenu();
       }
     }
 
-    // Add New Item
-    function addNewItem(sectionIndex) {
-      if (!currentMenuData[sectionIndex].items) {
-        currentMenuData[sectionIndex].items = [];
-      }
-      
-      currentMenuData[sectionIndex].items.push({
-        plat: 'صنف جديد',
-        prix: 0,
-        description: '',
-        icon: 'circle'
-      });
-      
-      renderMenuEditor();
-      
-      // Scroll to the new item
-      setTimeout(() => {
-        const sections = document.querySelectorAll('.section-card');
-        const items = sections[sectionIndex].querySelectorAll('.item-card');
-        items[items.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
-    }
-
-    // Delete Item
+    // Delete item
     function deleteItem(sectionIndex, itemIndex) {
       if (confirm('هل أنت متأكد من حذف هذا الصنف؟')) {
-        currentMenuData[sectionIndex].items.splice(itemIndex, 1);
-        renderMenuEditor();
+        menuData[sectionIndex].items.splice(itemIndex, 1);
+        renderMenu();
       }
     }
 
-    // Save All Changes
-    function saveAllChanges() {
-      database.ref('menu').set(currentMenuData)
+    // Open add section modal
+    addSectionBtn.addEventListener('click', () => {
+      sectionName.value = '';
+      sectionIcon.value = 'utensils';
+      sectionModal.style.display = 'flex';
+    });
+
+    // Open add item modal
+    function openAddItemModal(sectionIndex) {
+      currentSectionIndex = sectionIndex;
+      itemModalTitle.textContent = `إضافة صنف جديد إلى ${menuData[sectionIndex].section}`;
+      itemName.value = '';
+      itemPrice.value = '';
+      itemDesc.value = '';
+      itemIcon.value = 'circle';
+      itemModal.style.display = 'flex';
+    }
+
+    // Close modals
+    closeSectionModal.addEventListener('click', () => {
+      sectionModal.style.display = 'none';
+    });
+
+    closeItemModal.addEventListener('click', () => {
+      itemModal.style.display = 'none';
+    });
+
+    // Confirm add section
+    confirmAddSection.addEventListener('click', () => {
+      if (!sectionName.value.trim()) {
+        alert('الرجاء إدخال اسم القسم');
+        return;
+      }
+
+      menuData.push({
+        section: sectionName.value.trim(),
+        icon: sectionIcon.value,
+        items: []
+      });
+
+      renderMenu();
+      sectionModal.style.display = 'none';
+    });
+
+    // Confirm add item
+    confirmAddItem.addEventListener('click', () => {
+      if (!itemName.value.trim()) {
+        alert('الرجاء إدخال اسم الصنف');
+        return;
+      }
+
+      if (!itemPrice.value || isNaN(itemPrice.value)) {
+        alert('الرجاء إدخال سعر صحيح');
+        return;
+      }
+
+      if (!menuData[currentSectionIndex].items) {
+        menuData[currentSectionIndex].items = [];
+      }
+
+      menuData[currentSectionIndex].items.push({
+        plat: itemName.value.trim(),
+        prix: parseInt(itemPrice.value) || 0,
+        description: itemDesc.value.trim(),
+        icon: itemIcon.value
+      });
+
+      renderMenu();
+      itemModal.style.display = 'none';
+    });
+
+    // Save all changes
+    saveAllBtn.addEventListener('click', () => {
+      database.ref('menu').set(menuData)
         .then(() => {
-          showNotification('تم حفظ جميع التغييرات بنجاح', 'success');
+          alert('تم حفظ جميع التغييرات بنجاح');
         })
         .catch(error => {
-          showNotification('حدث خطأ أثناء الحفظ: ' + error.message, 'error');
+          alert('حدث خطأ أثناء الحفظ: ' + error.message);
         });
-    }
+    });
 
-    // Show Notification
-    function showNotification(message, type) {
-      const notification = document.createElement('div');
-      notification.className = `notification ${type}`;
-      notification.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-        <span>${message}</span>
-      `;
-      
-      document.body.appendChild(notification);
-      
-      setTimeout(() => {
-        notification.classList.add('show');
-      }, 10);
-      
-      setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-          notification.remove();
-        }, 300);
-      }, 3000);
-    }
+    // Close modals when clicking outside
+    window.addEventListener('click', (e) => {
+      if (e.target === sectionModal) {
+        sectionModal.style.display = 'none';
+      }
+      if (e.target === itemModal) {
+        itemModal.style.display = 'none';
+      }
+    });
 
-    // Add Notification Styles
-    const style = document.createElement('style');
-    style.textContent = `
-      .notification {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%) translateY(-100px);
-        background: var(--white);
-        padding: 1rem 1.5rem;
-        border-radius: var(--radius-sm);
-        box-shadow: var(--shadow-hover);
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        z-index: 1000;
-        transition: var(--transition);
-      }
-      
-      .notification.show {
-        transform: translateX(-50%) translateY(0);
-      }
-      
-      .notification.success {
-        border-right: 4px solid #2e7d32;
-      }
-      
-      .notification.error {
-        border-right: 4px solid #c62828;
-      }
-      
-      .notification i {
-        font-size: 1.2rem;
-      }
-      
-      .notification.success i {
-        color: #2e7d32;
-      }
-      
-      .notification.error i {
-        color: #c62828;
-      }
-    `;
-    document.head.appendChild(style);
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadMenu();
+    });
   </script>
 </body>
 </html>

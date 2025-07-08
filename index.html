@@ -441,12 +441,6 @@
       background: var(--light);
       border-radius: var(--radius);
       border-right: 4px solid var(--accent);
-      transition: var(--transition);
-    }
-
-    .menu-item.hidden-item {
-      opacity: 0.6;
-      background-color: #f8d7da;
     }
 
     .item-icon {
@@ -457,12 +451,6 @@
     .item-details {
       display: grid;
       gap: 0.5rem;
-      cursor: pointer;
-    }
-
-    .item-details input,
-    .item-details textarea {
-      pointer-events: none;
     }
 
     .item-name {
@@ -494,7 +482,6 @@
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-      pointer-events: auto;
     }
 
     .select-icon {
@@ -529,27 +516,6 @@
 
     .btn-delete:hover {
       background: #b71c1c;
-    }
-
-    /* Hide Item Checkbox */
-    .hide-item-label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      cursor: pointer;
-      padding: 0.5rem;
-      border-radius: var(--radius);
-    }
-
-    .hide-item-label:hover {
-      background-color: var(--gray);
-    }
-
-    .hide-item-label input[type="checkbox"] {
-      cursor: pointer;
-      width: 1.1em;
-      height: 1.1em;
     }
 
     /* Empty State */
@@ -813,13 +779,6 @@
             <option value="leaf">ورقة</option>
           </select>
         </div>
-        <div class="form-group">
-          <label for="itemHidden" class="form-label">حالة العنصر</label>
-          <label class="hide-item-label">
-            <input type="checkbox" id="itemHidden">
-            إخفاء من القائمة
-          </label>
-        </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" id="confirmAddItem">
@@ -834,7 +793,7 @@
     // Import the functions you need from the SDKs you need
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
     import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js';
-    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -842,7 +801,7 @@
       authDomain: "darhassna-484c3.firebaseapp.com",
       databaseURL: "https://darhassna-484c3-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "darhassna-484c3",
-      storageBucket: "darhassna-484c3.firebasestorage.app",
+      storageBucket: "darhassna-484c3.appspot.com",
       messagingSenderId: "141393162149",
       appId: "1:141393162149:web:0717227eac221f5ddfc24c"
     };
@@ -851,6 +810,37 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
     const auth = getAuth(app);
+
+    // Set session persistence (will forget on page refresh)
+    setPersistence(auth, browserSessionPersistence)
+      .then(() => {
+        console.log("Session persistence enabled");
+      })
+      .catch((error) => {
+        console.error("Error setting persistence:", error);
+      });
+
+    // Timeout after 15 minutes of inactivity (900000 milliseconds)
+    let inactivityTimeout;
+
+    function resetInactivityTimer() {
+      clearTimeout(inactivityTimeout);
+      inactivityTimeout = setTimeout(() => {
+        signOut(auth).then(() => {
+          window.location.reload();
+        });
+      }, 900000); // 15 minutes
+    }
+
+    // Track user activity
+    function setupActivityListeners() {
+      window.addEventListener('load', resetInactivityTimer);
+      window.addEventListener('mousemove', resetInactivityTimer);
+      window.addEventListener('mousedown', resetInactivityTimer);
+      window.addEventListener('touchstart', resetInactivityTimer);
+      window.addEventListener('click', resetInactivityTimer);
+      window.addEventListener('keypress', resetInactivityTimer);
+    }
 
     // DOM Elements
     const authContainer = document.getElementById('authContainer');
@@ -864,19 +854,21 @@
     const errorMessage = document.getElementById('errorMessage');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    // Check auth state
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in
-        authContainer.style.display = 'none';
-        adminPanel.style.display = 'block';
-        initializeAdminPanel();
-      } else {
-        // User is signed out
-        authContainer.style.display = 'flex';
-        adminPanel.style.display = 'none';
-      }
-    });
+    // Check auth state and redirect if not logged in
+    function checkAuthState() {
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          authContainer.style.display = 'flex';
+          adminPanel.style.display = 'none';
+        } else {
+          authContainer.style.display = 'none';
+          adminPanel.style.display = 'block';
+          initializeAdminPanel();
+          setupActivityListeners();
+          resetInactivityTimer();
+        }
+      });
+    }
 
     // Login form submission
     loginForm.addEventListener('submit', async (e) => {
@@ -885,22 +877,30 @@
       const email = emailInput.value;
       const password = passwordInput.value;
       
-      // Form validation
       if (!email || !password) {
         showError('الرجاء إدخال البريد الإلكتروني وكلمة المرور');
         return;
       }
       
-      // Show loading state
       toggleLoading(true);
       
       try {
         await signInWithEmailAndPassword(auth, email, password);
-        // Success handled by auth state change
+        window.location.reload(); // Force refresh after login
       } catch (error) {
         handleLoginError(error);
       } finally {
         toggleLoading(false);
+      }
+    });
+
+    // Logout button
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+        window.location.reload(); // Force refresh after logout
+      } catch (error) {
+        console.error('Logout error:', error);
       }
     });
 
@@ -947,15 +947,6 @@
       showError(errorMsg);
     }
 
-    // Logout button
-    logoutBtn.addEventListener('click', async () => {
-      try {
-        await signOut(auth);
-      } catch (error) {
-        console.error('Logout error:', error);
-      }
-    });
-
     // Initialize Admin Panel
     function initializeAdminPanel() {
       // DOM Elements
@@ -978,7 +969,6 @@
       const itemPrice = document.getElementById('itemPrice');
       const itemDesc = document.getElementById('itemDesc');
       const itemIcon = document.getElementById('itemIcon');
-      const itemHidden = document.getElementById('itemHidden');
       const itemModalTitle = document.getElementById('itemModalTitle');
 
       // Menu Data
@@ -1047,12 +1037,12 @@
           } else {
             section.items.forEach((item, itemIndex) => {
               const itemDiv = document.createElement('div');
-              itemDiv.className = `menu-item ${item.hidden ? 'hidden-item' : ''}`;
+              itemDiv.className = 'menu-item';
               itemDiv.innerHTML = `
                 <div class="item-icon">
                   <i class="fas fa-${item.icon || 'circle'}"></i>
                 </div>
-                <div class="item-details" onclick="toggleItemVisibility(${sectionIndex}, ${itemIndex}, event)">
+                <div class="item-details">
                   <input type="text" class="item-name" value="${item.plat || ''}" 
                     onchange="updateItem(${sectionIndex}, ${itemIndex}, 'plat', this.value)">
                   <textarea class="item-desc" 
@@ -1064,11 +1054,13 @@
                   </div>
                 </div>
                 <div class="item-controls">
-                  <label class="hide-item-label">
-                    <input type="checkbox" ${item.hidden ? 'checked' : ''} 
-                      onchange="updateItem(${sectionIndex}, ${itemIndex}, 'hidden', this.checked)">
-                    إخفاء من القائمة
-                  </label>
+                  <select class="select-icon" onchange="updateItem(${sectionIndex}, ${itemIndex}, 'icon', this.value)">
+                    <option value="circle" ${!item.icon || item.icon === 'circle' ? 'selected' : ''}>دائرة</option>
+                    <option value="star" ${item.icon === 'star' ? 'selected' : ''}>نجمة</option>
+                    <option value="fire" ${item.icon === 'fire' ? 'selected' : ''}>نار</option>
+                    <option value="heart" ${item.icon === 'heart' ? 'selected' : ''}>قلب</option>
+                    <option value="leaf" ${item.icon === 'leaf' ? 'selected' : ''}>ورقة</option>
+                  </select>
                   <button class="btn btn-delete" onclick="deleteItem(${sectionIndex}, ${itemIndex})">
                     <i class="fas fa-trash"></i> حذف
                   </button>
@@ -1092,33 +1084,6 @@
       // Update item data
       window.updateItem = function(sectionIndex, itemIndex, field, value) {
         menuData[sectionIndex].items[itemIndex][field] = value;
-        renderMenu();
-        saveChanges();
-      }
-
-      // Toggle item visibility
-      window.toggleItemVisibility = function(sectionIndex, itemIndex, event) {
-        // Prevent event from bubbling to parent elements
-        event.stopPropagation();
-        
-        // Toggle hidden status
-        const currentState = menuData[sectionIndex].items[itemIndex].hidden || false;
-        menuData[sectionIndex].items[itemIndex].hidden = !currentState;
-        
-        // Update UI and save changes
-        renderMenu();
-        saveChanges();
-      }
-
-      // Save changes to Firebase
-      async function saveChanges() {
-        try {
-          await set(ref(database, 'menu'), menuData);
-          showSuccessMessage('تم حفظ التغييرات بنجاح');
-        } catch (error) {
-          console.error('Error saving changes:', error);
-          alert('حدث خطأ أثناء الحفظ: ' + error.message);
-        }
       }
 
       // Delete section
@@ -1126,7 +1091,6 @@
         if (confirm('هل أنت متأكد من حذف هذا القسم وجميع أصنافه؟')) {
           menuData.splice(sectionIndex, 1);
           renderMenu();
-          saveChanges();
         }
       }
 
@@ -1135,7 +1099,6 @@
         if (confirm('هل أنت متأكد من حذف هذا الصنف؟')) {
           menuData[sectionIndex].items.splice(itemIndex, 1);
           renderMenu();
-          saveChanges();
         }
       }
 
@@ -1155,7 +1118,6 @@
         itemPrice.value = '';
         itemDesc.value = '';
         itemIcon.value = 'circle';
-        itemHidden.checked = false;
         itemModal.style.display = 'flex';
       }
 
@@ -1182,7 +1144,6 @@
         });
 
         renderMenu();
-        saveChanges();
         sectionModal.style.display = 'none';
       });
 
@@ -1206,12 +1167,10 @@
           plat: itemName.value.trim(),
           prix: parseInt(itemPrice.value) || 0,
           description: itemDesc.value.trim(),
-          icon: itemIcon.value,
-          hidden: itemHidden.checked
+          icon: itemIcon.value
         });
 
         renderMenu();
-        saveChanges();
         itemModal.style.display = 'none';
       });
 
@@ -1253,6 +1212,18 @@
       // Initialize admin panel
       loadMenu();
     }
+
+    // Initialize auth check on page load
+    document.addEventListener('DOMContentLoaded', checkAuthState);
+  </script>
+
+  <script>
+    // Force page to reload when navigating back to ensure auth check
+    window.onpageshow = function(event) {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    };
   </script>
 </body>
 </html>

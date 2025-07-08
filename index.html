@@ -496,6 +496,40 @@
       opacity: 0.7;
     }
 
+    /* Header Buttons */
+    .header-buttons {
+      display: flex;
+      gap: 0.75rem;
+      position: absolute;
+      right: 1.5rem;
+      top: 1.5rem;
+    }
+
+    .header-btn {
+      background: var(--secondary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 500;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .header-btn:hover {
+      background: var(--secondary-light);
+    }
+
+    .header-btn i {
+      font-size: 0.9rem;
+    }
+
     /* Animations */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
@@ -522,11 +556,17 @@
         padding-right: 2.5rem;
       }
       
-      .logout-btn {
+      .logout-btn, .header-buttons {
         position: relative;
         left: auto;
+        right: auto;
         top: auto;
         margin-top: 1rem;
+      }
+      
+      .header-buttons {
+        justify-content: flex-start;
+        width: 100%;
       }
       
       .panel-header {
@@ -586,6 +626,16 @@
     <header class="admin-header">
       <h1><i class="fas fa-utensils"></i> لوحة تحكم دار حسنا</h1>
       <p class="subtitle">إدارة قائمة الطعام والمشروبات</p>
+      
+      <div class="header-buttons">
+        <a href="https://tawfikaben.github.io/Menu/" class="header-btn" target="_self">
+          <i class="fas fa-book-open"></i> القائمة
+        </a>
+        <a href="https://tawfikaben.github.io/Viva/" class="header-btn" target="_self">
+          <i class="fas fa-clipboard-list"></i> متابعة الطلبات
+        </a>
+      </div>
+      
       <button id="logoutBtn" class="logout-btn">
         <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
       </button>

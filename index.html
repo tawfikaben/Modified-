@@ -17,14 +17,14 @@
   <!-- Modern CSS with CSS Variables matching the original dashboard -->
   <style>
     :root {
-      --primary: #E94560; /* Original red */
+      --primary: #E94560;
       --primary-light: #ff6b81;
       --primary-hover: #d6344f;
-      --secondary: #0F3460; /* Original dark blue */
+      --secondary: #0F3460;
       --secondary-light: #1a4b8c;
-      --accent: #FFD32D; /* Original gold */
-      --light: #F8F5F2; /* Original light cream */
-      --dark: #16213E; /* Original dark blue */
+      --accent: #FFD32D;
+      --light: #F8F5F2;
+      --dark: #16213E;
       --text: #2D3748;
       --text-light: #4A5568;
       --white: #FFFFFF;
@@ -286,12 +286,46 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
     .panel-title {
       font-size: 1.25rem;
       font-weight: 600;
       color: var(--dark);
+    }
+
+    .panel-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .header-btn {
+      background: var(--secondary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 500;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .header-btn:hover {
+      background: var(--secondary-light);
     }
 
     /* Modal Styles */
@@ -497,40 +531,6 @@
       opacity: 0.7;
     }
 
-    /* Header Buttons */
-    .header-buttons {
-      display: flex;
-      gap: 0.75rem;
-      position: absolute;
-      right: 1.5rem;
-      top: 1.5rem;
-    }
-
-    .header-btn {
-      background: var(--secondary);
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-family: 'Tajawal', sans-serif;
-      font-weight: 500;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-
-    .header-btn:hover {
-      background: var(--secondary-light);
-    }
-
-    .header-btn i {
-      font-size: 0.9rem;
-    }
-
     /* Login Page Buttons */
     .login-buttons {
       display: flex;
@@ -586,27 +586,35 @@
         padding-right: 2.5rem;
       }
       
-      .logout-btn, .header-buttons {
+      .logout-btn {
         position: relative;
         left: auto;
-        right: auto;
         top: auto;
         margin-top: 1rem;
-      }
-      
-      .header-buttons {
-        justify-content: flex-start;
-        width: 100%;
-      }
-      
-      .login-buttons {
-        flex-direction: column;
       }
       
       .panel-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1rem;
+      }
+      
+      .panel-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      
+      .header-buttons {
+        width: 100%;
+      }
+      
+      .header-btn, #addSectionBtn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .login-buttons {
+        flex-direction: column;
       }
       
       .menu-item {
@@ -670,15 +678,6 @@
       <h1><i class="fas fa-utensils"></i> لوحة تحكم دار حسنا</h1>
       <p class="subtitle">إدارة قائمة الطعام والمشروبات</p>
       
-      <div class="header-buttons">
-        <a href="https://tawfikaben.github.io/Menu/" class="header-btn" target="_self">
-          <i class="fas fa-book-open"></i> القائمة
-        </a>
-        <a href="https://tawfikaben.github.io/Viva/" class="header-btn" target="_self">
-          <i class="fas fa-clipboard-list"></i> متابعة الطلبات
-        </a>
-      </div>
-      
       <button id="logoutBtn" class="logout-btn">
         <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
       </button>
@@ -687,9 +686,19 @@
     <div class="admin-panel-content">
       <div class="panel-header">
         <div class="panel-title">قائمة الطعام</div>
-        <button class="btn btn-primary" id="addSectionBtn">
-          <i class="fas fa-plus"></i> إضافة قسم جديد
-        </button>
+        <div class="panel-actions">
+          <div class="header-buttons">
+            <a href="https://tawfikaben.github.io/Menu/" class="header-btn" target="_self">
+              <i class="fas fa-book-open"></i> القائمة
+            </a>
+            <a href="https://tawfikaben.github.io/Viva/" class="header-btn" target="_self">
+              <i class="fas fa-clipboard-list"></i> متابعة الطلبات
+            </a>
+          </div>
+          <button class="btn btn-primary" id="addSectionBtn">
+            <i class="fas fa-plus"></i> إضافة قسم جديد
+          </button>
+        </div>
       </div>
 
       <div class="menu-sections" id="menuSections">

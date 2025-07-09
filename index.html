@@ -441,6 +441,12 @@
       background: var(--light);
       border-radius: var(--radius);
       border-right: 4px solid var(--accent);
+      transition: var(--transition);
+    }
+
+    .menu-item.hidden-item {
+      opacity: 0.6;
+      background-color: #f8d7da;
     }
 
     .item-icon {
@@ -451,6 +457,12 @@
     .item-details {
       display: grid;
       gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .item-details input,
+    .item-details textarea {
+      pointer-events: none;
     }
 
     .item-name {
@@ -482,6 +494,7 @@
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+      pointer-events: auto;
     }
 
     .select-icon {
@@ -516,6 +529,27 @@
 
     .btn-delete:hover {
       background: #b71c1c;
+    }
+
+    /* Hide Item Checkbox */
+    .hide-item-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: var(--radius);
+    }
+
+    .hide-item-label:hover {
+      background-color: var(--gray);
+    }
+
+    .hide-item-label input[type="checkbox"] {
+      cursor: pointer;
+      width: 1.1em;
+      height: 1.1em;
     }
 
     /* Empty State */
@@ -779,6 +813,13 @@
             <option value="leaf">ورقة</option>
           </select>
         </div>
+        <div class="form-group">
+          <label for="itemHidden" class="form-label">حالة العنصر</label>
+          <label class="hide-item-label">
+            <input type="checkbox" id="itemHidden">
+            إخفاء من القائمة
+          </label>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" id="confirmAddItem">
@@ -793,7 +834,14 @@
     // Import the functions you need from the SDKs you need
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
     import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js';
-    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+    import { 
+      getAuth, 
+      signInWithEmailAndPassword, 
+      signOut, 
+      onAuthStateChanged, 
+      setPersistence, 
+      browserSessionPersistence 
+    } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -834,12 +882,11 @@
 
     // Track user activity
     function setupActivityListeners() {
-      window.addEventListener('load', resetInactivityTimer);
-      window.addEventListener('mousemove', resetInactivityTimer);
-      window.addEventListener('mousedown', resetInactivityTimer);
-      window.addEventListener('touchstart', resetInactivityTimer);
-      window.addEventListener('click', resetInactivityTimer);
-      window.addEventListener('keypress', resetInactivityTimer);
+      const events = ['mousemove', 'keydown', 'scroll', 'click', 'touchstart'];
+      events.forEach(event => {
+        window.addEventListener(event, resetInactivityTimer);
+      });
+      resetInactivityTimer(); // Initialize the timer
     }
 
     // DOM Elements
@@ -865,7 +912,6 @@
           adminPanel.style.display = 'block';
           initializeAdminPanel();
           setupActivityListeners();
-          resetInactivityTimer();
         }
       });
     }
@@ -910,7 +956,6 @@
         loginText.style.display = 'none';
         loginSpinner.style.display = 'block';
         loginBtn.disabled = true;
-        errorMessage.style.display = 'none';
       } else {
         loginText.style.display = 'inline';
         loginSpinner.style.display = 'none';
@@ -943,7 +988,6 @@
         default:
           errorMsg = 'حدث خطأ أثناء تسجيل الدخول';
       }
-      
       showError(errorMsg);
     }
 
@@ -969,6 +1013,7 @@
       const itemPrice = document.getElementById('itemPrice');
       const itemDesc = document.getElementById('itemDesc');
       const itemIcon = document.getElementById('itemIcon');
+      const itemHidden = document.getElementById('itemHidden');
       const itemModalTitle = document.getElementById('itemModalTitle');
 
       // Menu Data
@@ -1037,12 +1082,12 @@
           } else {
             section.items.forEach((item, itemIndex) => {
               const itemDiv = document.createElement('div');
-              itemDiv.className = 'menu-item';
+              itemDiv.className = `menu-item ${item.hidden ? 'hidden-item' : ''}`;
               itemDiv.innerHTML = `
                 <div class="item-icon">
                   <i class="fas fa-${item.icon || 'circle'}"></i>
                 </div>
-                <div class="item-details">
+                <div class="item-details" onclick="toggleItemVisibility(${sectionIndex}, ${itemIndex}, event)">
                   <input type="text" class="item-name" value="${item.plat || ''}" 
                     onchange="updateItem(${sectionIndex}, ${itemIndex}, 'plat', this.value)">
                   <textarea class="item-desc" 
@@ -1054,13 +1099,11 @@
                   </div>
                 </div>
                 <div class="item-controls">
-                  <select class="select-icon" onchange="updateItem(${sectionIndex}, ${itemIndex}, 'icon', this.value)">
-                    <option value="circle" ${!item.icon || item.icon === 'circle' ? 'selected' : ''}>دائرة</option>
-                    <option value="star" ${item.icon === 'star' ? 'selected' : ''}>نجمة</option>
-                    <option value="fire" ${item.icon === 'fire' ? 'selected' : ''}>نار</option>
-                    <option value="heart" ${item.icon === 'heart' ? 'selected' : ''}>قلب</option>
-                    <option value="leaf" ${item.icon === 'leaf' ? 'selected' : ''}>ورقة</option>
-                  </select>
+                  <label class="hide-item-label">
+                    <input type="checkbox" ${item.hidden ? 'checked' : ''} 
+                      onchange="updateItem(${sectionIndex}, ${itemIndex}, 'hidden', this.checked)">
+                    إخفاء من القائمة
+                  </label>
                   <button class="btn btn-delete" onclick="deleteItem(${sectionIndex}, ${itemIndex})">
                     <i class="fas fa-trash"></i> حذف
                   </button>
@@ -1084,6 +1127,28 @@
       // Update item data
       window.updateItem = function(sectionIndex, itemIndex, field, value) {
         menuData[sectionIndex].items[itemIndex][field] = value;
+        renderMenu();
+        saveChanges();
+      }
+
+      // Toggle item visibility
+      window.toggleItemVisibility = function(sectionIndex, itemIndex, event) {
+        event.stopPropagation();
+        const currentState = menuData[sectionIndex].items[itemIndex].hidden || false;
+        menuData[sectionIndex].items[itemIndex].hidden = !currentState;
+        renderMenu();
+        saveChanges();
+      }
+
+      // Save changes to Firebase
+      async function saveChanges() {
+        try {
+          await set(ref(database, 'menu'), menuData);
+          showSuccessMessage('تم حفظ التغييرات بنجاح');
+        } catch (error) {
+          console.error('Error saving changes:', error);
+          alert('حدث خطأ أثناء الحفظ: ' + error.message);
+        }
       }
 
       // Delete section
@@ -1091,6 +1156,7 @@
         if (confirm('هل أنت متأكد من حذف هذا القسم وجميع أصنافه؟')) {
           menuData.splice(sectionIndex, 1);
           renderMenu();
+          saveChanges();
         }
       }
 
@@ -1099,6 +1165,7 @@
         if (confirm('هل أنت متأكد من حذف هذا الصنف؟')) {
           menuData[sectionIndex].items.splice(itemIndex, 1);
           renderMenu();
+          saveChanges();
         }
       }
 
@@ -1118,6 +1185,7 @@
         itemPrice.value = '';
         itemDesc.value = '';
         itemIcon.value = 'circle';
+        itemHidden.checked = false;
         itemModal.style.display = 'flex';
       }
 
@@ -1144,6 +1212,7 @@
         });
 
         renderMenu();
+        saveChanges();
         sectionModal.style.display = 'none';
       });
 
@@ -1167,10 +1236,12 @@
           plat: itemName.value.trim(),
           prix: parseInt(itemPrice.value) || 0,
           description: itemDesc.value.trim(),
-          icon: itemIcon.value
+          icon: itemIcon.value,
+          hidden: itemHidden.checked
         });
 
         renderMenu();
+        saveChanges();
         itemModal.style.display = 'none';
       });
 

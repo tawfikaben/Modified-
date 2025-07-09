@@ -386,6 +386,14 @@
       background: #e68a00;
     }
 
+    /* أزرار إدارة الأقسام */
+    .sections-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
     /* نموذج إضافة/تعديل عنصر */
     .modal-overlay {
       position: fixed;
@@ -627,10 +635,16 @@
     <div class="container">
       <div class="page-title">
         <h1>إدارة قائمة الطعام</h1>
-        <button class="btn btn-primary" id="addMenuItem">
-          <i class="fas fa-plus"></i>
-          إضافة عنصر جديد
-        </button>
+        <div>
+          <button class="btn btn-secondary" id="addSectionBtn" style="margin-left: 1rem;">
+            <i class="fas fa-layer-group"></i>
+            إضافة قسم جديد
+          </button>
+          <button class="btn btn-primary" id="addMenuItem">
+            <i class="fas fa-plus"></i>
+            إضافة عنصر جديد
+          </button>
+        </div>
       </div>
 
       <!-- كروت الإحصائيات -->
@@ -756,6 +770,33 @@
     </div>
   </div>
 
+  <!-- مودال إضافة قسم جديد -->
+  <div class="modal-overlay" id="sectionModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="sectionModalTitle">إضافة قسم جديد</h3>
+        <button class="close-modal" id="closeSectionModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="sectionForm">
+          <div class="form-group">
+            <label for="sectionName">اسم القسم</label>
+            <input type="text" id="sectionName" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="sectionIcon">أيقونة القسم (اختياري)</label>
+            <input type="text" id="sectionIcon" class="form-control" placeholder="مثال: fa-utensils">
+            <small class="text-muted">يمكنك اختيار أيقونة من <a href="https://fontawesome.com/icons" target="_blank">Font Awesome</a></small>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn" id="cancelSectionBtn">إلغاء</button>
+            <button type="submit" class="btn btn-primary" id="saveSectionBtn">حفظ</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -797,8 +838,11 @@
     // عناصر DOM
     const menuItemsTable = document.getElementById('menuItemsTable');
     const itemModal = document.getElementById('itemModal');
+    const sectionModal = document.getElementById('sectionModal');
     const modalTitle = document.getElementById('modalTitle');
+    const sectionModalTitle = document.getElementById('sectionModalTitle');
     const menuItemForm = document.getElementById('menuItemForm');
+    const sectionForm = document.getElementById('sectionForm');
     const itemIdInput = document.getElementById('itemId');
     const itemNameInput = document.getElementById('itemName');
     const itemPriceInput = document.getElementById('itemPrice');
@@ -807,10 +851,16 @@
     const itemDescriptionInput = document.getElementById('itemDescription');
     const itemStatusInput = document.getElementById('itemStatus');
     const statusText = document.getElementById('statusText');
+    const sectionNameInput = document.getElementById('sectionName');
+    const sectionIconInput = document.getElementById('sectionIcon');
     const closeModalBtn = document.getElementById('closeModal');
+    const closeSectionModalBtn = document.getElementById('closeSectionModal');
     const cancelBtn = document.getElementById('cancelBtn');
+    const cancelSectionBtn = document.getElementById('cancelSectionBtn');
     const saveBtn = document.getElementById('saveBtn');
+    const saveSectionBtn = document.getElementById('saveSectionBtn');
     const addMenuItemBtn = document.getElementById('addMenuItem');
+    const addSectionBtn = document.getElementById('addSectionBtn');
     const searchMenuInput = document.getElementById('searchMenu');
     const totalItemsSpan = document.getElementById('totalItems');
     const activeItemsSpan = document.getElementById('activeItems');
@@ -837,15 +887,25 @@
         itemDescriptionInput.value = item.description || '';
         itemStatusInput.checked = !item.hidden;
         statusText.textContent = !item.hidden ? 'نشط' : 'مخفي';
+        
+        // حفظ الفهرس الأصلي للقسم لتجنب مشكلة تغيير القسم
+        itemSectionInput.setAttribute('data-original-section', item.sectionId);
       } else {
         // وضع الإضافة
         modalTitle.textContent = 'إضافة عنصر جديد';
         menuItemForm.reset();
         itemStatusInput.checked = true;
         statusText.textContent = 'نشط';
+        itemSectionInput.removeAttribute('data-original-section');
       }
       
       itemModal.classList.add('active');
+    }
+
+    function openSectionModal() {
+      sectionForm.reset();
+      sectionModalTitle.textContent = 'إضافة قسم جديد';
+      sectionModal.classList.add('active');
     }
 
     function closeModal() {
@@ -853,9 +913,16 @@
       currentEditingItem = null;
     }
 
+    function closeSectionModal() {
+      sectionModal.classList.remove('active');
+    }
+
     addMenuItemBtn.addEventListener('click', () => openModal());
+    addSectionBtn.addEventListener('click', openSectionModal);
     closeModalBtn.addEventListener('click', closeModal);
+    closeSectionModalBtn.addEventListener('click', closeSectionModal);
     cancelBtn.addEventListener('click', closeModal);
+    cancelSectionBtn.addEventListener('click', closeSectionModal);
 
     // تحميل الأقسام من Firebase
     function loadSections() {
@@ -896,8 +963,13 @@
         const sectionsData = snapshot.val();
         if (sectionsData && sectionsData.length > 0) {
           sectionsData.forEach((section, sectionIndex) => {
-            if (section.items && section.items.length > 0) {
-              section.items.forEach((item, itemIndex) => {
+            if (section.items) {
+              // تحويل items من object إلى array إذا لزم الأمر
+              const itemsArray = section.items && typeof section.items === 'object' && !Array.isArray(section.items) ?
+                Object.values(section.items) : 
+                (section.items || []);
+                
+              itemsArray.forEach((item, itemIndex) => {
                 const menuItem = {
                   id: `${sectionIndex}-${itemIndex}`,
                   plat: item.plat,
@@ -931,6 +1003,7 @@
         }
       }).catch(error => {
         toastr.error('حدث خطأ أثناء تحميل القائمة: ' + error.message);
+        console.error('Error loading menu items:', error);
       });
     }
 
@@ -1040,6 +1113,53 @@
       }
     }
 
+    // إضافة قسم جديد
+    sectionForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const sectionName = sectionNameInput.value.trim();
+      const sectionIcon = sectionIconInput.value.trim() || 'fa-utensils';
+      
+      if (!sectionName) {
+        toastr.warning('الرجاء إدخال اسم القسم');
+        return;
+      }
+      
+      saveSectionBtn.disabled = true;
+      saveSectionBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
+      
+      // إنشاء قسم جديد مع مصفوفة عناصر فارغة
+      const newSection = {
+        section: sectionName,
+        icon: sectionIcon,
+        items: []
+      };
+      
+      // الحصول على الأقسام الحالية
+      database.ref('menu').once('value').then(snapshot => {
+        const currentSections = snapshot.val() || [];
+        
+        // إضافة القسم الجديد إلى المصفوفة
+        currentSections.push(newSection);
+        
+        // حفظ المصفوفة المحدثة
+        database.ref('menu').set(currentSections)
+          .then(() => {
+            toastr.success('تم إضافة القسم الجديد بنجاح');
+            closeSectionModal();
+            loadSections(); // إعادة تحميل الأقسام
+            loadMenuItems(); // إعادة تحميل العناصر
+          })
+          .catch(error => {
+            toastr.error('حدث خطأ أثناء إضافة القسم: ' + error.message);
+          })
+          .finally(() => {
+            saveSectionBtn.disabled = false;
+            saveSectionBtn.innerHTML = '<i class="fas fa-save"></i> حفظ';
+          });
+      });
+    });
+
     // حفظ العنصر (إضافة/تعديل)
     menuItemForm.addEventListener('submit', function(e) {
       e.preventDefault();
@@ -1048,6 +1168,7 @@
       const itemName = itemNameInput.value.trim();
       const itemPrice = parseInt(itemPriceInput.value);
       const itemSection = itemSectionInput.value;
+      const originalSection = itemSectionInput.getAttribute('data-original-section');
       const itemIcon = itemIconInput.value.trim();
       const itemDescription = itemDescriptionInput.value.trim();
       const itemStatus = itemStatusInput.checked;
@@ -1073,19 +1194,45 @@
           hidden: !itemStatus
         };
         
-        database.ref(`menu/${sectionIndex}/items/${itemIndex}`).update(updates)
-          .then(() => {
-            toastr.success('تم تحديث العنصر بنجاح');
-            closeModal();
-            loadMenuItems();
-          })
-          .catch(error => {
-            toastr.error('حدث خطأ أثناء تحديث العنصر: ' + error.message);
-          })
-          .finally(() => {
-            saveBtn.disabled = false;
-            saveBtn.innerHTML = '<i class="fas fa-save"></i> حفظ';
+        // إذا تم تغيير القسم، نحتاج إلى حذف العنصر من القسم القديم وإضافته للجديد
+        if (originalSection !== itemSection) {
+          // أولاً: احصل على بيانات العنصر الحالية
+          database.ref(`menu/${originalSection}/items/${itemIndex}`).once('value').then(snapshot => {
+            const itemData = snapshot.val();
+            
+            // ثانياً: أضف العنصر إلى القسم الجديد
+            database.ref(`menu/${itemSection}/items`).push({
+              plat: itemName,
+              prix: itemPrice,
+              description: itemDescription || null,
+              icon: itemIcon || null,
+              hidden: !itemStatus
+            })
+              .then(() => {
+                // ثالثاً: احذف العنصر من القسم القديم
+                return database.ref(`menu/${originalSection}/items/${itemIndex}`).remove();
+              })
+              .then(() => {
+                toastr.success('تم نقل وتحديث العنصر بنجاح');
+                closeModal();
+                loadMenuItems();
+              })
+              .catch(error => {
+                toastr.error('حدث خطأ أثناء نقل العنصر: ' + error.message);
+              });
           });
+        } else {
+          // إذا لم يتغير القسم، قم بالتحديث فقط
+          database.ref(`menu/${sectionIndex}/items/${itemIndex}`).update(updates)
+            .then(() => {
+              toastr.success('تم تحديث العنصر بنجاح');
+              closeModal();
+              loadMenuItems();
+            })
+            .catch(error => {
+              toastr.error('حدث خطأ أثناء تحديث العنصر: ' + error.message);
+            });
+        }
       } else {
         // حالة الإضافة
         const newItem = {
@@ -1104,12 +1251,11 @@
           })
           .catch(error => {
             toastr.error('حدث خطأ أثناء إضافة العنصر: ' + error.message);
-          })
-          .finally(() => {
-            saveBtn.disabled = false;
-            saveBtn.innerHTML = '<i class="fas fa-save"></i> حفظ';
           });
       }
+      
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = '<i class="fas fa-save"></i> حفظ';
     });
 
     // البحث في القائمة

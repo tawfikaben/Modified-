@@ -3,42 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="لوحة تحكم إدارة قائمة الطعام لدار حسنا">
-  <title>تسجيل الدخول - دار حسنا</title>
-  
-  <!-- Preconnect to external resources -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-  
-  <!-- Fonts and Icons -->
+  <title>نظام إدارة الطلبات - دار حسنا</title>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Modern CSS with CSS Variables matching the original dashboard -->
   <style>
     :root {
       --primary: #E94560;
       --primary-light: #ff6b81;
-      --primary-hover: #d6344f;
       --secondary: #0F3460;
       --secondary-light: #1a4b8c;
-      --accent: #FFD32D;
       --light: #F8F5F2;
       --dark: #16213E;
+      --gold: #FFD32D;
+      --gold-light: #ffe066;
       --text: #2D3748;
-      --text-light: #4A5568;
+      --text-light: #4a5568;
       --white: #FFFFFF;
       --gray: #EDF2F7;
       --gray-dark: #e2e8f0;
-      --error: #c62828;
-      --error-bg: rgba(198, 40, 40, 0.1);
-      --success: #2E7D32;
-      --success-bg: rgba(46, 125, 50, 0.1);
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      --shadow-md: 0 6px 30px rgba(0, 0, 0, 0.12);
-      --transition: all 0.3s ease;
-      --radius: 8px;
-      --radius-lg: 12px;
+      --success: #2d9d78;
+      --warning: #e67e22;
+      --danger: #e94560;
+      --info: #0F3460;
+      
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.2);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
     }
 
     * {
@@ -47,125 +42,169 @@
       box-sizing: border-box;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
       font-family: 'Tajawal', sans-serif;
       background-color: #f5f7fa;
       color: var(--text);
       line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 1rem;
+      direction: rtl;
     }
 
-    /* Authentication Styles */
-    .auth-container {
+    /* Login Styles */
+    #login-container {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      max-width: 500px;
-      padding: 1rem;
-      animation: fadeIn 0.5s ease;
-    }
-
-    .auth-card {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      padding: 2rem;
-      text-align: center;
-      transition: var(--transition);
-      border-top: 4px solid var(--primary);
-      position: relative;
-    }
-
-    .auth-card:hover {
-      box-shadow: var(--shadow-md);
-    }
-
-    .logo {
-      font-size: 2rem;
-      color: var(--primary);
-      margin-bottom: 1.5rem;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+      background-size: cover;
       display: flex;
-      justify-content: center;
       align-items: center;
-      gap: 0.75rem;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    #login-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(15, 52, 96, 0.7);
     }
 
-    .logo i {
-      font-size: 2.2rem;
+    .login-box {
+      background-color: var(--white);
+      padding: 30px;
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      z-index: 2;
     }
 
-    .auth-title {
-      color: var(--dark);
-      margin-bottom: 1.5rem;
-      font-size: 1.5rem;
-      font-weight: 600;
+    .login-logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .login-logo .logo {
+      margin: 0 auto 15px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.8rem;
+      box-shadow: var(--shadow-sm);
     }
 
     .form-group {
-      margin-bottom: 1.25rem;
-      text-align: right;
+      margin-bottom: 20px;
     }
 
-    .form-label {
+    .form-group label {
       display: block;
-      margin-bottom: 0.5rem;
+      margin-bottom: 8px;
       font-weight: 500;
-      color: var(--dark);
-      font-size: 0.95rem;
     }
 
-    .form-control {
+    .form-group input {
       width: 100%;
-      padding: 0.875rem 1rem;
+      padding: 12px 15px;
       border: 1px solid var(--gray-dark);
-      border-radius: var(--radius);
+      border-radius: var(--radius-sm);
       font-family: 'Tajawal', sans-serif;
-      font-size: 1rem;
       transition: var(--transition);
-      background-color: var(--white);
     }
 
-    .form-control:focus {
-      border-color: var(--primary);
+    .form-group input:focus {
       outline: none;
-      box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.2);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.2);
+    }
+
+    .btn-block {
+      width: 100%;
+      padding: 12px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--gray);
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: var(--dark);
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 15px;
     }
 
     .btn {
-      padding: 0.875rem 1.5rem;
-      border-radius: var(--radius);
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
       border: none;
       font-family: 'Tajawal', sans-serif;
-      font-size: 1rem;
       font-weight: 500;
       cursor: pointer;
       transition: var(--transition);
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      width: 100%;
+      gap: 8px;
     }
 
     .btn-primary {
-      background: var(--primary);
-      color: var(--white);
-      margin-top: 0.5rem;
+      background-color: var(--primary);
+      color: white;
     }
 
     .btn-primary:hover {
-      background: var(--primary-hover);
-      transform: translateY(-2px);
-    }
-
-    .btn-primary:active {
-      transform: translateY(0);
+      background-color: var(--primary-light);
+      box-shadow: var(--shadow-sm);
     }
 
     .btn-outline {
@@ -178,672 +217,941 @@
       background-color: var(--gray);
     }
 
-    .auth-footer {
-      margin-top: 1.5rem;
-      color: var(--text-light);
-      font-size: 0.85rem;
-      line-height: 1.5;
+    .btn-reset {
+      background-color: var(--danger);
+      color: white;
+    }
+    
+    .btn-reset:hover {
+      background-color: #d32f2f;
     }
 
-    .auth-footer a {
-      color: var(--primary);
-      text-decoration: none;
+    .clock {
+      background-color: var(--white);
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
       font-weight: 500;
+      color: var(--text-light);
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background-color: var(--white);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
       transition: var(--transition);
     }
 
-    .auth-footer a:hover {
-      text-decoration: underline;
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
     }
 
-    /* Message Styles */
-    .message {
-      padding: 0.75rem;
-      border-radius: var(--radius);
-      margin-bottom: 1.25rem;
-      display: none;
-      text-align: right;
-    }
-
-    .error-message {
-      color: var(--error);
-      background: var(--error-bg);
-    }
-
-    .success-message {
-      color: var(--success);
-      background: var(--success-bg);
-    }
-
-    /* Loading spinner */
-    .spinner {
-      display: none;
-      width: 24px;
-      height: 24px;
-      border: 3px solid rgba(0, 0, 0, 0.1);
-      border-radius: 50%;
-      border-top-color: var(--white);
-      animation: spin 1s ease-in-out infinite;
-    }
-
-    /* Admin Panel Styles */
-    .admin-panel {
-      display: none;
-      width: 100%;
-      min-height: 100vh;
-      background-color: var(--light);
-      padding: 1rem;
-    }
-
-    .admin-header {
-      background: var(--white);
-      padding: 1.5rem;
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      margin-bottom: 1.5rem;
-      position: relative;
-      border-top: 4px solid var(--primary);
-    }
-
-    .admin-header h1 {
-      color: var(--dark);
-      font-size: 1.5rem;
+    .stat-title {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.5rem;
+      gap: 8px;
     }
 
-    .admin-header .subtitle {
-      color: var(--text-light);
-      font-size: 0.9rem;
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 5px;
     }
 
-    .logout-btn {
+    .stat-change {
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Status Card Backgrounds */
+    .pending-card {
+      background: linear-gradient(135deg, #FFEBEE 0%, #FFFFFF 100%);
+      border-top: 4px solid #D32F2F;
+    }
+
+    .preparing-card {
+      background: linear-gradient(135deg, #FFF3E0 0%, #FFFFFF 100%);
+      border-top: 4px solid #F57C00;
+    }
+
+    .ready-card {
+      background: linear-gradient(135deg, #E8F5E9 0%, #FFFFFF 100%);
+      border-top: 4px solid #388E3C;
+    }
+
+    .delivered-card {
+      background: linear-gradient(135deg, #E3F2FD 0%, #FFFFFF 100%);
+      border-top: 4px solid #1976D2;
+    }
+
+    .total-card {
+      background: linear-gradient(135deg, #FFF8E1 0%, #FFFFFF 100%);
+      border-top: 4px solid var(--gold);
+    }
+
+    /* New Orders Section */
+    .new-orders-section {
+      background-color: #fff5f7;
+      padding: 20px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 30px;
+      border-top: 4px solid var(--primary);
+      position: relative;
+    }
+
+    .new-orders-section h2 {
+      font-size: 1.4rem;
+      color: var(--primary);
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px dashed var(--gray);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .new-orders-section::before {
+      content: "";
       position: absolute;
-      left: 1.5rem;
-      top: 1.5rem;
-      background: var(--primary);
-      color: white;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(233,69,96,0.05) 0%, rgba(255,255,255,0) 100%);
+      pointer-events: none;
+    }
+
+    .new-order-highlight {
+      animation: highlightPulse 2s infinite;
+      border: 2px solid var(--primary);
+    }
+
+    @keyframes highlightPulse {
+      0% { box-shadow: 0 0 0 0 rgba(233, 69, 96, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(233, 69, 96, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(233, 69, 96, 0); }
+    }
+
+    /* Status Tabs */
+    .status-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+    }
+
+    .status-tabs::-webkit-scrollbar {
+      height: 5px;
+    }
+
+    .status-tabs::-webkit-scrollbar-thumb {
+      background-color: var(--gray-dark);
+      border-radius: 10px;
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
       border: none;
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius);
-      cursor: pointer;
+      background-color: var(--white);
+      color: var(--text);
       font-family: 'Tajawal', sans-serif;
       font-weight: 500;
+      cursor: pointer;
       transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      white-space: nowrap;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray);
     }
 
-    .logout-btn:hover {
-      background: var(--primary-hover);
+    .tab-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
-    .panel-header {
+    .tab-btn[data-status="pending"]:hover {
+      background-color: #FFEBEE;
+    }
+
+    .tab-btn[data-status="preparing"]:hover {
+      background-color: #FFF3E0;
+    }
+
+    .tab-btn[data-status="ready"]:hover {
+      background-color: #E8F5E9;
+    }
+
+    .tab-btn[data-status="delivered"]:hover {
+      background-color: #E3F2FD;
+    }
+
+    .tab-btn.active {
+      color: white;
+      border: none;
+    }
+
+    .tab-btn.active[data-status="pending"] {
+      background-color: #D32F2F;
+    }
+
+    .tab-btn.active[data-status="preparing"] {
+      background-color: #F57C00;
+    }
+
+    .tab-btn.active[data-status="ready"] {
+      background-color: #388E3C;
+    }
+
+    .tab-btn.active[data-status="delivered"] {
+      background-color: #1976D2;
+    }
+
+    /* Orders Grid */
+    .orders-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .order-card {
+      background-color: var(--white);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .order-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .order-card.new::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 8px;
+      height: 100%;
+      background-color: var(--primary);
+    }
+
+    .order-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-      gap: 1rem;
+      padding: 15px;
+      border-bottom: 1px solid var(--gray);
+      position: relative;
     }
 
-    .panel-title {
-      font-size: 1.25rem;
+    .order-table {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--primary);
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .order-time {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .order-time-ago {
+      font-size: 0.75rem;
+      color: var(--primary);
+      margin-top: 3px;
+    }
+
+    /* Status Badges with Background */
+    .order-status {
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
       font-weight: 600;
+    }
+
+    .status-pending {
+      background-color: #FFEEEE;
+      color: #D32F2F;
+      border-right: 4px solid #D32F2F;
+    }
+
+    .status-preparing {
+      background-color: #FFF3E0;
+      color: #F57C00;
+      border-right: 4px solid #F57C00;
+    }
+
+    .status-ready {
+      background-color: #E8F5E9;
+      color: #388E3C;
+      border-right: 4px solid #388E3C;
+    }
+
+    .status-delivered {
+      background-color: #E3F2FD;
+      color: #1976D2;
+      border-right: 4px solid #1976D2;
+    }
+
+    .order-body {
+      padding: 15px;
+    }
+
+    .order-items {
+      margin-bottom: 15px;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--gray);
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .item-quantity {
+      background-color: var(--gray);
+      color: var(--text);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .item-price {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .order-notes {
+      background-color: var(--gray);
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      margin-top: 15px;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .order-notes strong {
+      color: var(--text);
+    }
+
+    .order-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-top: 1px solid var(--gray);
+      background-color: var(--light);
+    }
+
+    .order-total {
+      font-weight: 700;
       color: var(--dark);
     }
 
-    .panel-actions {
+    .order-actions {
       display: flex;
-      align-items: center;
-      gap: 1rem;
+      gap: 10px;
     }
 
-    .header-buttons {
-      display: flex;
-      gap: 0.75rem;
-    }
-
-    .header-btn {
-      background: var(--secondary);
-      color: white;
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
       border: none;
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius);
+      background-color: var(--white);
+      color: var(--text);
       cursor: pointer;
-      font-family: 'Tajawal', sans-serif;
-      font-weight: 500;
       transition: var(--transition);
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      text-decoration: none;
-      font-size: 0.9rem;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
     }
 
-    .header-btn:hover {
-      background: var(--secondary-light);
+    .action-btn:hover {
+      transform: scale(1.1);
     }
 
-    /* Modal Styles */
-    .modal {
-      display: none;
+    .action-btn.delete {
+      color: var(--danger);
+    }
+
+    .action-btn.edit {
+      color: var(--primary);
+    }
+
+    .status-select {
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--gray-dark);
+      font-family: 'Tajawal', sans-serif;
+      background-color: var(--white);
+      color: var(--text);
+      cursor: pointer;
+      min-width: 120px;
+      transition: var(--transition);
+    }
+
+    .status-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.2);
+    }
+
+    .new-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: var(--primary);
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      z-index: 2;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    /* Status Change Animation */
+    .order-card.status-changing {
+      animation: pulse 0.5s 2;
+    }
+
+    /* Empty State */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 50px 20px;
+      background-color: var(--white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      color: var(--gray-dark);
+      margin-bottom: 20px;
+    }
+
+    .empty-text {
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+
+    /* Orders History Section */
+    .history-section {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--gray);
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .history-title {
+      font-size: 1.5rem;
+      color: var(--dark);
+      font-weight: 700;
+    }
+
+    .clear-history-btn {
+      background-color: var(--danger);
+      color: white;
+      padding: 8px 15px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .clear-history-btn:hover {
+      background-color: #d32f2f;
+    }
+
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+    }
+
+    .history-card {
+      background-color: var(--white);
+      border-radius: var(--radius-md);
+      padding: 15px;
+      box-shadow: var(--shadow-sm);
+      border-left: 4px solid var(--primary);
+    }
+
+    .history-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed var(--gray);
+    }
+
+    .history-time {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .history-table {
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .history-status {
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .history-items {
+      margin-bottom: 10px;
+    }
+
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      padding: 5px 0;
+    }
+
+    .history-total {
+      font-weight: 700;
+      text-align: left;
+      margin-top: 5px;
+    }
+
+    /* Countdown Timer Styles */
+    .countdown-timer {
+      background-color: var(--secondary);
+      color: white;
+      padding: 8px 15px;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      margin-left: 10px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .countdown-timer i {
+      margin-left: 8px;
+    }
+
+    .print-history-btn {
+      background-color: var(--primary);
+      color: white;
+      padding: 8px 15px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-right: 10px;
+    }
+
+    .print-history-btn:hover {
+      background-color: var(--primary-light);
+    }
+
+    .history-header-controls {
+      display: flex;
+      align-items: center;
+    }
+
+    .history-stats {
+      background-color: var(--white);
+      padding: 10px 15px;
+      border-radius: var(--radius-sm);
+      margin-left: 10px;
+      font-weight: 500;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Confirm Dialog Styles */
+    .confirm-dialog {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
+      background-color: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
       justify-content: center;
-      align-items: center;
-      padding: 1rem;
+      z-index: 2000;
+      display: none;
     }
-
-    .modal-content {
-      background: var(--white);
+    
+    .confirm-box {
+      background-color: white;
+      padding: 30px;
       border-radius: var(--radius-lg);
-      width: 100%;
-      max-width: 500px;
-      box-shadow: var(--shadow-md);
-      overflow: hidden;
-      animation: modalFadeIn 0.3s ease;
-      border-top: 4px solid var(--primary);
+      width: 90%;
+      max-width: 400px;
+      box-shadow: var(--shadow-lg);
     }
-
-    .modal-header {
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--gray);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-header h3 {
-      font-size: 1.25rem;
-      color: var(--dark);
-    }
-
-    .close-modal {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: var(--text-light);
-      transition: var(--transition);
-    }
-
-    .close-modal:hover {
-      color: var(--text);
-    }
-
-    .modal-body {
-      padding: 1.5rem;
-    }
-
-    .modal-footer {
-      padding: 1rem 1.5rem;
-      border-top: 1px solid var(--gray);
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    /* Menu Sections */
-    .menu-sections {
-      display: grid;
-      gap: 1.5rem;
-    }
-
-    .section {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      border-top: 4px solid var(--secondary);
-    }
-
-    .section-header {
-      padding: 1rem 1.5rem;
-      background: var(--light);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--gray);
-    }
-
-    .section-title {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 600;
-    }
-
-    .section-controls {
-      display: flex;
-      gap: 0.75rem;
-    }
-
-    .section-items {
-      padding: 1rem;
-      display: grid;
-      gap: 1rem;
-    }
-
-    .menu-item {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 1rem;
-      align-items: center;
-      padding: 1rem;
-      background: var(--light);
-      border-radius: var(--radius);
-      border-right: 4px solid var(--accent);
-      transition: var(--transition);
-    }
-
-    .menu-item.hidden-item {
-      opacity: 0.6;
-      background-color: #f8d7da;
-    }
-
-    .item-icon {
-      font-size: 1.25rem;
-      color: var(--primary);
-    }
-
-    .item-details {
-      display: grid;
-      gap: 0.5rem;
-      cursor: pointer;
-    }
-
-    .item-details input,
-    .item-details textarea {
-      pointer-events: none;
-    }
-
-    .item-name {
-      font-weight: 600;
-      border: none;
-      background: transparent;
-      padding: 0;
-      font-size: 1rem;
-      color: var(--dark);
-    }
-
-    .item-desc {
-      font-size: 0.875rem;
-      color: var(--text-light);
-      border: none;
-      background: transparent;
-      padding: 0;
-      resize: none;
-    }
-
-    .item-price {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--primary);
-    }
-
-    .item-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      pointer-events: auto;
-    }
-
-    .select-icon {
-      padding: 0.5rem;
-      border: 1px solid var(--gray);
-      border-radius: var(--radius);
-      font-family: 'Tajawal', sans-serif;
-    }
-
-    /* Save Button */
-    .save-all {
-      margin-top: 2rem;
-      display: flex;
-      justify-content: center;
-    }
-
-    .btn-save {
-      background: var(--secondary);
-      color: var(--white);
-      max-width: 300px;
-    }
-
-    .btn-save:hover {
-      background: var(--secondary-light);
-    }
-
-    /* Delete Button */
-    .btn-delete {
-      background: var(--error);
-      color: var(--white);
-    }
-
-    .btn-delete:hover {
-      background: #b71c1c;
-    }
-
-    /* Hide Item Checkbox */
-    .hide-item-label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      cursor: pointer;
-      padding: 0.5rem;
-      border-radius: var(--radius);
-    }
-
-    .hide-item-label:hover {
-      background-color: var(--gray);
-    }
-
-    .hide-item-label input[type="checkbox"] {
-      cursor: pointer;
-      width: 1.1em;
-      height: 1.1em;
-    }
-
-    /* Empty State */
-    .empty-state {
+    
+    .confirm-title {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      color: var(--danger);
       text-align: center;
-      padding: 2rem;
-      color: var(--text-light);
     }
-
-    .empty-state i {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      opacity: 0.7;
-    }
-
-    /* Login Page Buttons */
-    .login-buttons {
+    
+    .confirm-actions {
       display: flex;
-      gap: 0.75rem;
-      margin-top: 1.5rem;
-      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .confirm-actions button {
+      flex: 1;
     }
 
-    .login-btn {
-      background: var(--secondary);
-      color: white;
-      border: none;
-      padding: 0.75rem 1.25rem;
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-family: 'Tajawal', sans-serif;
-      font-weight: 500;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      text-decoration: none;
-      font-size: 0.95rem;
-    }
-
-    .login-btn:hover {
-      background: var(--secondary-light);
-    }
-
-    /* Animations */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes modalFadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    /* Responsive Adjustments */
+    /* Responsive */
     @media (max-width: 768px) {
-      .auth-card {
-        padding: 1.5rem;
-      }
-      
-      .admin-header h1 {
-        font-size: 1.25rem;
-        padding-right: 2.5rem;
-      }
-      
-      .logout-btn {
-        position: relative;
-        left: auto;
-        top: auto;
-        margin-top: 1rem;
-      }
-      
-      .panel-header {
+      .header {
         flex-direction: column;
         align-items: flex-start;
+        gap: 15px;
       }
       
-      .panel-actions {
+      .header-actions {
         width: 100%;
-        flex-direction: column;
-        gap: 0.75rem;
+        justify-content: space-between;
       }
       
-      .header-buttons {
-        width: 100%;
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
       }
       
-      .header-btn, #addSectionBtn {
-        width: 100%;
-        justify-content: center;
-      }
-      
-      .login-buttons {
-        flex-direction: column;
-      }
-      
-      .menu-item {
+      .orders-grid {
         grid-template-columns: 1fr;
       }
       
-      .item-controls {
-        flex-direction: row;
-        justify-content: flex-end;
+      .history-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .history-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      .history-header-controls {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .countdown-timer, .print-history-btn, .clear-history-btn, .history-stats {
+        margin: 0;
+        flex-grow: 1;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+      }
+      
+      .login-box {
+        padding: 20px;
+        margin: 15px;
+      }
+      
+      .status-tabs {
+        gap: 5px;
+      }
+      
+      .tab-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+      }
+
+      .history-header-controls {
+        flex-direction: column;
+        align-items: stretch;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Authentication Screen -->
-  <div class="auth-container" id="authContainer">
-    <div class="auth-card">
-      <div class="logo">
-        <i class="fas fa-utensils"></i>
-        <span>دار حسنا</span>
+  <!-- Login Container -->
+  <div id="login-container">
+    <div class="login-box">
+      <div class="login-logo">
+        <div class="logo">ح</div>
+        <h2>تسجيل الدخول</h2>
       </div>
-      <h1 class="auth-title">لوحة التحكم الإدارية</h1>
-      
-      <div class="message error-message" id="errorMessage"></div>
-      
-      <form id="loginForm" novalidate>
+      <form id="login-form">
         <div class="form-group">
-          <label for="email" class="form-label">البريد الإلكتروني</label>
-          <input type="email" id="email" class="form-control" required placeholder="ادخل بريدك الإلكتروني">
+          <label for="login-email">البريد الإلكتروني</label>
+          <input type="email" id="login-email" required>
         </div>
-        
         <div class="form-group">
-          <label for="password" class="form-label">كلمة المرور</label>
-          <input type="password" id="password" class="form-control" required placeholder="ادخل كلمة المرور">
+          <label for="login-password">كلمة المرور</label>
+          <input type="password" id="login-password" required>
         </div>
-        
-        <button type="submit" class="btn btn-primary" id="loginBtn">
-          <span id="loginText">تسجيل الدخول</span>
-          <div class="spinner" id="loginSpinner"></div>
+        <button type="submit" class="btn btn-primary btn-block">
+          <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
         </button>
       </form>
-      
-      <div class="login-buttons">
-        <a href="https://tawfikaben.github.io/Menu/" class="login-btn" target="_self">
-          <i class="fas fa-book-open"></i> القائمة
-        </a>
-        <a href="https://tawfikaben.github.io/Viva/" class="login-btn" target="_self">
-          <i class="fas fa-clipboard-list"></i> متابعة الطلبات
-        </a>
-      </div>
-      
-      <div class="auth-footer">
-        <p>للحصول على صلاحيات الدخول، يرجى التواصل مع <a href="mailto:admin@darhassna.com">مسؤول النظام</a></p>
-      </div>
+      <div id="login-error" style="color: var(--danger); margin-top: 15px; display: none;"></div>
     </div>
   </div>
 
-  <!-- Admin Panel (initially hidden) -->
-  <div class="admin-panel" id="adminPanel">
-    <header class="admin-header">
-      <h1><i class="fas fa-utensils"></i> لوحة تحكم دار حسنا</h1>
-      <p class="subtitle">إدارة قائمة الطعام والمشروبات</p>
-      
-      <button id="logoutBtn" class="logout-btn">
-        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
-      </button>
-    </header>
+  <!-- Main Container -->
+  <div class="container" id="main-container" style="display: none;">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-title">
+        <div class="logo">ح</div>
+        <h1>نظام إدارة الطلبات - دار حسنا</h1>
+      </div>
+      <div class="header-actions">
+        <div class="clock" id="liveClock"></div>
+        <button class="btn btn-outline" id="print-btn">
+          <i class="fas fa-print"></i> طباعة
+        </button>
+        <button class="btn btn-primary" id="modification-btn">
+          <i class="fas fa-edit"></i> تعديل
+        </button>
+        <button class="btn btn-primary" id="menu-btn">
+          <i class="fas fa-utensils"></i> القائمة
+        </button>
+        <button class="btn btn-reset" id="reset-btn">
+          <i class="fas fa-redo"></i> إعادة تشغيل
+        </button>
+        <button class="btn btn-outline" id="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+        </button>
+      </div>
+    </div>
 
-    <div class="admin-panel-content">
-      <div class="panel-header">
-        <div class="panel-title">قائمة الطعام</div>
-        <div class="panel-actions">
-          <div class="header-buttons">
-            <a href="https://tawfikaben.github.io/Menu/" class="header-btn" target="_self">
-              <i class="fas fa-book-open"></i> القائمة
-            </a>
-            <a href="https://tawfikaben.github.io/Viva/" class="header-btn" target="_self">
-              <i class="fas fa-clipboard-list"></i> متابعة الطلبات
-            </a>
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card pending-card">
+        <div class="stat-title">
+          <i class="fas fa-clock"></i> في الانتظار
+        </div>
+        <div class="stat-value" id="pending-count">0</div>
+        <div class="stat-change up">
+          <i class="fas fa-arrow-up"></i> 12% من الأمس
+        </div>
+      </div>
+      <div class="stat-card preparing-card">
+        <div class="stat-title">
+          <i class="fas fa-utensils"></i> قيد التحضير
+        </div>
+        <div class="stat-value" id="preparing-count">0</div>
+        <div class="stat-change up">
+          <i class="fas fa-arrow-up"></i> 8% من الأمس
+        </div>
+      </div>
+      <div class="stat-card ready-card">
+        <div class="stat-title">
+          <i class="fas fa-check-circle"></i> جاهزة
+        </div>
+        <div class="stat-value" id="ready-count">0</div>
+        <div class="stat-change down">
+          <i class="fas fa-arrow-down"></i> 5% من الأمس
+        </div>
+      </div>
+      <div class="stat-card delivered-card">
+        <div class="stat-title">
+          <i class="fas fa-truck"></i> تم التسليم
+        </div>
+        <div class="stat-value" id="delivered-count">0</div>
+        <div class="stat-change up">
+          <i class="fas fa-arrow-up"></i> 15% من الأمس
+        </div>
+      </div>
+      <div class="stat-card total-card">
+        <div class="stat-title">
+          <i class="fas fa-shopping-bag"></i> المجموع
+        </div>
+        <div class="stat-value" id="total-count">0</div>
+        <div class="stat-change up">
+          <i class="fas fa-arrow-up"></i> 10% من الأمس
+        </div>
+      </div>
+    </div>
+
+    <!-- New Orders Section -->
+    <div class="new-orders-section" id="new-orders-section">
+      <h2><i class="fas fa-bell"></i> الطلبيات الجديدة</h2>
+      <div class="orders-grid" id="new-orders-container"></div>
+    </div>
+
+    <!-- Status Tabs -->
+    <div class="status-tabs">
+      <button class="tab-btn active" data-status="pending">
+        <i class="fas fa-clock"></i> في الانتظار
+      </button>
+      <button class="tab-btn" data-status="preparing">
+        <i class="fas fa-utensils"></i> قيد التحضير
+      </button>
+      <button class="tab-btn" data-status="ready">
+        <i class="fas fa-check-circle"></i> جاهزة
+      </button>
+      <button class="tab-btn" data-status="delivered">
+        <i class="fas fa-truck"></i> تم التسليم
+      </button>
+    </div>
+
+    <!-- Orders Grid -->
+    <div class="orders-grid" id="orders-container">
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="fas fa-clipboard-list"></i>
+        </div>
+        <h3>لا توجد طلبات حالياً</h3>
+        <p class="empty-text">سيظهر هنا أي طلبات جديدة يتم تقديمها</p>
+        <button class="btn btn-primary">
+          <i class="fas fa-sync-alt"></i> تحديث
+        </button>
+      </div>
+    </div>
+
+    <!-- Orders History Section -->
+    <div class="history-section" id="history-section">
+      <div class="history-header">
+        <h2 class="history-title"><i class="fas fa-history"></i> سجل الطلبيات (آخر 24 ساعة)</h2>
+        <div class="history-header-controls">
+          <div class="history-stats">
+            <i class="fas fa-file-invoice-dollar"></i> 
+            <span id="history-total-amount">0</span> درهم
           </div>
-          <button class="btn btn-primary" id="addSectionBtn">
-            <i class="fas fa-plus"></i> إضافة قسم جديد
+          <div class="history-stats">
+            <i class="fas fa-list-ol"></i> 
+            <span id="history-total-orders">0</span> طلبية
+          </div>
+          <div class="countdown-timer" id="history-countdown">
+            <i class="fas fa-clock"></i> 
+            <span>24:00:00</span>
+          </div>
+          <button class="print-history-btn" id="print-history-btn">
+            <i class="fas fa-print"></i> طباعة السجل
+          </button>
+          <button class="clear-history-btn" id="clear-history-btn">
+            <i class="fas fa-trash"></i> مسح السجل
           </button>
         </div>
       </div>
-
-      <div class="menu-sections" id="menuSections">
-        <!-- Sections will be loaded here -->
+      <div class="history-grid" id="history-container">
         <div class="empty-state">
-          <i class="fas fa-utensils"></i>
-          <p>لا توجد أقسام في القائمة حالياً</p>
+          <div class="empty-icon">
+            <i class="fas fa-history"></i>
+          </div>
+          <h3>لا توجد طلبات في السجل</h3>
+          <p class="empty-text">سيتم عرض الطلبات المنتهية هنا</p>
         </div>
       </div>
+    </div>
+  </div>
 
-      <div class="save-all">
-        <button class="btn btn-save" id="saveAllBtn">
-          <i class="fas fa-save"></i> حفظ جميع التغييرات
+  <!-- Confirm Reset Dialog -->
+  <div class="confirm-dialog" id="confirm-reset-dialog">
+    <div class="confirm-box">
+      <div class="confirm-title">
+        <i class="fas fa-exclamation-triangle"></i> تأكيد إعادة التشغيل
+      </div>
+      <div class="form-group">
+        <label for="reset-email">البريد الإلكتروني</label>
+        <input type="email" id="reset-email" required>
+      </div>
+      <div class="form-group">
+        <label for="reset-password">كلمة المرور</label>
+        <input type="password" id="reset-password" required>
+      </div>
+      <div id="reset-error" style="color: var(--danger); margin-top: 15px; display: none;"></div>
+      <div class="confirm-actions">
+        <button class="btn btn-outline" id="cancel-reset-btn">
+          إلغاء
+        </button>
+        <button class="btn btn-reset" id="confirm-reset-btn">
+          تأكيد
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Add Section Modal -->
-  <div class="modal" id="sectionModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>إضافة قسم جديد</h3>
-        <button class="close-modal" id="closeSectionModal" aria-label="إغلاق">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="sectionName" class="form-label">اسم القسم</label>
-          <input type="text" class="form-control" id="sectionName" placeholder="مثال: المقبلات، المشروبات" required>
-        </div>
-        <div class="form-group">
-          <label for="sectionIcon" class="form-label">اختر أيقونة</label>
-          <select class="form-control select-icon" id="sectionIcon" required>
-            <option value="utensils">أواني طعام</option>
-            <option value="drumstick-bite">لحم</option>
-            <option value="fish">سمك</option>
-            <option value="leaf">نباتي</option>
-            <option value="ice-cream">حلويات</option>
-            <option value="coffee">مشروبات</option>
-          </select>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" id="confirmAddSection">
-          <i class="fas fa-check"></i> تأكيد الإضافة
-        </button>
-      </div>
-    </div>
-  </div>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
-  <!-- Add Item Modal -->
-  <div class="modal" id="itemModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 id="itemModalTitle">إضافة صنف جديد</h3>
-        <button class="close-modal" id="closeItemModal" aria-label="إغلاق">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="itemName" class="form-label">اسم الصنف</label>
-          <input type="text" class="form-control" id="itemName" placeholder="مثال: طاجن لحم، كسكس" required>
-        </div>
-        <div class="form-group">
-          <label for="itemPrice" class="form-label">السعر (درهم)</label>
-          <input type="number" class="form-control" id="itemPrice" placeholder="50" min="0" required>
-        </div>
-        <div class="form-group">
-          <label for="itemDesc" class="form-label">الوصف</label>
-          <textarea class="form-control" id="itemDesc" rows="3" placeholder="وصف مختصر للصنف"></textarea>
-        </div>
-        <div class="form-group">
-          <label for="itemIcon" class="form-label">اختر أيقونة</label>
-          <select class="form-control select-icon" id="itemIcon" required>
-            <option value="circle">دائرة</option>
-            <option value="star">نجمة</option>
-            <option value="fire">نار</option>
-            <option value="heart">قلب</option>
-            <option value="leaf">ورقة</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="itemHidden" class="form-label">حالة العنصر</label>
-          <label class="hide-item-label">
-            <input type="checkbox" id="itemHidden">
-            إخفاء من القائمة
-          </label>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" id="confirmAddItem">
-          <i class="fas fa-check"></i> تأكيد الإضافة
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Firebase SDK with version 9 (modular) -->
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
-    import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js';
-    import { 
-      getAuth, 
-      signInWithEmailAndPassword, 
-      signOut, 
-      onAuthStateChanged, 
-      setPersistence, 
-      browserSessionPersistence 
-    } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
-
-    // Firebase Configuration
+  <script>
+    // تكوين Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDpSF4J0bsd6T0ImMpse0KQQRADaxiYUQw",
       authDomain: "darhassna-484c3.firebaseapp.com",
@@ -855,446 +1163,731 @@
     };
 
     // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-    const auth = getAuth(app);
-
-    // Set session persistence (will forget on page refresh)
-    setPersistence(auth, browserSessionPersistence)
-      .then(() => {
-        console.log("Session persistence enabled");
-      })
-      .catch((error) => {
-        console.error("Error setting persistence:", error);
-      });
-
-    // Timeout after 15 minutes of inactivity (900000 milliseconds)
-    let inactivityTimeout;
-
-    function resetInactivityTimer() {
-      clearTimeout(inactivityTimeout);
-      inactivityTimeout = setTimeout(() => {
-        signOut(auth).then(() => {
-          window.location.reload();
-        });
-      }, 900000); // 15 minutes
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const auth = firebase.auth();
+    
+    // عناصر DOM
+    const ordersContainer = document.getElementById("orders-container");
+    const newOrdersContainer = document.getElementById("new-orders-container");
+    const newOrdersSection = document.getElementById("new-orders-section");
+    const historyContainer = document.getElementById("history-container");
+    
+    // متغيرات التطبيق
+    let allOrders = {};
+    let newOrders = {};
+    let ordersHistory = {};
+    const playedNotifications = new Set();
+    const statusCount = {
+      'pending': 0,
+      'preparing': 0,
+      'ready': 0,
+      'delivered': 0,
+      'total': 0
+    };
+    
+    // متغيرات العداد
+    let countdownInterval;
+    let historyTotalAmount = 0;
+    let historyTotalOrders = 0;
+    
+    // متغير للتحكم في الإشعارات الصوتية
+    let isNotificationPlaying = false;
+    
+    // دالة تشغيل الإشعار الصوتي
+    function playNotificationSound() {
+      if (!isNotificationPlaying) {
+        isNotificationPlaying = true;
+        const notificationSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3');
+        notificationSound.volume = 0.3;
+        notificationSound.play()
+          .then(() => {
+            setTimeout(() => {
+              isNotificationPlaying = false;
+            }, 4000);
+          })
+          .catch(e => {
+            console.log("Error playing notification:", e);
+            isNotificationPlaying = false;
+          });
+      }
+    }
+    
+    // دالة تشغيل صوت تغيير الحالة
+    function playStatusChangeSound() {
+      const statusChangeSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-positive-interface-beep-221.mp3');
+      statusChangeSound.volume = 0.3;
+      statusChangeSound.play().catch(e => console.log("Status sound error:", e));
     }
 
-    // Track user activity
-    function setupActivityListeners() {
-      const events = ['mousemove', 'keydown', 'scroll', 'click', 'touchstart'];
-      events.forEach(event => {
-        window.addEventListener(event, resetInactivityTimer);
-      });
-      resetInactivityTimer(); // Initialize the timer
-    }
-
-    // DOM Elements
-    const authContainer = document.getElementById('authContainer');
-    const adminPanel = document.getElementById('adminPanel');
-    const loginForm = document.getElementById('loginForm');
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const loginBtn = document.getElementById('loginBtn');
-    const loginText = document.getElementById('loginText');
-    const loginSpinner = document.getElementById('loginSpinner');
-    const errorMessage = document.getElementById('errorMessage');
-    const logoutBtn = document.getElementById('logoutBtn');
-
-    // Check auth state and redirect if not logged in
-    function checkAuthState() {
-      onAuthStateChanged(auth, (user) => {
-        if (!user) {
-          authContainer.style.display = 'flex';
-          adminPanel.style.display = 'none';
-        } else {
-          authContainer.style.display = 'none';
-          adminPanel.style.display = 'block';
-          initializeAdminPanel();
-          setupActivityListeners();
+    // دالة بدء عداد 24 ساعة
+    function startCountdown() {
+      let hours = 24;
+      let minutes = 0;
+      let seconds = 0;
+      
+      if (countdownInterval) clearInterval(countdownInterval);
+      
+      countdownInterval = setInterval(() => {
+        seconds--;
+        if (seconds < 0) {
+          seconds = 59;
+          minutes--;
+          if (minutes < 0) {
+            minutes = 59;
+            hours--;
+            if (hours < 0) {
+              clearInterval(countdownInterval);
+              db.ref("history").remove()
+                .then(() => {
+                  console.log("تم حذف السجل تلقائياً بعد 24 ساعة");
+                  startCountdown();
+                });
+              return;
+            }
+          }
         }
-      });
+        
+        const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        document.getElementById('history-countdown').querySelector('span').textContent = timeString;
+      }, 1000);
     }
 
-    // Login form submission
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    // دالة حساب إجمالي الطلبات والمبيعات في السجل
+    function calculateHistoryStats(historyData) {
+      historyTotalAmount = 0;
+      historyTotalOrders = 0;
       
-      const email = emailInput.value;
-      const password = passwordInput.value;
+      Object.values(historyData).forEach(order => {
+        historyTotalAmount += order.total || 0;
+        historyTotalOrders++;
+      });
       
-      if (!email || !password) {
-        showError('الرجاء إدخال البريد الإلكتروني وكلمة المرور');
+      document.getElementById('history-total-amount').textContent = historyTotalAmount;
+      document.getElementById('history-total-orders').textContent = historyTotalOrders;
+    }
+
+    // دالة طباعة سجل الطلبيات
+    function printHistory() {
+      const printWindow = window.open('', '_blank');
+      const historyCards = document.querySelectorAll('.history-card');
+      
+      if (historyCards.length === 0) {
+        alert('لا توجد طلبات في السجل للطباعة');
         return;
       }
       
-      toggleLoading(true);
+      let printContent = `
+        <!DOCTYPE html>
+        <html lang="ar" dir="rtl">
+        <head>
+          <meta charset="UTF-8">
+          <title>سجل طلبيات دار حسنا</title>
+          <style>
+            body { font-family: 'Tajawal', sans-serif; padding: 20px; }
+            h1 { text-align: center; color: #0F3460; margin-bottom: 20px; }
+            .history-card { border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+            .history-card-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+            .history-items { margin-bottom: 10px; }
+            .history-item { display: flex; justify-content: space-between; padding: 3px 0; }
+            .history-total { font-weight: bold; margin-top: 10px; }
+            .summary { margin-top: 30px; padding: 15px; background: #f5f7fa; border-radius: 8px; }
+          </style>
+        </head>
+        <body>
+          <h1>سجل طلبيات دار حسنا</h1>
+          <div>تاريخ الطباعة: ${new Date().toLocaleString('ar-AR')}</div>
+          <hr>
+      `;
       
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        window.location.reload(); // Force refresh after login
-      } catch (error) {
-        handleLoginError(error);
-      } finally {
-        toggleLoading(false);
-      }
-    });
+      historyCards.forEach(card => {
+        printContent += card.outerHTML;
+      });
+      
+      printContent += `
+          <div class="summary">
+            <h3>ملخص السجل:</h3>
+            <div>عدد الطلبيات: ${historyTotalOrders}</div>
+            <div>إجمالي المبيعات: ${historyTotalAmount} درهم</div>
+          </div>
+        </body>
+        </html>
+      `;
+      
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+      setTimeout(() => printWindow.print(), 500);
+    }
 
-    // Logout button
-    logoutBtn.addEventListener('click', async () => {
-      try {
-        await signOut(auth);
-        window.location.reload(); // Force refresh after logout
-      } catch (error) {
-        console.error('Logout error:', error);
-      }
-    });
+    // دالة لنقل الطلبية بين المسارات عند تغيير الحالة
+    function updateOrderStatus(orderId, newStatus) {
+      const orderRef = db.ref(`commandes/${orderId}`);
+      
+      return orderRef.update({ 
+        status: newStatus,
+        lastUpdated: Date.now(),
+        lastUpdatedBy: firebase.auth().currentUser.uid
+      });
+    }
 
-    // Toggle loading state
-    function toggleLoading(isLoading) {
-      if (isLoading) {
-        loginText.style.display = 'none';
-        loginSpinner.style.display = 'block';
-        loginBtn.disabled = true;
+    // دالة مساعدة للحصول على نص الحالة
+    function getStatusText(status) {
+      const statusTexts = {
+        'pending': 'في الانتظار',
+        'preparing': 'قيد التحضير',
+        'ready': 'جاهزة',
+        'delivered': 'تم التسليم'
+      };
+      return statusTexts[status] || status;
+    }
+
+    // دالة مساعدة للحصول على كلاس الحالة
+    function getStatusClass(status) {
+      const statusClasses = {
+        'pending': 'status-pending',
+        'preparing': 'status-preparing',
+        'ready': 'status-ready',
+        'delivered': 'status-delivered'
+      };
+      return statusClasses[status] || '';
+    }
+
+    // Authentication functions
+    function initAuth() {
+      auth.onAuthStateChanged(function(user) {
+        if (user) {
+          document.getElementById('login-container').style.display = 'none';
+          document.getElementById('main-container').style.display = 'block';
+          initApp();
+        } else {
+          document.getElementById('login-container').style.display = 'flex';
+          document.getElementById('main-container').style.display = 'none';
+        }
+      });
+    }
+
+    function setupLogin() {
+      const loginForm = document.getElementById('login-form');
+      const loginError = document.getElementById('login-error');
+      
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        
+        auth.signInWithEmailAndPassword(email, password)
+          .then(() => {
+            loginError.style.display = 'none';
+          })
+          .catch((error) => {
+            loginError.textContent = getAuthErrorMessage(error);
+            loginError.style.display = 'block';
+          });
+      });
+    }
+
+    function getAuthErrorMessage(error) {
+      const messages = {
+        'auth/wrong-password': 'كلمة المرور غير صحيحة',
+        'auth/user-not-found': 'لا يوجد حساب مرتبط بهذا البريد الإلكتروني',
+        'auth/invalid-email': 'البريد الإلكتروني غير صالح',
+        'auth/too-many-requests': 'تم إجراء محاولات كثيرة جدًا. يرجى المحاولة مرة أخرى لاحقًا',
+        'auth/user-disabled': 'تم تعطيل هذا الحساب',
+        'default': 'حدث خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى'
+      };
+      
+      return messages[error.code] || messages['default'];
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('ar-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const dateString = now.toLocaleDateString('ar-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('liveClock').innerHTML = `<span>${dateString}</span><span>${timeString}</span>`;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function formatOrderTime(timestamp) {
+      const now = new Date();
+      const orderDate = new Date(timestamp);
+      const timeString = orderDate.toLocaleTimeString('ar-AR', { hour: '2-digit', minute: '2-digit' });
+      
+      const diffInMinutes = Math.floor((now - orderDate) / (1000 * 60));
+      let timeAgo = '';
+      
+      if (diffInMinutes < 1) {
+        timeAgo = 'الآن';
+      } else if (diffInMinutes < 60) {
+        timeAgo = `منذ ${diffInMinutes} دقيقة`;
       } else {
-        loginText.style.display = 'inline';
-        loginSpinner.style.display = 'none';
-        loginBtn.disabled = false;
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        timeAgo = `منذ ${diffInHours} ساعة`;
       }
-    }
-
-    // Show error message
-    function showError(message) {
-      errorMessage.textContent = message;
-      errorMessage.style.display = 'block';
-    }
-
-    // Handle login errors
-    function handleLoginError(error) {
-      let errorMsg = '';
-      switch(error.code) {
-        case 'auth/invalid-email':
-          errorMsg = 'البريد الإلكتروني غير صحيح';
-          break;
-        case 'auth/user-disabled':
-          errorMsg = 'هذا الحساب معطل';
-          break;
-        case 'auth/user-not-found':
-          errorMsg = 'لا يوجد حساب مرتبط بهذا البريد';
-          break;
-        case 'auth/wrong-password':
-          errorMsg = 'كلمة المرور غير صحيحة';
-          break;
-        default:
-          errorMsg = 'حدث خطأ أثناء تسجيل الدخول';
-      }
-      showError(errorMsg);
-    }
-
-    // Initialize Admin Panel
-    function initializeAdminPanel() {
-      // DOM Elements
-      const menuSections = document.getElementById('menuSections');
-      const addSectionBtn = document.getElementById('addSectionBtn');
-      const saveAllBtn = document.getElementById('saveAllBtn');
       
-      // Modal Elements
-      const sectionModal = document.getElementById('sectionModal');
-      const itemModal = document.getElementById('itemModal');
-      const closeSectionModal = document.getElementById('closeSectionModal');
-      const closeItemModal = document.getElementById('closeItemModal');
-      const confirmAddSection = document.getElementById('confirmAddSection');
-      const confirmAddItem = document.getElementById('confirmAddItem');
+      return {
+        time: timeString,
+        ago: timeAgo
+      };
+    }
+    
+    function updateStatusCounters() {
+      document.getElementById('pending-count').textContent = statusCount['pending'];
+      document.getElementById('preparing-count').textContent = statusCount['preparing'];
+      document.getElementById('ready-count').textContent = statusCount['ready'];
+      document.getElementById('delivered-count').textContent = statusCount['delivered'];
+      document.getElementById('total-count').textContent = statusCount['total'];
+    }
+    
+    function resetStatusCounters() {
+      statusCount['pending'] = 0;
+      statusCount['preparing'] = 0;
+      statusCount['ready'] = 0;
+      statusCount['delivered'] = 0;
+      statusCount['total'] = 0;
+      updateStatusCounters();
+    }
+    
+    function filterOrders(status) {
+      const allOrdersDivs = document.querySelectorAll('.order-card');
       
-      // Form Elements
-      const sectionName = document.getElementById('sectionName');
-      const sectionIcon = document.getElementById('sectionIcon');
-      const itemName = document.getElementById('itemName');
-      const itemPrice = document.getElementById('itemPrice');
-      const itemDesc = document.getElementById('itemDesc');
-      const itemIcon = document.getElementById('itemIcon');
-      const itemHidden = document.getElementById('itemHidden');
-      const itemModalTitle = document.getElementById('itemModalTitle');
-
-      // Menu Data
-      let menuData = [];
-      let currentSectionIndex = -1;
-
-      // Load menu data
-      function loadMenu() {
-        const menuRef = ref(database, 'menu');
-        
-        onValue(menuRef, (snapshot) => {
-          menuData = snapshot.val() || [];
-          renderMenu();
-        });
-      }
-
-      // Render menu sections and items
-      function renderMenu() {
-        if (!menuData || menuData.length === 0) {
-          menuSections.innerHTML = `
-            <div class="empty-state">
-              <i class="fas fa-utensils"></i>
-              <p>لا توجد أقسام في القائمة حالياً</p>
+      allOrdersDivs.forEach(div => {
+        div.style.display = 'none';
+      });
+      
+      const matchingOrders = document.querySelectorAll(`.order-card[data-status="${status}"]`);
+      matchingOrders.forEach(div => {
+        div.style.display = 'block';
+      });
+      
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.status === status) {
+          btn.classList.add('active');
+        }
+      });
+      
+      if (matchingOrders.length === 0) {
+        ordersContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="fas fa-clipboard-list"></i>
             </div>
-          `;
-          return;
-        }
+            <h3>لا توجد طلبات ${getStatusText(status)}</h3>
+            <p class="empty-text">سيظهر هنا أي طلبات جديدة</p>
+            <button class="btn btn-primary">
+              <i class="fas fa-sync-alt"></i> تحديث
+            </button>
+          </div>
+        `;
+      }
+    }
+    
+    function createOrderElement(orderId, orderData, isNew = false) {
+      const timeInfo = formatOrderTime(orderData.timestamp);
+      const isBrandNew = Date.now() - orderData.timestamp < 30000;
 
-        menuSections.innerHTML = '';
+      const div = document.createElement("div");
+      div.className = `order-card`;
+      div.dataset.status = orderData.status || 'pending';
+      div.dataset.id = orderId;
+      div.dataset.created = orderData.timestamp;
+      
+      if (isBrandNew) {
+        div.classList.add('new');
+      }
+      
+      if (isNew) {
+        div.classList.add('new-order-highlight');
+      }
+      
+      let itemsHTML = Object.entries(orderData.items || {}).map(([itemId, quantity]) => `
+        <div class="order-item">
+          <div class="item-name">
+            <span class="item-quantity">${quantity}</span>
+            ${itemId}
+          </div>
+          <div class="item-price">${quantity * (orderData.prices?.[itemId] || 0)} درهم</div>
+        </div>
+      `).join('');
+      
+      let notesHTML = orderData.notes && orderData.notes.trim() !== '' ? `
+        <div class="order-notes">
+          <strong>ملاحظة:</strong> ${orderData.notes}
+        </div>
+      ` : '';
+      
+      div.innerHTML = `
+        <div class="order-header">
+          <div class="order-time">
+            ${timeInfo.time}
+            <div class="order-time-ago">${timeInfo.ago}</div>
+          </div>
+          <div class="order-table">طاولة ${orderData.table || 'غير معروف'}</div>
+          <div class="order-status ${getStatusClass(orderData.status)}">${getStatusText(orderData.status)}</div>
+        </div>
         
-        menuData.forEach((section, sectionIndex) => {
-          const sectionDiv = document.createElement('div');
-          sectionDiv.className = 'section';
-          
-          // Section Header
-          const sectionHeader = document.createElement('div');
-          sectionHeader.className = 'section-header';
-          sectionHeader.innerHTML = `
-            <div class="section-title">
-              <i class="fas fa-${section.icon || 'utensils'}"></i>
-              <input type="text" class="form-control" value="${section.section || ''}" 
-                onchange="updateSection(${sectionIndex}, 'section', this.value)"
-                style="border: none; background: transparent; font-weight: 600; padding: 0;">
-            </div>
-            <div class="section-controls">
-              <button class="btn btn-primary" onclick="openAddItemModal(${sectionIndex})">
-                <i class="fas fa-plus"></i> إضافة صنف
-              </button>
-              <button class="btn btn-delete" onclick="deleteSection(${sectionIndex})">
-                <i class="fas fa-trash"></i> حذف
-              </button>
-            </div>
-          `;
-          
-          // Section Items
-          const sectionItems = document.createElement('div');
-          sectionItems.className = 'section-items';
-          
-          if (!section.items || section.items.length === 0) {
-            sectionItems.innerHTML = `
-              <div class="empty-state">
-                <i class="fas fa-info-circle"></i>
-                <p>لا توجد أصناف في هذا القسم</p>
-              </div>
-            `;
-          } else {
-            section.items.forEach((item, itemIndex) => {
-              const itemDiv = document.createElement('div');
-              itemDiv.className = `menu-item ${item.hidden ? 'hidden-item' : ''}`;
-              itemDiv.innerHTML = `
-                <div class="item-icon">
-                  <i class="fas fa-${item.icon || 'circle'}"></i>
-                </div>
-                <div class="item-details" onclick="toggleItemVisibility(${sectionIndex}, ${itemIndex}, event)">
-                  <input type="text" class="item-name" value="${item.plat || ''}" 
-                    onchange="updateItem(${sectionIndex}, ${itemIndex}, 'plat', this.value)">
-                  <textarea class="item-desc" 
-                    onchange="updateItem(${sectionIndex}, ${itemIndex}, 'description', this.value)">${item.description || ''}</textarea>
-                  <div class="item-price">
-                    <input type="number" class="form-control" value="${item.prix || 0}" 
-                      onchange="updateItem(${sectionIndex}, ${itemIndex}, 'prix', parseInt(this.value) || 0)"
-                      style="width: 80px; display: inline-block;"> درهم
-                  </div>
-                </div>
-                <div class="item-controls">
-                  <label class="hide-item-label">
-                    <input type="checkbox" ${item.hidden ? 'checked' : ''} 
-                      onchange="updateItem(${sectionIndex}, ${itemIndex}, 'hidden', this.checked)">
-                    إخفاء من القائمة
-                  </label>
-                  <button class="btn btn-delete" onclick="deleteItem(${sectionIndex}, ${itemIndex})">
-                    <i class="fas fa-trash"></i> حذف
-                  </button>
-                </div>
-              `;
-              sectionItems.appendChild(itemDiv);
-            });
-          }
-          
-          sectionDiv.appendChild(sectionHeader);
-          sectionDiv.appendChild(sectionItems);
-          menuSections.appendChild(sectionDiv);
-        });
-      }
-
-      // Update section data
-      window.updateSection = function(sectionIndex, field, value) {
-        menuData[sectionIndex][field] = value;
-      }
-
-      // Update item data
-      window.updateItem = function(sectionIndex, itemIndex, field, value) {
-        menuData[sectionIndex].items[itemIndex][field] = value;
-        renderMenu();
-        saveChanges();
-      }
-
-      // Toggle item visibility
-      window.toggleItemVisibility = function(sectionIndex, itemIndex, event) {
-        event.stopPropagation();
-        const currentState = menuData[sectionIndex].items[itemIndex].hidden || false;
-        menuData[sectionIndex].items[itemIndex].hidden = !currentState;
-        renderMenu();
-        saveChanges();
-      }
-
-      // Save changes to Firebase
-      async function saveChanges() {
-        try {
-          await set(ref(database, 'menu'), menuData);
-          showSuccessMessage('تم حفظ التغييرات بنجاح');
-        } catch (error) {
-          console.error('Error saving changes:', error);
-          alert('حدث خطأ أثناء الحفظ: ' + error.message);
-        }
-      }
-
-      // Delete section
-      window.deleteSection = function(sectionIndex) {
-        if (confirm('هل أنت متأكد من حذف هذا القسم وجميع أصنافه؟')) {
-          menuData.splice(sectionIndex, 1);
-          renderMenu();
-          saveChanges();
-        }
-      }
-
-      // Delete item
-      window.deleteItem = function(sectionIndex, itemIndex) {
-        if (confirm('هل أنت متأكد من حذف هذا الصنف؟')) {
-          menuData[sectionIndex].items.splice(itemIndex, 1);
-          renderMenu();
-          saveChanges();
-        }
-      }
-
-      // Open add section modal
-      addSectionBtn.addEventListener('click', () => {
-        sectionName.value = '';
-        sectionIcon.value = 'utensils';
-        sectionModal.style.display = 'flex';
-      });
-
-      // Open add item modal
-      window.openAddItemModal = function(sectionIndex) {
-        currentSectionIndex = sectionIndex;
-        const sectionTitle = menuData[sectionIndex].section || 'القسم';
-        itemModalTitle.textContent = `إضافة صنف جديد إلى ${sectionTitle}`;
-        itemName.value = '';
-        itemPrice.value = '';
-        itemDesc.value = '';
-        itemIcon.value = 'circle';
-        itemHidden.checked = false;
-        itemModal.style.display = 'flex';
-      }
-
-      // Close modals
-      closeSectionModal.addEventListener('click', () => {
-        sectionModal.style.display = 'none';
-      });
-
-      closeItemModal.addEventListener('click', () => {
-        itemModal.style.display = 'none';
-      });
-
-      // Confirm add section
-      confirmAddSection.addEventListener('click', () => {
-        if (!sectionName.value.trim()) {
-          alert('الرجاء إدخال اسم القسم');
-          return;
-        }
-
-        menuData.push({
-          section: sectionName.value.trim(),
-          icon: sectionIcon.value,
-          items: []
-        });
-
-        renderMenu();
-        saveChanges();
-        sectionModal.style.display = 'none';
-      });
-
-      // Confirm add item
-      confirmAddItem.addEventListener('click', () => {
-        if (!itemName.value.trim()) {
-          alert('الرجاء إدخال اسم الصنف');
-          return;
-        }
-
-        if (!itemPrice.value || isNaN(itemPrice.value)) {
-          alert('الرجاء إدخال سعر صحيح');
-          return;
-        }
-
-        if (!menuData[currentSectionIndex].items) {
-          menuData[currentSectionIndex].items = [];
-        }
-
-        menuData[currentSectionIndex].items.push({
-          plat: itemName.value.trim(),
-          prix: parseInt(itemPrice.value) || 0,
-          description: itemDesc.value.trim(),
-          icon: itemIcon.value,
-          hidden: itemHidden.checked
-        });
-
-        renderMenu();
-        saveChanges();
-        itemModal.style.display = 'none';
-      });
-
-      // Save all changes
-      saveAllBtn.addEventListener('click', async () => {
-        try {
-          await set(ref(database, 'menu'), menuData);
-          showSuccessMessage('تم حفظ جميع التغييرات بنجاح');
-        } catch (error) {
-          alert('حدث خطأ أثناء الحفظ: ' + error.message);
-        }
-      });
-
-      // Show success message
-      function showSuccessMessage(message) {
-        const successMsg = document.createElement('div');
-        successMsg.className = 'message success-message';
-        successMsg.textContent = message;
-        successMsg.style.display = 'block';
+        <div class="order-body">
+          <div class="order-items">
+            ${itemsHTML}
+          </div>
+          ${notesHTML}
+        </div>
         
-        adminPanel.insertBefore(successMsg, adminPanel.firstChild);
+        <div class="order-footer">
+          <div class="order-total">المجموع: ${orderData.total || 0} درهم</div>
+          <div class="order-actions">
+            <select class="status-select" data-id="${orderId}">
+              <option value="pending" ${orderData.status === 'pending' ? 'selected' : ''}>في الانتظار</option>
+              <option value="preparing" ${orderData.status === 'preparing' ? 'selected' : ''}>قيد التحضير</option>
+              <option value="ready" ${orderData.status === 'ready' ? 'selected' : ''}>جاهزة</option>
+              <option value="delivered" ${orderData.status === 'delivered' ? 'selected' : ''}>تم التسليم</option>
+            </select>
+            <button class="action-btn delete" data-id="${orderId}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      `;
+      
+      if (isBrandNew && !playedNotifications.has(orderId)) {
+        const badge = document.createElement('div');
+        badge.className = 'new-badge';
+        badge.innerHTML = '<i class="fas fa-bell"></i>';
+        div.querySelector('.order-header').appendChild(badge);
+        
+        playNotificationSound();
+        playedNotifications.add(orderId);
         
         setTimeout(() => {
-          successMsg.style.display = 'none';
-          successMsg.remove();
-        }, 3000);
+          badge.remove();
+          div.classList.remove('new');
+        }, 30000);
       }
-
-      // Close modals when clicking outside
-      window.addEventListener('click', (e) => {
-        if (e.target === sectionModal) {
-          sectionModal.style.display = 'none';
-        }
-        if (e.target === itemModal) {
-          itemModal.style.display = 'none';
+      
+      div.querySelector('.status-select').addEventListener("change", function() {
+        const newStatus = this.value;
+        const orderId = this.dataset.id;
+        
+        updateOrderStatus(orderId, newStatus)
+          .then(() => {
+            playStatusChangeSound();
+            document.querySelectorAll(`.order-card[data-id="${orderId}"]`).forEach(card => {
+              card.dataset.status = newStatus;
+              const statusElement = card.querySelector('.order-status');
+              statusElement.className = `order-status ${getStatusClass(newStatus)}`;
+              statusElement.textContent = getStatusText(newStatus);
+              card.classList.add('status-changing');
+              setTimeout(() => {
+                card.classList.remove('status-changing');
+              }, 1000);
+            });
+          })
+          .catch(error => {
+            console.error("Error updating order:", error);
+            alert("حدث خطأ أثناء تغيير حالة الطلبية. يرجى المحاولة مرة أخرى.");
+          });
+      });
+      
+      div.querySelector('.action-btn.delete').addEventListener("click", function() {
+        if (confirm("هل تريد حقاً حذف هذه الطلبية؟")) {
+          db.ref(`commandes/${this.dataset.id}`).remove();
         }
       });
+      
+      return div;
+    }
+    
+    function createHistoryElement(orderId, orderData) {
+      const timeInfo = formatOrderTime(orderData.timestamp);
 
-      // Initialize admin panel
-      loadMenu();
+      let itemsHTML = Object.entries(orderData.items || {}).map(([itemId, quantity]) => `
+        <div class="history-item">
+          <span>${quantity} × ${itemId}</span>
+          <span>${quantity * (orderData.prices?.[itemId] || 0)} درهم</span>
+        </div>
+      `).join('');
+      
+      const div = document.createElement("div");
+      div.className = "history-card";
+      div.dataset.id = orderId;
+      div.dataset.timestamp = orderData.timestamp;
+      
+      div.innerHTML = `
+        <div class="history-card-header">
+          <div class="history-time">${timeInfo.time} - ${timeInfo.ago}</div>
+          <div class="history-table">طاولة ${orderData.table || 'غير معروف'}</div>
+          <div class="history-status ${getStatusClass(orderData.status)}">${getStatusText(orderData.status)}</div>
+        </div>
+        <div class="history-items">
+          ${itemsHTML}
+        </div>
+        <div class="history-total">المجموع: ${orderData.total || 0} درهم</div>
+      `;
+      
+      return div;
+    }
+    
+    function manageNewOrders(orderId, orderData) {
+      const isNew = Date.now() - orderData.timestamp < 5 * 60 * 1000;
+      
+      if (isNew) {
+        newOrders[orderId] = orderData;
+        const orderElement = createOrderElement(orderId, orderData, true);
+        newOrdersContainer.prepend(orderElement);
+        
+        newOrdersSection.style.display = 'block';
+        
+        setTimeout(() => {
+          if (newOrders[orderId]) {
+            delete newOrders[orderId];
+            const element = document.querySelector(`#new-orders-container .order-card[data-id="${orderId}"]`);
+            if (element) element.remove();
+            
+            if (Object.keys(newOrders).length === 0) {
+              newOrdersSection.style.display = 'none';
+            }
+          }
+        }, 5 * 60 * 1000);
+      }
+    }
+    
+    function updateHistorySection(historyData) {
+      historyContainer.innerHTML = '';
+      
+      const twentyFourHoursAgo = Date.now() - (24 * 60 * 60 * 1000);
+      const recentHistory = Object.entries(historyData)
+        .filter(([orderId, order]) => order.timestamp >= twentyFourHoursAgo)
+        .sort((a, b) => b[1].timestamp - a[1].timestamp);
+      
+      calculateHistoryStats(historyData);
+      
+      if (recentHistory.length === 0) {
+        historyContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="fas fa-history"></i>
+            </div>
+            <h3>لا توجد طلبات في السجل</h3>
+            <p class="empty-text">سيتم عرض الطلبات المنتهية هنا</p>
+          </div>
+        `;
+        return;
+      }
+      
+      recentHistory.forEach(([orderId, order]) => {
+        const historyElement = createHistoryElement(orderId, order);
+        historyContainer.appendChild(historyElement);
+      });
+      
+      calculateHistoryStats(historyData);
+    }
+    
+    function initFirebaseListeners() {
+      resetStatusCounters();
+      newOrdersSection.style.display = 'none';
+
+      // استماع لتغييرات الطلبات
+      db.ref('commandes').orderByChild('timestamp').limitToLast(50)
+        .on('child_added', (snapshot) => {
+          const orderData = snapshot.val();
+          const orderId = snapshot.key;
+          
+          if (!allOrders[orderId]) {
+            statusCount[orderData.status || 'pending']++;
+            statusCount['total']++;
+            updateStatusCounters();
+          }
+          
+          allOrders[orderId] = orderData;
+          const orderElement = createOrderElement(orderId, orderData);
+          
+          const emptyState = document.querySelector('#orders-container .empty-state');
+          if (emptyState) {
+            ordersContainer.innerHTML = '';
+          }
+          
+          ordersContainer.prepend(orderElement);
+          manageNewOrders(orderId, orderData);
+          
+          const activeTab = document.querySelector('.tab-btn.active');
+          if (activeTab && activeTab.dataset.status !== (orderData.status || 'pending')) {
+            orderElement.style.display = 'none';
+          }
+        });
+      
+      db.ref('commandes').on('child_changed', (snapshot) => {
+        const orderData = snapshot.val();
+        const orderId = snapshot.key;
+        const newStatus = orderData.status || 'pending';
+        
+        if (allOrders[orderId] && allOrders[orderId].status !== newStatus) {
+          statusCount[allOrders[orderId].status]--;
+          statusCount[newStatus]++;
+          updateStatusCounters();
+        }
+        
+        allOrders[orderId] = orderData;
+        document.querySelectorAll(`.order-card[data-id="${orderId}"]`).forEach(card => {
+          const newElement = createOrderElement(orderId, orderData, card.parentElement.id === 'new-orders-container');
+          card.replaceWith(newElement);
+          
+          const activeTab = document.querySelector('.tab-btn.active');
+          if (activeTab && activeTab.dataset.status !== newStatus) {
+            newElement.style.display = 'none';
+          }
+        });
+      });
+      
+      db.ref('commandes').on('child_removed', (snapshot) => {
+        const orderId = snapshot.key;
+        if (allOrders[orderId]) {
+          statusCount[allOrders[orderId].status || 'pending']--;
+          statusCount['total']--;
+          updateStatusCounters();
+          delete allOrders[orderId];
+        }
+        
+        if (newOrders[orderId]) {
+          delete newOrders[orderId];
+          const element = document.querySelector(`#new-orders-container .order-card[data-id="${orderId}"]`);
+          if (element) element.remove();
+          
+          if (Object.keys(newOrders).length === 0) {
+            newOrdersSection.style.display = 'none';
+          }
+        }
+        
+        const orderElement = document.querySelector(`.order-card[data-id="${orderId}"]`);
+        if (orderElement) {
+          orderElement.remove();
+        }
+        
+        if (Object.keys(allOrders).length === 0) {
+          ordersContainer.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-icon">
+                <i class="fas fa-clipboard-list"></i>
+              </div>
+              <h3>لا توجد طلبات حالياً</h3>
+              <p class="empty-text">سيظهر هنا أي طلبات جديدة يتم تقديمها</p>
+              <button class="btn btn-primary">
+                <i class="fas fa-sync-alt"></i> تحديث
+              </button>
+            </div>
+          `;
+        }
+      });
+      
+      db.ref("history").orderByChild("timestamp").limitToLast(50).on("value", (snapshot) => {
+        const historyData = snapshot.val() || {};
+        updateHistorySection(historyData);
+      });
+    }
+    
+    function initFilterTabs() {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterOrders(btn.dataset.status);
+        });
+      });
+    }
+    
+    function resetApplication() {
+      document.getElementById('confirm-reset-dialog').style.display = 'flex';
+      document.getElementById('reset-error').style.display = 'none';
+      
+      document.getElementById('cancel-reset-btn').onclick = function() {
+        document.getElementById('confirm-reset-dialog').style.display = 'none';
+      };
+      
+      document.getElementById('confirm-reset-btn').onclick = function() {
+        const email = document.getElementById('reset-email').value;
+        const password = document.getElementById('reset-password').value;
+        
+        auth.signInWithEmailAndPassword(email, password)
+          .then((userCredential) => {
+            document.getElementById('confirm-reset-dialog').style.display = 'none';
+            
+            db.ref("commandes").remove()
+              .then(() => {
+                console.log("تم مسح جميع الطلبيات");
+                resetStatusCounters();
+                newOrdersSection.style.display = 'none';
+                ordersContainer.innerHTML = `
+                  <div class="empty-state">
+                    <div class="empty-icon">
+                      <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h3>لا توجد طلبات حالياً</h3>
+                    <p class="empty-text">تم إعادة تشغيل النظام بنجاح</p>
+                    <button class="btn btn-primary">
+                      <i class="fas fa-sync-alt"></i> تحديث
+                    </button>
+                  </div>
+                `;
+              })
+              .catch(error => {
+                console.error("Error resetting orders:", error);
+                alert("حدث خطأ أثناء إعادة التشغيل");
+              });
+          })
+          .catch((error) => {
+            document.getElementById('reset-error').textContent = getAuthErrorMessage(error);
+            document.getElementById('reset-error').style.display = 'block';
+          });
+      };
     }
 
-    // Initialize auth check on page load
-    document.addEventListener('DOMContentLoaded', checkAuthState);
-  </script>
+    function initApp() {
+      initFirebaseListeners();
+      initFilterTabs();
+      
+      startCountdown();
+      filterOrders('pending');
+      
+      document.getElementById('print-btn').addEventListener('click', () => {
+        window.print();
+      });
 
-  <script>
-    // Force page to reload when navigating back to ensure auth check
-    window.onpageshow = function(event) {
-      if (event.persisted) {
-        window.location.reload();
-      }
-    };
+      document.getElementById('modification-btn').addEventListener('click', function() {
+        window.open('https://tawfikaben.github.io/Modified-/', '_blank');
+      });
+      
+      document.getElementById('menu-btn').addEventListener('click', function() {
+        window.location.href = 'https://tawfikaben.github.io/Menu/';
+      });
+      
+      document.getElementById('logout-btn').addEventListener('click', function() {
+        auth.signOut();
+      });
+      
+      document.getElementById('clear-history-btn').addEventListener('click', function() {
+        if (confirm("هل تريد حقاً مسح سجل الطلبيات بالكامل؟")) {
+          db.ref("history").remove()
+            .then(() => console.log("تم مسح السجل"))
+            .catch(error => console.error("خطأ في مسح السجل:", error));
+        }
+      });
+      
+      document.getElementById('print-history-btn').addEventListener('click', printHistory);
+      
+      document.getElementById('reset-btn').addEventListener('click', resetApplication);
+      
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.empty-state .btn-primary')) {
+          location.reload();
+        }
+      });
+    }
+    
+    window.addEventListener('DOMContentLoaded', function() {
+      initAuth();
+      setupLogin();
+      initApp();
+    });
   </script>
 </body>
 </html>

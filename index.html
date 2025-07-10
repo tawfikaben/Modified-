@@ -12,17 +12,18 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
   <style>
     :root {
-      --primary: #E94560; /* زهري غامق */
-      --secondary: #0F3460; /* أزرق داكن */
-      --light: #F8F5F2; /* كريمي */
-      --dark: #16213E; /* أزرق ليلي */
-      --gold: #FFD32D; /* ذهبي */
+      --primary: #E94560;
+      --secondary: #0F3460;
+      --light: #F8F5F2;
+      --dark: #16213E;
+      --gold: #FFD32D;
       --text: #2D3748;
       --white: #FFFFFF;
       --gray: #EDF2F7;
       --success: #4CAF50;
       --warning: #FF9800;
       --danger: #F44336;
+      --info: #2196F3;
       --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       --transition: all 0.3s ease;
       --radius: 12px;
@@ -193,6 +194,24 @@
       background: #0d2b4f;
     }
 
+    .btn-danger {
+      background: var(--danger);
+      color: var(--white);
+    }
+
+    .btn-danger:hover {
+      background: #d32f2f;
+    }
+
+    .btn-info {
+      background: var(--info);
+      color: var(--white);
+    }
+
+    .btn-info:hover {
+      background: #0b7dda;
+    }
+
     /* كروت الإحصائيات */
     .stats-cards {
       display: grid;
@@ -251,6 +270,11 @@
     .stat-icon.danger {
       background: rgba(244, 67, 54, 0.1);
       color: var(--danger);
+    }
+
+    .stat-icon.info {
+      background: rgba(33, 150, 243, 0.1);
+      color: var(--info);
     }
 
     /* جدول القائمة */
@@ -344,6 +368,11 @@
       color: var(--danger);
     }
 
+    .badge-info {
+      background: rgba(33, 150, 243, 0.1);
+      color: var(--info);
+    }
+
     .actions {
       display: flex;
       gap: 0.5rem;
@@ -386,12 +415,72 @@
       background: #e68a00;
     }
 
-    /* أزرار إدارة الأقسام */
+    .action-btn.info {
+      background: var(--info);
+    }
+
+    .action-btn.info:hover {
+      background: #0b7dda;
+    }
+
+    /* أقسام القائمة */
+    .sections-container {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
     .sections-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      padding: 1rem 1.5rem;
+      background: var(--dark);
+      color: var(--white);
+    }
+
+    .sections-header h3 {
+      font-size: 1.2rem;
+    }
+
+    .sections-list {
+      padding: 1rem;
+    }
+
+    .section-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid var(--gray);
+      transition: var(--transition);
+    }
+
+    .section-item:last-child {
+      border-bottom: none;
+    }
+
+    .section-item:hover {
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    .section-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .section-info i {
+      margin-left: 0.5rem;
+      color: var(--gold);
+      font-size: 1.2rem;
+    }
+
+    .section-stats {
+      font-size: 0.9rem;
+      color: var(--text);
+      opacity: 0.7;
     }
 
     /* نموذج إضافة/تعديل عنصر */
@@ -566,6 +655,24 @@
       align-items: center;
     }
 
+    /* مودال تأكيد الحذف */
+    .confirm-modal {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 400px;
+      overflow: hidden;
+    }
+
+    .confirm-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      padding: 1.5rem;
+      border-top: 1px solid var(--gray);
+    }
+
     /* تنسيقات للجوال */
     @media (max-width: 768px) {
       .admin-header .container {
@@ -597,6 +704,16 @@
       table {
         display: block;
         overflow-x: auto;
+      }
+
+      .page-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .page-title .btn {
+        width: 100%;
       }
     }
   </style>
@@ -681,8 +798,26 @@
             <h3>الأقسام</h3>
             <h2 id="totalSections">0</h2>
           </div>
-          <div class="stat-icon danger">
+          <div class="stat-icon info">
             <i class="fas fa-layer-group"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- قسم إدارة الأقسام -->
+      <div class="sections-container">
+        <div class="sections-header">
+          <h3>إدارة الأقسام</h3>
+          <button class="btn btn-info btn-sm" id="refreshSectionsBtn">
+            <i class="fas fa-sync-alt"></i>
+            تحديث
+          </button>
+        </div>
+        <div class="sections-list" id="sectionsList">
+          <!-- سيتم تعبئة الأقسام هنا -->
+          <div style="text-align: center; padding: 2rem; color: var(--text); opacity: 0.6;">
+            <i class="fas fa-info-circle" style="font-size: 1.5rem; margin-bottom: 1rem;"></i>
+            <p>لا توجد أقسام متاحة</p>
           </div>
         </div>
       </div>
@@ -699,6 +834,7 @@
         <table>
           <thead>
             <tr>
+              <th>#</th>
               <th>الصنف</th>
               <th>القسم</th>
               <th>الوصف</th>
@@ -709,6 +845,12 @@
           </thead>
           <tbody id="menuItemsTable">
             <!-- سيتم تعبئة الجدول ديناميكياً -->
+            <tr>
+              <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text); opacity: 0.6;">
+                <i class="fas fa-info-circle" style="font-size: 1.5rem; margin-bottom: 1rem;"></i>
+                <p>لا توجد عناصر في القائمة</p>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -797,6 +939,25 @@
     </div>
   </div>
 
+  <!-- مودال تأكيد الحذف -->
+  <div class="modal-overlay" id="confirmDeleteModal">
+    <div class="confirm-modal">
+      <div class="modal-header">
+        <h3>تأكيد الحذف</h3>
+        <button class="close-modal" id="closeConfirmModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmDeleteText">هل أنت متأكد من أنك تريد حذف هذا العنصر؟</p>
+      </div>
+      <div class="confirm-actions">
+        <button type="button" class="btn" id="cancelDeleteBtn">إلغاء</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+          <i class="fas fa-trash"></i> حذف
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -810,7 +971,9 @@
       closeButton: true,
       progressBar: true,
       positionClass: 'toast-top-left',
-      rtl: true
+      rtl: true,
+      timeOut: 3000,
+      extendedTimeOut: 2000
     };
 
     // Firebase Configuration
@@ -834,15 +997,20 @@
     let menuItems = [];
     let menuSections = [];
     let currentEditingItem = null;
+    let itemToDelete = null;
+    let isDeletingSection = false;
 
     // عناصر DOM
     const menuItemsTable = document.getElementById('menuItemsTable');
+    const sectionsList = document.getElementById('sectionsList');
     const itemModal = document.getElementById('itemModal');
     const sectionModal = document.getElementById('sectionModal');
+    const confirmDeleteModal = document.getElementById('confirmDeleteModal');
     const modalTitle = document.getElementById('modalTitle');
     const sectionModalTitle = document.getElementById('sectionModalTitle');
     const menuItemForm = document.getElementById('menuItemForm');
     const sectionForm = document.getElementById('sectionForm');
+    const confirmDeleteText = document.getElementById('confirmDeleteText');
     const itemIdInput = document.getElementById('itemId');
     const itemNameInput = document.getElementById('itemName');
     const itemPriceInput = document.getElementById('itemPrice');
@@ -855,12 +1023,16 @@
     const sectionIconInput = document.getElementById('sectionIcon');
     const closeModalBtn = document.getElementById('closeModal');
     const closeSectionModalBtn = document.getElementById('closeSectionModal');
+    const closeConfirmModal = document.getElementById('closeConfirmModal');
     const cancelBtn = document.getElementById('cancelBtn');
     const cancelSectionBtn = document.getElementById('cancelSectionBtn');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
     const saveBtn = document.getElementById('saveBtn');
     const saveSectionBtn = document.getElementById('saveSectionBtn');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
     const addMenuItemBtn = document.getElementById('addMenuItem');
     const addSectionBtn = document.getElementById('addSectionBtn');
+    const refreshSectionsBtn = document.getElementById('refreshSectionsBtn');
     const searchMenuInput = document.getElementById('searchMenu');
     const totalItemsSpan = document.getElementById('totalItems');
     const activeItemsSpan = document.getElementById('activeItems');
@@ -917,12 +1089,135 @@
       sectionModal.classList.remove('active');
     }
 
+    function closeConfirmDeleteModal() {
+      confirmDeleteModal.classList.remove('active');
+      itemToDelete = null;
+      isDeletingSection = false;
+    }
+
     addMenuItemBtn.addEventListener('click', () => openModal());
     addSectionBtn.addEventListener('click', openSectionModal);
+    refreshSectionsBtn.addEventListener('click', () => {
+      loadSections();
+      loadMenuItems();
+      toastr.info('تم تحديث البيانات بنجاح');
+    });
     closeModalBtn.addEventListener('click', closeModal);
     closeSectionModalBtn.addEventListener('click', closeSectionModal);
+    closeConfirmModal.addEventListener('click', closeConfirmDeleteModal);
     cancelBtn.addEventListener('click', closeModal);
     cancelSectionBtn.addEventListener('click', closeSectionModal);
+    cancelDeleteBtn.addEventListener('click', closeConfirmDeleteModal);
+
+    // دالة عرض تأكيد الحذف
+    function showDeleteConfirmation(itemId, isSection = false) {
+      itemToDelete = itemId;
+      isDeletingSection = isSection;
+      
+      if (isSection) {
+        const section = menuSections.find(s => s.id == itemId);
+        confirmDeleteText.textContent = `هل أنت متأكد من أنك تريد حذف قسم "${section.name}"؟ سيتم حذف جميع العناصر التابعة لهذا القسم!`;
+      } else {
+        const item = menuItems.find(i => i.id === itemId);
+        confirmDeleteText.textContent = `هل أنت متأكد من أنك تريد حذف "${item.plat}"؟`;
+      }
+      
+      confirmDeleteModal.classList.add('active');
+    }
+
+    // دالة حذف العنصر بعد التأكيد
+    function performDelete() {
+      if (!itemToDelete) return;
+      
+      confirmDeleteBtn.disabled = true;
+      confirmDeleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحذف...';
+      
+      if (isDeletingSection) {
+        // حذف قسم كامل
+        const sectionId = parseInt(itemToDelete);
+        
+        database.ref('menu').once('value').then(snapshot => {
+          const sections = snapshot.val() || [];
+          
+          if (sectionId >= 0 && sectionId < sections.length) {
+            // حذف القسم من المصفوفة
+            sections.splice(sectionId, 1);
+            
+            // حفظ المصفوفة المحدثة
+            database.ref('menu').set(sections)
+              .then(() => {
+                refreshAfterUpdate('تم حذف القسم وجميع عناصره بنجاح');
+                closeConfirmDeleteModal();
+              })
+              .catch(error => {
+                toastr.error('حدث خطأ أثناء حذف القسم: ' + error.message);
+              })
+              .finally(() => {
+                confirmDeleteBtn.disabled = false;
+                confirmDeleteBtn.innerHTML = '<i class="fas fa-trash"></i> حذف';
+              });
+          }
+        });
+      } else {
+        // حذف عنصر فردي
+        const [sectionIndex, itemIndex] = itemToDelete.split('-').map(Number);
+        
+        // الحل الجديد لحذف العنصر بشكل صحيح
+        database.ref('menu').once('value').then(snapshot => {
+          const menuData = snapshot.val();
+          
+          if (!menuData || !menuData[sectionIndex] || !menuData[sectionIndex].items) {
+            throw new Error('هيكل البيانات غير صحيح');
+          }
+          
+          // إذا كانت items كائنًا وليس مصفوفة
+          if (typeof menuData[sectionIndex].items === 'object' && !Array.isArray(menuData[sectionIndex].items)) {
+            const itemsKeys = Object.keys(menuData[sectionIndex].items);
+            if (itemIndex >= itemsKeys.length) {
+              throw new Error('فهرس العنصر غير صحيح');
+            }
+            const keyToDelete = itemsKeys[itemIndex];
+            return database.ref(`menu/${sectionIndex}/items/${keyToDelete}`).remove();
+          }
+          // إذا كانت items مصفوفة
+          else if (Array.isArray(menuData[sectionIndex].items)) {
+            if (itemIndex >= menuData[sectionIndex].items.length) {
+              throw new Error('فهرس العنصر غير صحيح');
+            }
+            menuData[sectionIndex].items.splice(itemIndex, 1);
+            return database.ref('menu').set(menuData);
+          }
+          else {
+            throw new Error('هيكل العناصر غير معروف');
+          }
+        })
+        .then(() => {
+          refreshAfterUpdate('تم حذف العنصر بنجاح');
+          closeConfirmDeleteModal();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          toastr.error('حدث خطأ أثناء حذف العنصر: ' + error.message);
+        })
+        .finally(() => {
+          confirmDeleteBtn.disabled = false;
+          confirmDeleteBtn.innerHTML = '<i class="fas fa-trash"></i> حذف';
+        });
+      }
+    }
+
+    confirmDeleteBtn.addEventListener('click', performDelete);
+
+    // دالة لتحديث الصفحة بعد كل تغيير
+    function refreshAfterUpdate(message) {
+      toastr.success(message);
+      
+      // إعادة تحميل البيانات بعد ثانيتين
+      setTimeout(() => {
+        loadSections();
+        loadMenuItems();
+      }, 2000);
+    }
 
     // تحميل الأقسام من Firebase
     function loadSections() {
@@ -933,12 +1228,22 @@
         const sectionsData = snapshot.val();
         if (sectionsData && sectionsData.length > 0) {
           sectionsData.forEach((section, index) => {
+            // حساب عدد العناصر في القسم
+            let itemCount = 0;
+            if (section.items) {
+              itemCount = Array.isArray(section.items) ? 
+                section.items.length : 
+                Object.keys(section.items).length;
+            }
+            
             menuSections.push({
               id: index,
               name: section.section,
-              icon: section.icon || 'fa-utensils'
+              icon: section.icon || 'fa-utensils',
+              itemCount: itemCount
             });
             
+            // إضافة الأقسام إلى القائمة المنسدلة
             const option = document.createElement('option');
             option.value = index;
             option.textContent = section.section;
@@ -946,9 +1251,63 @@
           });
           
           totalSectionsSpan.textContent = sectionsData.length;
+          
+          // عرض الأقسام في قائمة الأقسام
+          displaySectionsList(menuSections);
+        } else {
+          sectionsList.innerHTML = `
+            <div style="text-align: center; padding: 2rem; color: var(--text); opacity: 0.6;">
+              <i class="fas fa-info-circle" style="font-size: 1.5rem; margin-bottom: 1rem;"></i>
+              <p>لا توجد أقسام متاحة</p>
+            </div>
+          `;
+          totalSectionsSpan.textContent = '0';
         }
       }).catch(error => {
         toastr.error('حدث خطأ أثناء تحميل الأقسام: ' + error.message);
+      });
+    }
+
+    // عرض الأقسام في قائمة الأقسام
+    function displaySectionsList(sections) {
+      if (sections.length === 0) {
+        sectionsList.innerHTML = `
+          <div style="text-align: center; padding: 2rem; color: var(--text); opacity: 0.6;">
+            <i class="fas fa-info-circle" style="font-size: 1.5rem; margin-bottom: 1rem;"></i>
+            <p>لا توجد أقسام متاحة</p>
+          </div>
+        `;
+        return;
+      }
+      
+      sectionsList.innerHTML = '';
+      
+      sections.forEach(section => {
+        const sectionItem = document.createElement('div');
+        sectionItem.className = 'section-item';
+        sectionItem.innerHTML = `
+          <div class="section-info">
+            <i class="fas ${section.icon}"></i>
+            <div>
+              <h4>${section.name}</h4>
+              <div class="section-stats">${section.itemCount} عنصر</div>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="action-btn delete" data-id="${section.id}" data-section="true">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        `;
+        sectionsList.appendChild(sectionItem);
+      });
+      
+      // إضافة أحداث النقر لأزرار حذف الأقسام
+      document.querySelectorAll('.action-btn.delete[data-section="true"]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const sectionId = this.getAttribute('data-id');
+          showDeleteConfirmation(sectionId, true);
+        });
       });
     }
 
@@ -1000,10 +1359,21 @@
           
           // عرض العناصر في الجدول
           displayMenuItems(menuItems);
+        } else {
+          menuItemsTable.innerHTML = `
+            <tr>
+              <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text); opacity: 0.6;">
+                <i class="fas fa-info-circle" style="font-size: 1.5rem; margin-bottom: 1rem;"></i>
+                <p>لا توجد عناصر في القائمة</p>
+              </td>
+            </tr>
+          `;
+          totalItemsSpan.textContent = '0';
+          activeItemsSpan.textContent = '0';
+          hiddenItemsSpan.textContent = '0';
         }
       }).catch(error => {
         toastr.error('حدث خطأ أثناء تحميل القائمة: ' + error.message);
-        console.error('Error loading menu items:', error);
       });
     }
 
@@ -1014,7 +1384,7 @@
       if (items.length === 0) {
         menuItemsTable.innerHTML = `
           <tr>
-            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text); opacity: 0.6;">
+            <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text); opacity: 0.6;">
               <i class="fas fa-info-circle" style="font-size: 1.5rem; margin-bottom: 1rem;"></i>
               <p>لا توجد عناصر في القائمة</p>
             </td>
@@ -1023,11 +1393,12 @@
         return;
       }
       
-      items.forEach(item => {
+      items.forEach((item, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
+          <td>${index + 1}</td>
           <td>
-            <i class="fas ${item.icon}" style="margin-left: 0.5rem; color: var(--gold);"></i>
+            <i class="fas ${item.icon || 'fa-circle'}" style="margin-left: 0.5rem; color: var(--gold);"></i>
             ${item.plat}
           </td>
           <td>${item.sectionName}</td>
@@ -1053,28 +1424,11 @@
           </td>
         `;
         menuItemsTable.appendChild(tr);
-      });
-      
-      // إضافة أحداث النقر للأزرار
-      document.querySelectorAll('.action-btn.edit').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const itemId = this.getAttribute('data-id');
-          const item = menuItems.find(i => i.id === itemId);
-          if (item) openModal(item);
-        });
-      });
-      
-      document.querySelectorAll('.action-btn.visibility').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const itemId = this.getAttribute('data-id');
-          toggleItemVisibility(itemId);
-        });
-      });
-      
-      document.querySelectorAll('.action-btn.delete').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const itemId = this.getAttribute('data-id');
-          deleteMenuItem(itemId);
+        
+        // إضافة حدث الحذف مباشرة للزر
+        const deleteBtn = tr.querySelector('.action-btn.delete');
+        deleteBtn.addEventListener('click', function() {
+          showDeleteConfirmation(this.getAttribute('data-id'), false);
         });
       });
     }
@@ -1088,29 +1442,12 @@
         
         database.ref(`menu/${sectionIndex}/items/${itemIndex}/hidden`).set(!currentStatus)
           .then(() => {
-            toastr.success('تم تحديث حالة العنصر بنجاح');
-            loadMenuItems(); // إعادة تحميل القائمة
+            refreshAfterUpdate('تم تحديث حالة العنصر بنجاح');
           })
           .catch(error => {
             toastr.error('حدث خطأ أثناء تحديث حالة العنصر: ' + error.message);
           });
       });
-    }
-
-    // حذف عنصر من القائمة
-    function deleteMenuItem(itemId) {
-      if (confirm('هل أنت متأكد من حذف هذا العنصر؟ لا يمكن التراجع عن هذه العملية.')) {
-        const [sectionIndex, itemIndex] = itemId.split('-').map(Number);
-        
-        database.ref(`menu/${sectionIndex}/items/${itemIndex}`).remove()
-          .then(() => {
-            toastr.success('تم حذف العنصر بنجاح');
-            loadMenuItems(); // إعادة تحميل القائمة
-          })
-          .catch(error => {
-            toastr.error('حدث خطأ أثناء حذف العنصر: ' + error.message);
-          });
-      }
     }
 
     // إضافة قسم جديد
@@ -1145,10 +1482,8 @@
         // حفظ المصفوفة المحدثة
         database.ref('menu').set(currentSections)
           .then(() => {
-            toastr.success('تم إضافة القسم الجديد بنجاح');
+            refreshAfterUpdate('تم إضافة القسم الجديد بنجاح');
             closeSectionModal();
-            loadSections(); // إعادة تحميل الأقسام
-            loadMenuItems(); // إعادة تحميل العناصر
           })
           .catch(error => {
             toastr.error('حدث خطأ أثناء إضافة القسم: ' + error.message);
@@ -1213,9 +1548,8 @@
                 return database.ref(`menu/${originalSection}/items/${itemIndex}`).remove();
               })
               .then(() => {
-                toastr.success('تم نقل وتحديث العنصر بنجاح');
+                refreshAfterUpdate('تم نقل وتحديث العنصر بنجاح');
                 closeModal();
-                loadMenuItems();
               })
               .catch(error => {
                 toastr.error('حدث خطأ أثناء نقل العنصر: ' + error.message);
@@ -1225,9 +1559,8 @@
           // إذا لم يتغير القسم، قم بالتحديث فقط
           database.ref(`menu/${sectionIndex}/items/${itemIndex}`).update(updates)
             .then(() => {
-              toastr.success('تم تحديث العنصر بنجاح');
+              refreshAfterUpdate('تم تحديث العنصر بنجاح');
               closeModal();
-              loadMenuItems();
             })
             .catch(error => {
               toastr.error('حدث خطأ أثناء تحديث العنصر: ' + error.message);
@@ -1245,9 +1578,8 @@
         
         database.ref(`menu/${itemSection}/items`).push(newItem)
           .then(() => {
-            toastr.success('تم إضافة العنصر بنجاح');
+            refreshAfterUpdate('تم إضافة العنصر بنجاح');
             closeModal();
-            loadMenuItems();
           })
           .catch(error => {
             toastr.error('حدث خطأ أثناء إضافة العنصر: ' + error.message);

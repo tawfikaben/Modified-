@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول | دار حسنا</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #E94560;
+      --secondary: #0F3460;
+      --light: #F8F5F2;
+      --dark: #16213E;
+      --text: #2D3748;
+      --white: #FFFFFF;
+      --gray: #EDF2F7;
+      --radius: 8px;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background-color: var(--light);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    
+    .login-container {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    .logo {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 1.5rem;
+    }
+    
+    .login-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--dark);
+    }
+    
+    .form-group {
+      margin-bottom: 1.2rem;
+      text-align: right;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid var(--gray);
+      border-radius: var(--radius);
+      font-family: 'Tajawal', sans-serif;
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: var(--radius);
+      border: none;
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+    }
+    
+    .btn-primary:hover {
+      background: #d1334e;
+    }
+    
+    .error-message {
+      color: var(--primary);
+      margin-top: 1rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">دار حسنا</div>
+    <h1 class="login-title">تسجيل الدخول</h1>
+    
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email" class="form-label">البريد الإلكتروني</label>
+        <input type="email" id="email" class="form-control" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="password" class="form-label">كلمة المرور</label>
+        <input type="password" id="password" class="form-control" required>
+      </div>
+      
+      <button type="submit" class="btn btn-primary">تسجيل الدخول</button>
+      
+      <div id="errorMessage" class="error-message">
+        <i class="fas fa-exclamation-circle"></i> البريد الإلكتروني أو كلمة المرور غير صحيحة
+      </div>
+    </form>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB8t7aItx10OgZhOn4vkuiDzHYchh63cKo",
+      authDomain: "fir-afb14.firebaseapp.com",
+      databaseURL: "https://fir-afb14-default-rtdb.firebaseio.com",
+      projectId: "fir-afb14",
+      storageBucket: "fir-afb14.appspot.com",
+      messagingSenderId: "696865036390",
+      appId: "1:696865036390:web:7299226db4346c5251f5a7",
+      measurementId: "G-ENGTMMTDX4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = "index.html";
+      } catch (error) {
+        console.error("Login error:", error);
+        document.getElementById('errorMessage').style.display = 'block';
+      }
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "index.html";
+      }
+    });
+  </script>
+</body>
+</html>

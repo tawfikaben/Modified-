@@ -706,6 +706,72 @@
       font-size: 0.9rem;
     }
 
+    /* بطاقة التأكيد الجميلة */
+    .confirm-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .confirm-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .confirm-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+      transform: translateY(30px);
+      transition: var(--transition);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    .confirm-overlay.active .confirm-card {
+      transform: translateY(0);
+    }
+
+    .confirm-header {
+      padding: 1.2rem;
+      background: var(--secondary);
+      color: var(--white);
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .confirm-body {
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .confirm-actions {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      border-top: 1px solid var(--gray);
+    }
+
+    .confirm-actions .btn {
+      flex: 1;
+      padding: 0.8rem;
+    }
+
     /* تأثيرات للطلبات الجديدة */
     .order-row {
       transition: all 0.3s ease;
@@ -839,12 +905,14 @@
         overflow-x: auto;
       }
       
-      .order-card-status-actions {
+      .order-card-status-actions,
+      .confirm-actions {
         flex-direction: column;
       }
       
       .order-card-status-actions .status-select,
-      .order-card-status-actions .btn {
+      .order-card-status-actions .btn,
+      .confirm-actions .btn {
         width: 100%;
       }
     }
@@ -892,10 +960,6 @@
           <button class="btn btn-primary" id="printAllBtn">
             <i class="fas fa-print"></i>
             طباعة السجل
-          </button>
-          <button class="btn btn-primary" id="refreshOrders">
-            <i class="fas fa-sync-alt"></i>
-            تحديث الطلبات
           </button>
           <button class="btn btn-secondary" id="openModificationBtn">
             <i class="fas fa-edit"></i>
@@ -1062,6 +1126,26 @@
     </div>
   </div>
 
+  <!-- بطاقة التأكيد الجميلة -->
+  <div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-card">
+      <div class="confirm-header" id="confirmHeader">
+        تأكيد الإجراء
+      </div>
+      <div class="confirm-body" id="confirmMessage">
+        هل أنت متأكد من تنفيذ هذا الإجراء؟
+      </div>
+      <div class="confirm-actions">
+        <button class="btn btn-danger" id="confirmCancel">
+          <i class="fas fa-times"></i> إلغاء
+        </button>
+        <button class="btn btn-success" id="confirmOk">
+          <i class="fas fa-check"></i> تأكيد
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- تأثير صوتي للطلبات الجديدة -->
   <audio class="notification-sound" id="notificationSound" preload="auto">
     <source src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" type="audio/mpeg">
@@ -1112,6 +1196,7 @@
     let currentStatusFilter = 'all';
     let lastOrdersCount = 0;
     let lastPendingCount = 0;
+    let confirmCallback = null;
 
     // عناصر DOM
     const notificationSound = document.getElementById('notificationSound');
@@ -1154,6 +1239,20 @@
           }
         });
       }
+    }
+
+    // دالة عرض تأكيد جميل
+    function showConfirm(title, message, callback) {
+      document.getElementById('confirmHeader').textContent = title;
+      document.getElementById('confirmMessage').textContent = message;
+      confirmCallback = callback;
+      document.getElementById('confirmOverlay').classList.add('active');
+    }
+
+    // دالة إخفاء تأكيد
+    function hideConfirm() {
+      document.getElementById('confirmOverlay').classList.remove('active');
+      confirmCallback = null;
     }
 
     // دالة طباعة السجل الكامل مع الإحصائيات
@@ -1409,7 +1508,7 @@
 
     // دالة إعادة تعيين جميع الطلبات
     function resetAllOrders() {
-      if (confirm('هل أنت متأكد من أنك تريد حذف جميع الطلبات والإحصائيات؟ هذا الإجراء لا يمكن التراجع عنه!')) {
+      showConfirm('إعادة تشغيل النظام', 'هل أنت متأكد من أنك تريد حذف جميع الطلبات والإحصائيات؟ هذا الإجراء لا يمكن التراجع عنه!', () => {
         const ordersRef = ref(database, 'orders');
         
         remove(ordersRef)
@@ -1424,7 +1523,7 @@
           .catch((error) => {
             toastr.error('حدث خطأ أثناء حذف الطلبات: ' + error.message);
           });
-      }
+      });
     }
 
     // دالة فتح بطاقة الطلب
@@ -1671,57 +1770,48 @@
         btn.addEventListener('click', function(e) {
           e.stopPropagation();
           const orderId = this.getAttribute('data-id');
-          if (confirm('هل أنت متأكد من إلغاء هذا الطلب؟')) {
+          showConfirm('إلغاء الطلب', 'هل أنت متأكد من إلغاء هذا الطلب؟', () => {
             updateOrderStatus(orderId, 'cancelled');
-          }
+          });
         });
       });
     }
 
     // دالة تحديث حالة الطلب
     function updateOrderStatus(orderId, newStatus) {
-      const confirmMessage = {
-        'pending': 'هل تريد إعادة الطلب إلى الحالة الجديدة؟',
-        'preparing': 'هل تريد تغيير حالة الطلب إلى قيد التحضير؟',
-        'completed': 'هل تريد إكمال هذا الطلب؟',
-        'cancelled': 'هل أنت متأكد من إلغاء هذا الطلب؟'
-      };
+      const orderRef = ref(database, `orders/${orderId}/status`);
       
-      if (confirm(confirmMessage[newStatus] || 'هل تريد تغيير حالة هذا الطلب؟')) {
-        const orderRef = ref(database, `orders/${orderId}/status`);
-        
-        set(orderRef, newStatus)
-          .then(() => {
-            toastr.success('تم تحديث حالة الطلب بنجاح');
-            
-            // إذا كان الطلب الحالي مفتوحًا، قم بتحديثه
-            if (currentOrder && currentOrder.id === orderId) {
-              currentOrder.status = newStatus;
-              updateOrderCardStatusDisplay(newStatus);
-            }
-            
-            // تحديث عرض الطلبات
-            displayOrders(orders.filter(order => 
-              currentStatusFilter === 'all' || order.status === currentStatusFilter
-            ));
-            
-            // إضافة تأثير تغيير الحالة للصف المحدث
-            const updatedRow = document.querySelector(`.order-row[data-id="${orderId}"]`);
-            if (updatedRow) {
-              updatedRow.classList.add('status-change-effect');
-              setTimeout(() => {
-                updatedRow.classList.remove('status-change-effect');
-              }, 1500);
-            }
-            
-            // تحديث الإحصائيات
-            updateStats();
-            calculateAdvancedStats();
-          })
-          .catch((error) => {
-            toastr.error('حدث خطأ أثناء تحديث حالة الطلب: ' + error.message);
-          });
-      }
+      set(orderRef, newStatus)
+        .then(() => {
+          toastr.success('تم تحديث حالة الطلب بنجاح');
+          
+          // إذا كان الطلب الحالي مفتوحًا، قم بتحديثه
+          if (currentOrder && currentOrder.id === orderId) {
+            currentOrder.status = newStatus;
+            updateOrderCardStatusDisplay(newStatus);
+          }
+          
+          // تحديث عرض الطلبات
+          displayOrders(orders.filter(order => 
+            currentStatusFilter === 'all' || order.status === currentStatusFilter
+          ));
+          
+          // إضافة تأثير تغيير الحالة للصف المحدث
+          const updatedRow = document.querySelector(`.order-row[data-id="${orderId}"]`);
+          if (updatedRow) {
+            updatedRow.classList.add('status-change-effect');
+            setTimeout(() => {
+              updatedRow.classList.remove('status-change-effect');
+            }, 1500);
+          }
+          
+          // تحديث الإحصائيات
+          updateStats();
+          calculateAdvancedStats();
+        })
+        .catch((error) => {
+          toastr.error('حدث خطأ أثناء تحديث حالة الطلب: ' + error.message);
+        });
     }
 
     // دالة تصفية الطلبات حسب الحالة
@@ -1760,16 +1850,16 @@
       const updateCardStatusBtn = document.getElementById('updateCardStatusBtn');
       const printAllBtn = document.getElementById('printAllBtn');
       const resetAllBtn = document.getElementById('resetAllBtn');
-      const refreshOrdersBtn = document.getElementById('refreshOrders');
       const openModificationBtn = document.getElementById('openModificationBtn');
       const searchOrdersInput = document.getElementById('searchOrders');
       const statusButtons = document.querySelectorAll('.status-btn');
+      const confirmCancelBtn = document.getElementById('confirmCancel');
+      const confirmOkBtn = document.getElementById('confirmOk');
 
       // أحداث النقر
       closeCardBtn.addEventListener('click', closeOrderCard);
       printAllBtn.addEventListener('click', printAllOrders);
       resetAllBtn.addEventListener('click', resetAllOrders);
-      refreshOrdersBtn.addEventListener('click', loadOrders);
       openModificationBtn.addEventListener('click', openModificationFile);
       
       updateCardStatusBtn.addEventListener('click', () => {
@@ -1793,6 +1883,15 @@
       
       searchOrdersInput.addEventListener('input', function() {
         searchOrders(this.value.trim());
+      });
+
+      // أحداث بطاقة التأكيد
+      confirmCancelBtn.addEventListener('click', hideConfirm);
+      confirmOkBtn.addEventListener('click', () => {
+        if (confirmCallback) {
+          confirmCallback();
+          hideConfirm();
+        }
       });
 
       // تسجيل الخروج

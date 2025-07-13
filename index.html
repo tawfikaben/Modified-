@@ -10,6 +10,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <!-- Toastr للإشعارات -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
   <style>
     :root {
       --primary: #D4AF37; /* ذهبي فاخر */
@@ -149,6 +154,12 @@
     .main-content {
       margin-top: 80px;
       padding: 2rem 0;
+    }
+
+    .stats-page {
+      margin-top: 80px;
+      padding: 2rem 0;
+      background-color: var(--light);
     }
 
     .page-title {
@@ -307,17 +318,42 @@
       color: var(--danger);
     }
 
-    /* الإحصائيات المتقدمة المعدلة */
-    .advanced-stats {
+    /* صفحة الإحصائيات */
+    .date-filter {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .filter-input {
+      padding: 0.7rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--gray);
+      font-family: 'Tajawal', sans-serif;
+    }
+
+    .comparison-section {
       background: var(--white);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 2rem;
-      margin-bottom: 3rem;
+      margin-bottom: 2rem;
       border: var(--border);
     }
 
-    .advanced-stats h2 {
+    .comparison-section h3 {
       margin-bottom: 1.5rem;
       color: var(--secondary);
       font-size: 1.5rem;
@@ -326,48 +362,185 @@
       padding-bottom: 1rem;
     }
 
-    .stats-grid {
+    .comparison-cards {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
     }
 
-    .stat-box {
+    .comparison-card {
       background: var(--light-gray);
-      border-radius: var(--radius);
+      border-radius: var(--radius-sm);
       padding: 1.5rem;
       border: var(--border);
     }
 
-    .stat-box h3 {
+    .comparison-card h4 {
       color: var(--secondary);
       margin-bottom: 1rem;
-      font-size: 1.2rem;
-      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .comparison-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--secondary);
+    }
+
+    .comparison-change {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      margin-top: 0.5rem;
+      font-weight: 600;
     }
 
-    .stat-box h3 i {
-      color: var(--gold);
+    .positive-change {
+      color: var(--success);
     }
 
-    .popular-items, .daily-stats {
-      margin-top: 1.5rem;
+    .negative-change {
+      color: var(--danger);
     }
 
-    .popular-item, .daily-stat {
+    .neutral-change {
+      color: var(--text);
+      opacity: 0.7;
+    }
+
+    .chart-container {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border: var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .chart-container h3 {
+      margin-bottom: 1.5rem;
+      color: var(--secondary);
+      font-size: 1.5rem;
+      font-weight: 800;
+      border-bottom: 2px solid var(--gray);
+      padding-bottom: 1rem;
+    }
+
+    .chart-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1rem;
+      gap: 1rem;
+    }
+
+    .sales-table {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 3rem;
+      border: var(--border);
+    }
+
+    .table-header {
       display: flex;
       justify-content: space-between;
-      padding: 0.8rem 0;
-      border-bottom: 1px dashed var(--gray);
+      align-items: center;
+      padding: 1.2rem 2rem;
+      background: var(--secondary);
+      color: var(--white);
+    }
+
+    .table-header h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 1.2rem;
+      text-align: right;
+    }
+
+    th {
+      background: var(--light-gray);
+      font-weight: 700;
+      color: var(--secondary);
       font-size: 0.95rem;
     }
 
-    .popular-item span:last-child, .daily-stat span:last-child {
-      font-weight: 600;
+    tr:not(:last-child) {
+      border-bottom: 1px solid var(--gray);
+    }
+
+    tr:hover {
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    .popular-items-section {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      margin-bottom: 3rem;
+      border: var(--border);
+    }
+
+    .popular-items-section h3 {
+      margin-bottom: 1.5rem;
       color: var(--secondary);
+      font-size: 1.5rem;
+      font-weight: 800;
+      border-bottom: 2px solid var(--gray);
+      padding-bottom: 1rem;
+    }
+
+    .popular-items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .popular-item-card {
+      background: var(--light-gray);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      border: var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .popular-item-name {
+      font-weight: 700;
+      color: var(--secondary);
+      font-size: 1.1rem;
+    }
+
+    .popular-item-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+    }
+
+    .popular-item-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .popular-item-stat-value {
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .popular-item-stat-label {
+      font-size: 0.8rem;
+      color: var(--text);
+      opacity: 0.7;
     }
 
     /* فلتر الحالة المعدل */
@@ -412,20 +585,6 @@
       border: var(--border);
     }
 
-    .table-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.2rem 2rem;
-      background: var(--secondary);
-      color: var(--white);
-    }
-
-    .table-header h3 {
-      font-size: 1.3rem;
-      font-weight: 700;
-    }
-
     .search-box {
       position: relative;
     }
@@ -453,31 +612,6 @@
       transform: translateY(-50%);
       color: var(--text);
       opacity: 0.6;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 1.2rem;
-      text-align: right;
-    }
-
-    th {
-      background: var(--light-gray);
-      font-weight: 700;
-      color: var(--secondary);
-      font-size: 0.95rem;
-    }
-
-    tr:not(:last-child) {
-      border-bottom: 1px solid var(--gray);
-    }
-
-    tr:hover {
-      background: rgba(0, 0, 0, 0.02);
     }
 
     .badge {
@@ -557,15 +691,15 @@
       background: #3d8b40;
     }
 
-    /* بطاقة تفاصيل الطلب الصغيرة */
-    .order-card-overlay {
+    /* مودال تفاصيل الطلب المعدل */
+    .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(5px);
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -573,20 +707,19 @@
       opacity: 0;
       visibility: hidden;
       transition: var(--transition);
-      padding: 1rem;
     }
 
-    .order-card-overlay.active {
+    .modal-overlay.active {
       opacity: 1;
       visibility: visible;
     }
 
-    .order-card {
+    .modal {
       background: var(--white);
       border-radius: var(--radius);
       box-shadow: 0 12px 36px rgba(0,0,0,0.2);
       width: 100%;
-      max-width: 400px;
+      max-width: 900px;
       max-height: 90vh;
       overflow-y: auto;
       transform: translateY(30px);
@@ -594,12 +727,12 @@
       border: 1px solid rgba(0, 0, 0, 0.05);
     }
 
-    .order-card-overlay.active .order-card {
+    .modal-overlay.active .modal {
       transform: translateY(0);
     }
 
-    .order-card-header {
-      padding: 1rem;
+    .modal-header {
+      padding: 1.8rem;
       border-bottom: 1px solid var(--gray);
       display: flex;
       justify-content: space-between;
@@ -608,168 +741,117 @@
       color: var(--white);
     }
 
-    .order-card-header h3 {
-      font-size: 1.2rem;
+    .modal-header h3 {
+      font-size: 1.5rem;
       font-weight: 700;
-      margin: 0;
     }
 
-    .close-card {
+    .close-modal {
       background: none;
       border: none;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       cursor: pointer;
       color: var(--white);
       opacity: 0.8;
       transition: var(--transition);
-      width: 32px;
-      height: 32px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0;
     }
 
-    .close-card:hover {
+    .close-modal:hover {
       opacity: 1;
       background: rgba(255,255,255,0.1);
     }
 
-    .order-card-body {
-      padding: 1rem;
+    .modal-body {
+      padding: 2rem;
     }
 
-    .order-card-row {
+    .order-details {
+      margin-bottom: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .order-details-row {
       display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.8rem;
-      font-size: 0.95rem;
-    }
-
-    .order-card-row span:first-child {
-      font-weight: 600;
-      color: var(--secondary);
-    }
-
-    .order-card-items {
-      margin: 1rem 0;
-      padding-top: 1rem;
-      border-top: 1px solid var(--gray);
-    }
-
-    .order-card-items h4 {
-      font-size: 1rem;
-      margin-bottom: 0.8rem;
-      color: var(--secondary);
-      display: flex;
-      align-items: center;
+      flex-direction: column;
       gap: 0.5rem;
     }
 
-    .order-card-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.6rem;
-      background: var(--light-gray);
-      border-radius: var(--radius-sm);
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
+    .order-details-label {
+      font-weight: 600;
+      color: var(--secondary);
+      font-size: 0.95rem;
     }
 
-    .order-card-total {
+    /* تحسينات لتغيير الحالة */
+    .status-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .status-select {
+      padding: 0.7rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--gray);
+      font-family: 'Tajawal', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      flex-grow: 1;
+      min-width: 200px;
+    }
+
+    .status-select:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
+    }
+
+    .order-items {
+      margin: 2rem 0;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: var(--light-gray);
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.8rem;
+      transition: var(--transition);
+      border: var(--border);
+    }
+
+    .order-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .order-total {
       font-weight: 800;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       text-align: left;
-      margin: 1rem 0;
-      padding-top: 1rem;
+      margin: 2rem 0;
+      padding-top: 2rem;
       border-top: 2px solid var(--gray);
       color: var(--secondary);
     }
 
-    .order-card-status-actions {
+    .form-actions {
       display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--gray);
-    }
-
-    .order-card-status-actions .status-select {
-      flex-grow: 1;
-      padding: 0.6rem;
-      font-size: 0.9rem;
-    }
-
-    .order-card-status-actions .btn {
-      padding: 0.6rem 1rem;
-      font-size: 0.9rem;
-    }
-
-    /* بطاقة التأكيد الجميلة */
-    .confirm-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(5px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 300;
-      opacity: 0;
-      visibility: hidden;
-      transition: var(--transition);
-    }
-
-    .confirm-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .confirm-card {
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: 0 12px 36px rgba(0,0,0,0.2);
-      width: 100%;
-      max-width: 400px;
-      transform: translateY(30px);
-      transition: var(--transition);
-      border: 1px solid rgba(0, 0, 0, 0.05);
-      overflow: hidden;
-    }
-
-    .confirm-overlay.active .confirm-card {
-      transform: translateY(0);
-    }
-
-    .confirm-header {
-      padding: 1.2rem;
-      background: var(--secondary);
-      color: var(--white);
-      text-align: center;
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
-
-    .confirm-body {
-      padding: 1.5rem;
-      text-align: center;
-      font-size: 1rem;
-    }
-
-    .confirm-actions {
-      display: flex;
+      justify-content: flex-end;
       gap: 1rem;
-      padding: 1rem;
-      border-top: 1px solid var(--gray);
-    }
-
-    .confirm-actions .btn {
-      flex: 1;
-      padding: 0.8rem;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 2px solid var(--gray);
     }
 
     /* تأثيرات للطلبات الجديدة */
@@ -804,6 +886,40 @@
 
     .print-btn:hover {
       background: #0d2b4f;
+    }
+
+    /* تأثيرات SweetAlert2 */
+    .animate__animated {
+      animation-duration: 0.5s;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translate3d(0, -20px, 0);
+      }
+      to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    .animate__fadeInDown {
+      animation-name: fadeInDown;
+    }
+
+    @keyframes fadeOutUp {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+        transform: translate3d(0, -20px, 0);
+      }
+    }
+
+    .animate__fadeOutUp {
+      animation-name: fadeOutUp;
     }
 
     /* تنسيقات الطباعة */
@@ -849,12 +965,16 @@
         grid-template-columns: repeat(2, 1fr);
       }
       
-      .stats-grid {
-        grid-template-columns: 1fr;
+      .comparison-cards {
+        grid-template-columns: repeat(2, 1fr);
       }
       
       .search-box input {
         width: 200px;
+      }
+      
+      .order-details {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -886,18 +1006,25 @@
         left: 0;
       }
       
-      .table-header {
+      .date-filter {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1rem;
       }
       
-      .search-box {
+      .filter-group {
         width: 100%;
       }
       
-      .search-box input {
+      .filter-input {
         width: 100%;
+      }
+      
+      .comparison-cards {
+        grid-template-columns: 1fr;
+      }
+      
+      .popular-items-grid {
+        grid-template-columns: 1fr;
       }
       
       table {
@@ -905,15 +1032,29 @@
         overflow-x: auto;
       }
       
-      .order-card-status-actions,
-      .confirm-actions {
-        flex-direction: column;
+      .form-actions {
+        flex-wrap: wrap;
+        justify-content: center;
       }
       
-      .order-card-status-actions .status-select,
-      .order-card-status-actions .btn,
-      .confirm-actions .btn {
+      .form-actions .btn {
         width: 100%;
+        justify-content: center;
+      }
+
+      /* تحسينات لتغيير الحالة على الجوال */
+      .status-actions {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .status-select {
+        width: 100%;
+      }
+      
+      #updateStatusBtn {
+        width: 100%;
+        justify-content: center;
       }
     }
   </style>
@@ -927,11 +1068,11 @@
         <span>Demo | لوحة التحكم</span>
       </div>
       <nav class="admin-nav">
-        <a href="#">
+        <a href="#" id="statsLink">
           <i class="fas fa-chart-line"></i>
           <span>الإحصائيات</span>
         </a>
-        <a href="#" class="active">
+        <a href="#" id="ordersLink" class="active">
           <i class="fas fa-shopping-cart"></i>
           <span>الطلبات</span>
         </a>
@@ -1008,31 +1149,6 @@
         </div>
       </div>
 
-      <!-- الإحصائيات المتقدمة -->
-      <div class="advanced-stats">
-        <h2><i class="fas fa-chart-pie"></i> الإحصائيات المتقدمة</h2>
-        <div class="stats-grid">
-          <div class="stat-box">
-            <h3><i class="fas fa-star"></i> الأطباق الأكثر طلباً</h3>
-            <div class="popular-items" id="popularItems">
-              <div style="text-align: center; padding: 1rem; color: var(--text); opacity: 0.6;">
-                <i class="fas fa-spinner fa-spin"></i>
-                <p>جاري تحميل البيانات...</p>
-              </div>
-            </div>
-          </div>
-          <div class="stat-box">
-            <h3><i class="fas fa-calendar-day"></i> إحصائيات اليوم</h3>
-            <div class="daily-stats" id="dailyStats">
-              <div style="text-align: center; padding: 1rem; color: var(--text); opacity: 0.6;">
-                <i class="fas fa-spinner fa-spin"></i>
-                <p>جاري تحميل البيانات...</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- فلتر الحالة -->
       <div class="status-filter">
         <button class="status-btn active" data-status="all">الكل</button>
@@ -1075,73 +1191,210 @@
     </div>
   </main>
 
-  <!-- بطاقة تفاصيل الطلب الصغيرة -->
-  <div class="order-card-overlay" id="orderCardOverlay">
-    <div class="order-card" id="orderCard">
-      <div class="order-card-header">
-        <h3>تفاصيل الطلب #<span id="orderCardId"></span></h3>
-        <button class="close-card" id="closeCard">&times;</button>
+  <!-- صفحة الإحصائيات -->
+  <div id="statsPage" class="stats-page" style="display: none;">
+    <div class="container">
+      <div class="page-title">
+        <h1>إحصائيات المبيعات</h1>
+        <div>
+          <button class="btn btn-primary" id="printStatsBtn">
+            <i class="fas fa-print"></i>
+            طباعة التقرير
+          </button>
+        </div>
       </div>
-      <div class="order-card-body">
-        <div class="order-card-row">
-          <span>رقم الطاولة:</span>
-          <span id="orderCardTable">-</span>
-        </div>
-        <div class="order-card-row">
-          <span>حالة الطلب:</span>
-          <span id="orderCardStatus"><span class="badge badge-warning">جديد</span></span>
-        </div>
-        <div class="order-card-row">
-          <span>وقت الطلب:</span>
-          <span id="orderCardTime">-</span>
-        </div>
-        <div class="order-card-row">
-          <span>ملاحظات:</span>
-          <span id="orderCardNotes">لا توجد ملاحظات</span>
-        </div>
-        
-        <div class="order-card-items">
-          <h4><i class="fas fa-utensils"></i> الأصناف:</h4>
-          <div id="orderCardItemsList">
-            <!-- سيتم تعبئة العناصر ديناميكياً -->
+
+      <!-- كروت ملخصة -->
+      <div class="stats-cards">
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3>إجمالي المبيعات</h3>
+            <h2 id="totalSalesStats">0 درهم</h2>
+          </div>
+          <div class="stat-icon primary">
+            <i class="fas fa-money-bill-wave"></i>
           </div>
         </div>
-        
-        <div class="order-card-total">
-          المجموع: <span id="orderCardTotal">0</span> درهم
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3>متوسط المبيعات اليومية</h3>
+            <h2 id="avgDailySales">0 درهم</h2>
+          </div>
+          <div class="stat-icon success">
+            <i class="fas fa-calculator"></i>
+          </div>
         </div>
-        
-        <div class="order-card-status-actions">
-          <select id="statusCardSelect" class="status-select">
-            <option value="pending">جديد</option>
-            <option value="preparing">قيد التحضير</option>
-            <option value="completed">مكتمل</option>
-            <option value="cancelled">ملغى</option>
-          </select>
-          <button class="btn btn-primary" id="updateCardStatusBtn">
-            <i class="fas fa-save"></i> حفظ
+        <div class="stat-card">
+          <div class="stat-info">
+            <h3>أفضل يوم مبيعات</h3>
+            <h2 id="bestDaySales">0 درهم</h2>
+          </div>
+          <div class="stat-icon danger">
+            <i class="fas fa-trophy"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- فلتر التاريخ -->
+      <div class="date-filter">
+        <div class="filter-group">
+          <label for="startDate">من:</label>
+          <input type="date" id="startDate" class="filter-input">
+        </div>
+        <div class="filter-group">
+          <label for="endDate">إلى:</label>
+          <input type="date" id="endDate" class="filter-input">
+        </div>
+        <button class="btn btn-secondary" id="applyFilter">
+          <i class="fas fa-filter"></i>
+          تطبيق الفلتر
+        </button>
+        <button class="btn" id="resetFilter">
+          <i class="fas fa-redo"></i>
+          إعادة التعيين
+        </button>
+      </div>
+
+      <!-- المخطط الأسبوعي -->
+      <div class="chart-container">
+        <h3><i class="fas fa-chart-line"></i> المبيعات خلال 7 أيام</h3>
+        <canvas id="weeklySalesChart"></canvas>
+        <div class="chart-actions">
+          <button class="btn btn-secondary" id="printWeeklyChartBtn">
+            <i class="fas fa-print"></i>
+            طباعة التقرير الأسبوعي
           </button>
+        </div>
+      </div>
+
+      <!-- قسم مقارنة الأداء -->
+      <div class="comparison-section">
+        <h3><i class="fas fa-chart-bar"></i> مقارنة الأداء</h3>
+        <div class="comparison-cards">
+          <div class="comparison-card">
+            <h4>مقارنة المبيعات</h4>
+            <div class="comparison-value" id="salesComparison">0%</div>
+            <div class="comparison-change" id="salesTrend">
+              <i class="fas fa-equals neutral-change"></i>
+              <span class="neutral-change">لا يوجد تغيير</span>
+            </div>
+          </div>
+          <div class="comparison-card">
+            <h4>مقارنة عدد الطلبات</h4>
+            <div class="comparison-value" id="ordersComparison">0%</div>
+            <div class="comparison-change" id="ordersTrend">
+              <i class="fas fa-equals neutral-change"></i>
+              <span class="neutral-change">لا يوجد تغيير</span>
+            </div>
+          </div>
+          <div class="comparison-card">
+            <h4>مقارنة متوسط قيمة الطلب</h4>
+            <div class="comparison-value" id="avgOrderComparison">0%</div>
+            <div class="comparison-change" id="avgOrderTrend">
+              <i class="fas fa-equals neutral-change"></i>
+              <span class="neutral-change">لا يوجد تغيير</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- المخطط اليومي -->
+      <div class="chart-container">
+        <h3><i class="fas fa-calendar-day"></i> المبيعات اليومية</h3>
+        <canvas id="dailySalesChart"></canvas>
+      </div>
+
+      <!-- جدول المبيعات اليومية -->
+      <div class="sales-table">
+        <div class="table-header">
+          <h3><i class="fas fa-table"></i> تفاصيل المبيعات اليومية</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>التاريخ</th>
+              <th>عدد الطلبات</th>
+              <th>إجمالي المبيعات</th>
+              <th>متوسط قيمة الطلب</th>
+            </tr>
+          </thead>
+          <tbody id="dailySalesTable">
+            <tr>
+              <td colspan="4" style="text-align: center; padding: 2rem; color: var(--text); opacity: 0.6;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; margin-bottom: 1rem;"></i>
+                <p>جاري تحميل البيانات...</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- الأطباق الأكثر مبيعا -->
+      <div class="popular-items-section">
+        <h3><i class="fas fa-utensils"></i> الأطباق الأكثر طلباً</h3>
+        <div class="popular-items-grid" id="popularItemsGrid">
+          <!-- سيتم تعبئتها ديناميكياً -->
         </div>
       </div>
     </div>
   </div>
 
-  <!-- بطاقة التأكيد الجميلة -->
-  <div class="confirm-overlay" id="confirmOverlay">
-    <div class="confirm-card">
-      <div class="confirm-header" id="confirmHeader">
-        تأكيد الإجراء
+  <!-- مودال تفاصيل الطلب -->
+  <div class="modal-overlay" id="orderModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">تفاصيل الطلب #<span id="orderId"></span></h3>
+        <button class="close-modal" id="closeModal">&times;</button>
       </div>
-      <div class="confirm-body" id="confirmMessage">
-        هل أنت متأكد من تنفيذ هذا الإجراء؟
-      </div>
-      <div class="confirm-actions">
-        <button class="btn btn-danger" id="confirmCancel">
-          <i class="fas fa-times"></i> إلغاء
-        </button>
-        <button class="btn btn-success" id="confirmOk">
-          <i class="fas fa-check"></i> تأكيد
-        </button>
+      <div class="modal-body">
+        <div class="order-details">
+          <div class="order-details-row">
+            <div class="order-details-label">رقم الطاولة:</div>
+            <div id="orderTable">-</div>
+          </div>
+          <div class="order-details-row">
+            <div class="order-details-label">حالة الطلب:</div>
+            <div id="orderStatus"><span class="badge badge-warning">جديد</span></div>
+          </div>
+          <div class="order-details-row">
+            <div class="order-details-label">وقت الطلب:</div>
+            <div id="orderTime">-</div>
+          </div>
+          <div class="order-details-row">
+            <div class="order-details-label">ملاحظات:</div>
+            <div id="orderNotes">لا توجد ملاحظات</div>
+          </div>
+          <div class="order-details-row">
+            <div class="order-details-label">تغيير الحالة:</div>
+            <div class="status-actions">
+              <select id="statusSelect" class="status-select">
+                <option value="pending">جديد</option>
+                <option value="preparing">قيد التحضير</option>
+                <option value="completed">مكتمل</option>
+                <option value="cancelled">ملغى</option>
+              </select>
+              <button class="btn btn-primary" id="updateStatusBtn">
+                <i class="fas fa-save"></i> تحديث
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <h4><i class="fas fa-utensils"></i> الأصناف المطلوبة:</h4>
+        <div class="order-items" id="orderItemsList">
+          <!-- سيتم تعبئة العناصر ديناميكياً -->
+        </div>
+
+        <div class="order-total">
+          المجموع: <span id="orderTotal">0</span> درهم
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn print-btn" id="printOrderBtn">
+            <i class="fas fa-print"></i> طباعة
+          </button>
+          <button type="button" class="btn" id="cancelBtn">إغلاق</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1196,7 +1449,9 @@
     let currentStatusFilter = 'all';
     let lastOrdersCount = 0;
     let lastPendingCount = 0;
-    let confirmCallback = null;
+    let dailySalesData = [];
+    let popularItemsData = [];
+    let previousPeriodData = null;
 
     // عناصر DOM
     const notificationSound = document.getElementById('notificationSound');
@@ -1215,9 +1470,850 @@
       return `${day}/${month}/${year} - ${hours}:${minutes}`;
     }
 
-    // دالة فتح ملف modification.html
+    // دالة تحويل التاريخ إلى تنسيق YYYY-MM-DD
+    function formatDateForInput(date) {
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    // دالة تحميل بيانات الإحصائيات
+    function loadStatistics() {
+      const today = new Date();
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(today.getMonth() - 1);
+      
+      document.getElementById('startDate').value = formatDateForInput(oneMonthAgo);
+      document.getElementById('endDate').value = formatDateForInput(today);
+      
+      calculateStatistics();
+      renderWeeklySalesChart();
+    }
+
+    // دالة تجهيز بيانات الأسبوع
+    function prepareWeeklyData() {
+      const today = new Date();
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(today.getDate() - 6); // 7 أيام بما فيها اليوم
+      
+      // تصفية الطلبات المكتملة خلال 7 أيام
+      const weeklyOrders = orders.filter(order => {
+        if (order.status !== 'completed') return false;
+        const orderDate = new Date(order.timestamp);
+        return orderDate >= sevenDaysAgo && orderDate <= today;
+      });
+      
+      // تجميع البيانات اليومية
+      const dailyData = {};
+      for (let i = 0; i < 7; i++) {
+        const date = new Date();
+        date.setDate(today.getDate() - i);
+        const dateStr = date.toISOString().split('T')[0];
+        dailyData[dateStr] = {
+          date: dateStr,
+          total: 0,
+          count: 0
+        };
+      }
+      
+      // ملء البيانات الفعلية
+      weeklyOrders.forEach(order => {
+        const date = new Date(order.timestamp).toISOString().split('T')[0];
+        if (dailyData[date]) {
+          dailyData[date].total += order.total || 0;
+          dailyData[date].count++;
+        }
+      });
+      
+      // تحويل إلى مصفوفة وترتيب من الأقدم للأحدث
+      return Object.values(dailyData).sort((a, b) => new Date(a.date) - new Date(b.date));
+    }
+
+    // دالة رسم المخطط الأسبوعي
+    function renderWeeklySalesChart() {
+      const weeklyData = prepareWeeklyData();
+      const ctx = document.getElementById('weeklySalesChart').getContext('2d');
+      
+      // إذا كان هناك مخطط موجود، قم بتدميره أولاً
+      if (window.weeklySalesChart) {
+        window.weeklySalesChart.destroy();
+      }
+      
+      // تحضير البيانات للمخطط
+      const labels = weeklyData.map(day => formatDateForDisplay(day.date));
+      const salesData = weeklyData.map(day => day.total);
+      const ordersData = weeklyData.map(day => day.count);
+      
+      window.weeklySalesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'المبيعات اليومية (درهم)',
+              data: salesData,
+              borderColor: 'rgba(212, 175, 55, 1)',
+              backgroundColor: 'rgba(212, 175, 55, 0.1)',
+              borderWidth: 2,
+              tension: 0.4,
+              fill: true,
+              yAxisID: 'y'
+            },
+            {
+              label: 'عدد الطلبات',
+              data: ordersData,
+              borderColor: 'rgba(26, 26, 46, 1)',
+              backgroundColor: 'rgba(26, 26, 46, 0.1)',
+              borderWidth: 2,
+              tension: 0.4,
+              fill: true,
+              yAxisID: 'y1'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: 'المبيعات وعدد الطلبات خلال 7 أيام'
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  let label = context.dataset.label || '';
+                  if (label) {
+                    label += ': ';
+                  }
+                  if (context.datasetIndex === 0) {
+                    label += context.raw.toLocaleString('en-US') + ' درهم';
+                  } else {
+                    label += context.raw;
+                  }
+                  return label;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              type: 'linear',
+              display: true,
+              position: 'left',
+              title: {
+                display: true,
+                text: 'المبيعات (درهم)'
+              }
+            },
+            y1: {
+              type: 'linear',
+              display: true,
+              position: 'right',
+              title: {
+                display: true,
+                text: 'عدد الطلبات'
+              },
+              grid: {
+                drawOnChartArea: false
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // دالة طباعة التقرير الأسبوعي
+    function printWeeklyReport() {
+      const printWindow = window.open('', '_blank', 'width=900,height=700');
+      
+      if (!printWindow || printWindow.closed) {
+        Swal.fire({
+          icon: 'error',
+          title: 'خطأ في الطباعة',
+          text: 'لم يتم فتح نافذة الطباعة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع',
+          confirmButtonColor: '#D4AF37'
+        });
+        return;
+      }
+
+      const weeklyData = prepareWeeklyData();
+      const totalWeeklySales = weeklyData.reduce((sum, day) => sum + day.total, 0);
+      const totalWeeklyOrders = weeklyData.reduce((sum, day) => sum + day.count, 0);
+      const avgDailySales = totalWeeklySales / 7;
+      const bestDay = weeklyData.reduce((max, day) => day.total > max.total ? day : max, weeklyData[0]);
+      
+      let tableContent = '';
+      weeklyData.forEach(day => {
+        tableContent += `
+          <tr>
+            <td>${formatDateForDisplay(day.date)}</td>
+            <td>${day.count}</td>
+            <td>${day.total.toLocaleString('en-US')} درهم</td>
+            <td>${day.count > 0 ? Math.round(day.total / day.count).toLocaleString('en-US') : 0} درهم</td>
+          </tr>
+        `;
+      });
+
+      const printContent = `
+        <!DOCTYPE html>
+        <html dir="rtl">
+        <head>
+          <meta charset="UTF-8">
+          <title>تقرير المبيعات الأسبوعي - Demo</title>
+          <style>
+            body { font-family: 'Tajawal', sans-serif; padding: 20px; }
+            h1, h2 { color: #1A1A2E; text-align: center; }
+            h1 { margin-bottom: 5px; font-size: 24px; }
+            h2 { margin-top: 0; margin-bottom: 20px; font-size: 18px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { padding: 10px; text-align: right; border: 1px solid #ddd; }
+            th { background-color: #f2f2f2; }
+            .summary-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 20px 0; }
+            .summary-card { background: #f8f9fa; border-radius: 8px; padding: 15px; text-align: center; border: 1px solid #ddd; }
+            .summary-value { font-size: 1.5rem; font-weight: bold; color: #D4AF37; margin: 10px 0; }
+            .print-date { text-align: left; margin-bottom: 20px; font-size: 14px; }
+            .logo { text-align: center; margin-bottom: 20px; }
+            .logo img { max-width: 150px; }
+            @page { size: auto; margin: 10mm; }
+          </style>
+        </head>
+        <body>
+          <div class="print-content">
+            <div class="logo">
+              <h1 style="color: #D4AF37; font-size: 28px; margin-bottom: 5px;">Demo</h1>
+              <h2 style="color: #1A1A2E; margin-top: 0;">تقرير المبيعات الأسبوعي</h2>
+            </div>
+            
+            <div class="print-date">تاريخ الطباعة: ${new Date().toLocaleString('en-US')}</div>
+            <div class="print-date">الفترة من ${formatDateForDisplay(weeklyData[0].date)} إلى ${formatDateForDisplay(weeklyData[6].date)}</div>
+            
+            <div class="summary-cards">
+              <div class="summary-card">
+                <div>إجمالي المبيعات</div>
+                <div class="summary-value">${totalWeeklySales.toLocaleString('en-US')} درهم</div>
+              </div>
+              <div class="summary-card">
+                <div>عدد الطلبات</div>
+                <div class="summary-value">${totalWeeklyOrders}</div>
+              </div>
+              <div class="summary-card">
+                <div>متوسط المبيعات اليومية</div>
+                <div class="summary-value">${avgDailySales.toLocaleString('en-US', { maximumFractionDigits: 0 })} درهم</div>
+              </div>
+              <div class="summary-card">
+                <div>أفضل يوم مبيعات</div>
+                <div class="summary-value">${bestDay.total.toLocaleString('en-US')} درهم</div>
+              </div>
+            </div>
+            
+            <h3 style="border-bottom: 2px solid #1A1A2E; padding-bottom: 5px;">المبيعات اليومية</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>التاريخ</th>
+                  <th>عدد الطلبات</th>
+                  <th>إجمالي المبيعات</th>
+                  <th>متوسط قيمة الطلب</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${tableContent}
+              </tbody>
+            </table>
+            
+            <div style="margin-top: 30px; text-align: left; font-size: 12px; color: #666;">
+              <p>تم إنشاء هذا التقرير تلقائياً من نظام إدارة المطعم Demo</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      printWindow.document.open();
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+
+      printWindow.onload = function() {
+        setTimeout(() => {
+          try {
+            printWindow.focus();
+            printWindow.print();
+            setTimeout(() => {
+              if (!printWindow.closed) {
+                printWindow.close();
+              }
+            }, 1000);
+          } catch (error) {
+            Swal.fire({
+              icon: 'error',
+              title: 'خطأ في الطباعة',
+              text: 'حدث خطأ أثناء الطباعة: ' + error.message,
+              confirmButtonColor: '#D4AF37'
+            });
+            if (!printWindow.clapsed) {
+              printWindow.close();
+            }
+          }
+        }, 1000);
+      };
+    }
+
+    // دالة حساب الإحصائيات
+    function calculateStatistics() {
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      
+      if (!startDate || !endDate) return;
+      
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999); // نهاية اليوم
+      
+      // تصفية الطلبات حسب النطاق الزمني
+      const filteredOrders = orders.filter(order => {
+        if (order.status !== 'completed') return false;
+        const orderDate = new Date(order.timestamp);
+        return orderDate >= start && orderDate <= end;
+      });
+      
+      // تجميع البيانات اليومية
+      const dailySales = {};
+      filteredOrders.forEach(order => {
+        const date = new Date(order.timestamp).toISOString().split('T')[0];
+        if (!dailySales[date]) {
+          dailySales[date] = {
+            date: date,
+            total: 0,
+            count: 0
+          };
+        }
+        dailySales[date].total += order.total || 0;
+        dailySales[date].count++;
+      });
+      
+      // تحويل إلى مصفوفة وترتيب حسب التاريخ
+      dailySalesData = Object.values(dailySales).sort((a, b) => new Date(a.date) - new Date(b.date));
+      
+      // تجميع الأطباق الأكثر مبيعاً
+      const popularItems = {};
+      filteredOrders.forEach(order => {
+        if (order.items) {
+          order.items.forEach(item => {
+            if (!popularItems[item.plat]) {
+              popularItems[item.plat] = {
+                name: item.plat,
+                quantity: 0,
+                total: 0
+              };
+            }
+            popularItems[item.plat].quantity += item.quantity;
+            popularItems[item.plat].total += item.prix * item.quantity;
+          });
+        }
+      });
+      
+      // تحويل إلى مصفوفة وترتيب حسب الكمية
+      popularItemsData = Object.values(popularItems).sort((a, b) => b.quantity - a.quantity);
+      
+      // حساب بيانات الفترة السابقة للمقارنة
+      calculatePreviousPeriodData(start, end);
+      
+      // تحديث واجهة المستخدم
+      updateStatisticsUI();
+    }
+
+    // دالة حساب بيانات الفترة السابقة للمقارنة
+    function calculatePreviousPeriodData(currentStart, currentEnd) {
+      const periodDuration = currentEnd - currentStart;
+      const previousStart = new Date(currentStart.getTime() - periodDuration - 86400000); // ناقص يوم إضافي لتجنب التداخل
+      const previousEnd = new Date(currentStart.getTime() - 86400000); // ناقص يوم واحد
+      
+      const previousOrders = orders.filter(order => {
+        if (order.status !== 'completed') return false;
+        const orderDate = new Date(order.timestamp);
+        return orderDate >= previousStart && orderDate <= previousEnd;
+      });
+      
+      // حساب إجماليات الفترة السابقة
+      previousPeriodData = {
+        totalSales: previousOrders.reduce((sum, order) => sum + (order.total || 0), 0),
+        totalOrders: previousOrders.length,
+        avgOrderValue: previousOrders.length > 0 ? 
+          previousOrders.reduce((sum, order) => sum + (order.total || 0), 0) / previousOrders.length : 0
+      };
+    }
+
+    // دالة تحديث واجهة الإحصائيات
+    function updateStatisticsUI() {
+      // حساب الإحصائيات الملخصة
+      const totalSales = dailySalesData.reduce((sum, day) => sum + day.total, 0);
+      const totalOrders = dailySalesData.reduce((sum, day) => sum + day.count, 0);
+      const avgDailySales = dailySalesData.length > 0 ? totalSales / dailySalesData.length : 0;
+      const avgOrderValue = totalOrders > 0 ? totalSales / totalOrders : 0;
+      const bestDay = dailySalesData.length > 0 ? 
+        dailySalesData.reduce((max, day) => day.total > max.total ? day : max, dailySalesData[0]) : 
+        { total: 0, date: 'لا يوجد بيانات' };
+      
+      // تحديث الكروت الملخصة
+      document.getElementById('totalSalesStats').textContent = totalSales.toLocaleString('en-US') + ' درهم';
+      document.getElementById('avgDailySales').textContent = avgDailySales.toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' درهم';
+      document.getElementById('bestDaySales').textContent = bestDay.total.toLocaleString('en-US') + ' درهم';
+      
+      // تحديث مقارنة الأداء
+      updatePerformanceComparison(totalSales, totalOrders, avgOrderValue);
+      
+      // تحديث جدول المبيعات اليومية
+      const dailySalesTable = document.getElementById('dailySalesTable');
+      if (dailySalesData.length > 0) {
+        dailySalesTable.innerHTML = dailySalesData.map(day => {
+          const avgOrderValue = day.count > 0 ? day.total / day.count : 0;
+          return `
+            <tr>
+              <td>${formatDateForDisplay(day.date)}</td>
+              <td>${day.count}</td>
+              <td>${day.total.toLocaleString('en-US')} درهم</td>
+              <td>${avgOrderValue.toLocaleString('en-US', { maximumFractionDigits: 0 })} درهم</td>
+            </tr>
+          `;
+        }).join('');
+      } else {
+        dailySalesTable.innerHTML = `
+          <tr>
+            <td colspan="4" style="text-align: center; padding: 2rem; color: var(--text); opacity: 0.6;">
+              <i class="fas fa-info-circle"></i>
+              <p>لا توجد بيانات في النطاق الزمني المحدد</p>
+            </td>
+          </tr>
+        `;
+      }
+      
+      // تحديث الأطباق الأكثر مبيعاً
+      const popularItemsGrid = document.getElementById('popularItemsGrid');
+      if (popularItemsData.length > 0) {
+        popularItemsGrid.innerHTML = popularItemsData.slice(0, 6).map(item => `
+          <div class="popular-item-card">
+            <div class="popular-item-name">${item.name}</div>
+            <div class="popular-item-stats">
+              <div class="popular-item-stat">
+                <div class="popular-item-stat-value">${item.quantity}</div>
+                <div class="popular-item-stat-label">الكمية</div>
+              </div>
+              <div class="popular-item-stat">
+                <div class="popular-item-stat-value">${item.total.toLocaleString('en-US')}</div>
+                <div class="popular-item-stat-label">إجمالي المبيعات</div>
+              </div>
+              <div class="popular-item-stat">
+                <div class="popular-item-stat-value">${Math.round(item.total / item.quantity).toLocaleString('en-US')}</div>
+                <div class="popular-item-stat-label">متوسط السعر</div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        popularItemsGrid.innerHTML = `
+          <div style="text-align: center; padding: 2rem; color: var(--text); opacity: 0.6; grid-column: 1 / -1;">
+            <i class="fas fa-info-circle"></i>
+            <p>لا توجد بيانات عن الأطباق المطلوبة</p>
+          </div>
+        `;
+      }
+      
+      // رسم المخطط البياني اليومي
+      renderDailySalesChart();
+    }
+
+    // دالة تحديث مقارنة الأداء
+    function updatePerformanceComparison(currentSales, currentOrders, currentAvgOrder) {
+      if (!previousPeriodData || previousPeriodData.totalSales === 0) {
+        // لا توجد بيانات سابقة للمقارنة
+        document.getElementById('salesComparison').textContent = '100%';
+        document.getElementById('ordersComparison').textContent = '100%';
+        document.getElementById('avgOrderComparison').textContent = '100%';
+        
+        document.getElementById('salesTrend').innerHTML = `
+          <i class="fas fa-chart-line positive-change"></i>
+          <span class="positive-change">بيانات جديدة</span>
+        `;
+        
+        document.getElementById('ordersTrend').innerHTML = `
+          <i class="fas fa-chart-line positive-change"></i>
+          <span class="positive-change">بيانات جديدة</span>
+        `;
+        
+        document.getElementById('avgOrderTrend').innerHTML = `
+          <i class="fas fa-chart-line positive-change"></i>
+          <span class="positive-change">بيانات جديدة</span>
+        `;
+        return;
+      }
+      
+      // حساب النسب المئوية للتغيير
+      const salesChange = ((currentSales - previousPeriodData.totalSales) / previousPeriodData.totalSales) * 100;
+      const ordersChange = ((currentOrders - previousPeriodData.totalOrders) / previousPeriodData.totalOrders) * 100;
+      const avgOrderChange = ((currentAvgOrder - previousPeriodData.avgOrderValue) / previousPeriodData.avgOrderValue) * 100;
+      
+      // تحديث قيم المقارنة
+      document.getElementById('salesComparison').textContent = `${Math.abs(salesChange).toFixed(1)}%`;
+      document.getElementById('ordersComparison').textContent = `${Math.abs(ordersChange).toFixed(1)}%`;
+      document.getElementById('avgOrderComparison').textContent = `${Math.abs(avgOrderChange).toFixed(1)}%`;
+      
+      // تحديث اتجاهات المقارنة
+      updateComparisonTrend('sales', salesChange);
+      updateComparisonTrend('orders', ordersChange);
+      updateComparisonTrend('avgOrder', avgOrderChange);
+    }
+
+    // دالة تحديث اتجاه المقارنة
+    function updateComparisonTrend(type, change) {
+      const trendElement = document.getElementById(`${type}Trend`);
+      
+      if (change > 0) {
+        trendElement.innerHTML = `
+          <i class="fas fa-arrow-up positive-change"></i>
+          <span class="positive-change">زيادة ${Math.abs(change).toFixed(1)}%</span>
+        `;
+      } else if (change < 0) {
+        trendElement.innerHTML = `
+          <i class="fas fa-arrow-down negative-change"></i>
+          <span class="negative-change">انخفاض ${Math.abs(change).toFixed(1)}%</span>
+        `;
+      } else {
+        trendElement.innerHTML = `
+          <i class="fas fa-equals neutral-change"></i>
+          <span class="neutral-change">لا يوجد تغيير</span>
+        `;
+      }
+    }
+
+    // دالة رسم المخطط البياني اليومي
+    function renderDailySalesChart() {
+      const ctx = document.getElementById('dailySalesChart').getContext('2d');
+      
+      // إذا كان هناك مخطط موجود، قم بتدميره أولاً
+      if (window.dailySalesChart) {
+        window.dailySalesChart.destroy();
+      }
+      
+      // تحضير البيانات للمخطط
+      const labels = dailySalesData.map(day => formatDateForDisplay(day.date));
+      const salesData = dailySalesData.map(day => day.total);
+      const ordersCountData = dailySalesData.map(day => day.count);
+      
+      window.dailySalesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'المبيعات اليومية (درهم)',
+              data: salesData,
+              backgroundColor: 'rgba(212, 175, 55, 0.7)',
+              borderColor: 'rgba(212, 175, 55, 1)',
+              borderWidth: 1,
+              yAxisID: 'y'
+            },
+            {
+              label: 'عدد الطلبات',
+              data: ordersCountData,
+              type: 'line',
+              borderColor: 'rgba(26, 26, 46, 1)',
+              borderWidth: 2,
+              pointBackgroundColor: 'rgba(26, 26, 46, 1)',
+              pointRadius: 4,
+              yAxisID: 'y1'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: 'المبيعات اليومية وعدد الطلبات'
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  let label = context.dataset.label || '';
+                  if (label) {
+                    label += ': ';
+                  }
+                  if (context.datasetIndex === 0) {
+                    label += context.raw.toLocaleString('en-US') + ' درهم';
+                  } else {
+                    label += context.raw;
+                  }
+                  return label;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              type: 'linear',
+              display: true,
+              position: 'left',
+              title: {
+                display: true,
+                text: 'المبيعات (درهم)'
+              }
+            },
+            y1: {
+              type: 'linear',
+              display: true,
+              position: 'right',
+              title: {
+                display: true,
+                text: 'عدد الطلبات'
+              },
+              grid: {
+                drawOnChartArea: false
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // دالة طباعة تقرير الإحصائيات
+    function printStatisticsReport() {
+      const printWindow = window.open('', '_blank', 'width=900,height=700');
+      
+      if (!printWindow || printWindow.closed) {
+        Swal.fire({
+          icon: 'error',
+          title: 'خطأ في الطباعة',
+          text: 'لم يتم فتح نافذة الطباعة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع',
+          confirmButtonColor: '#D4AF37'
+        });
+        return;
+      }
+
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      
+      const totalSales = dailySalesData.reduce((sum, day) => sum + day.total, 0);
+      const totalOrders = dailySalesData.reduce((sum, day) => sum + day.count, 0);
+      const avgDailySales = dailySalesData.length > 0 ? totalSales / dailySalesData.length : 0;
+      const avgOrderValue = totalOrders > 0 ? totalSales / totalOrders : 0;
+      const bestDay = dailySalesData.length > 0 ? 
+        dailySalesData.reduce((max, day) => day.total > max.total ? day : max, dailySalesData[0]) : 
+        { total: 0, date: 'لا يوجد بيانات' };
+      
+      const mostPopularItem = popularItemsData.length > 0 ? popularItemsData[0] : null;
+      
+      // حساب مقارنة الأداء
+      let performanceComparison = '';
+      if (previousPeriodData) {
+        const salesChange = ((totalSales - previousPeriodData.totalSales) / previousPeriodData.totalSales) * 100;
+        const ordersChange = ((totalOrders - previousPeriodData.totalOrders) / previousPeriodData.totalOrders) * 100;
+        const avgOrderChange = ((avgOrderValue - previousPeriodData.avgOrderValue) / previousPeriodData.avgOrderValue) * 100;
+        
+        performanceComparison = `
+          <div style="margin-top: 20px;">
+            <h3 style="border-bottom: 2px solid #1A1A2E; padding-bottom: 5px;">مقارنة الأداء مع الفترة السابقة</h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 15px;">
+              <div style="background: #f8f9fa; border-radius: 8px; padding: 15px; text-align: center; border: 1px solid #ddd;">
+                <div style="font-weight: bold;">المبيعات</div>
+                <div style="font-size: 1.2rem; margin: 10px 0; color: ${salesChange >= 0 ? '#4CAF50' : '#F44336'};">
+                  ${salesChange >= 0 ? '↑' : '↓'} ${Math.abs(salesChange).toFixed(1)}%
+                </div>
+              </div>
+              <div style="background: #f8f9fa; border-radius: 8px; padding: 15px; text-align: center; border: 1px solid #ddd;">
+                <div style="font-weight: bold;">عدد الطلبات</div>
+                <div style="font-size: 1.2rem; margin: 10px 0; color: ${ordersChange >= 0 ? '#4CAF50' : '#F44336'};">
+                  ${ordersChange >= 0 ? '↑' : '↓'} ${Math.abs(ordersChange).toFixed(1)}%
+                </div>
+              </div>
+              <div style="background: #f8f9fa; border-radius: 8px; padding: 15px; text-align: center; border: 1px solid #ddd;">
+                <div style="font-weight: bold;">متوسط الطلب</div>
+                <div style="font-size: 1.2rem; margin: 10px 0; color: ${avgOrderChange >= 0 ? '#4CAF50' : '#F44336'};">
+                  ${avgOrderChange >= 0 ? '↑' : '↓'} ${Math.abs(avgOrderChange).toFixed(1)}%
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      let printContent = `
+        <!DOCTYPE html>
+        <html dir="rtl">
+        <head>
+          <meta charset="UTF-8">
+          <title>تقرير إحصائيات المبيعات - Demo</title>
+          <style>
+            body { font-family: 'Tajawal', sans-serif; padding: 20px; }
+            h1, h2 { color: #1A1A2E; text-align: center; }
+            h1 { margin-bottom: 5px; font-size: 24px; }
+            h2 { margin-top: 0; margin-bottom: 20px; font-size: 18px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { padding: 10px; text-align: right; border: 1px solid #ddd; }
+            th { background-color: #f2f2f2; }
+            .summary-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 20px 0; }
+            .summary-card { background: #f8f9fa; border-radius: 8px; padding: 15px; text-align: center; border: 1px solid #ddd; }
+            .summary-value { font-size: 1.5rem; font-weight: bold; color: #D4AF37; margin: 10px 0; }
+            .print-date { text-align: left; margin-bottom: 20px; font-size: 14px; }
+            .logo { text-align: center; margin-bottom: 20px; }
+            .logo img { max-width: 150px; }
+            @page { size: auto; margin: 10mm; }
+          </style>
+        </head>
+        <body>
+          <div class="print-content">
+            <div class="logo">
+              <h1 style="color: #D4AF37; font-size: 28px; margin-bottom: 5px;">Demo</h1>
+              <h2 style="color: #1A1A2E; margin-top: 0;">تقرير إحصائيات المبيعات</h2>
+            </div>
+            
+            <div class="print-date">تاريخ الطباعة: ${new Date().toLocaleString('en-US')}</div>
+            <div class="print-date">الفترة من ${formatDateForDisplay(startDate)} إلى ${formatDateForDisplay(endDate)}</div>
+            
+            <div class="summary-cards">
+              <div class="summary-card">
+                <div>إجمالي المبيعات</div>
+                <div class="summary-value">${totalSales.toLocaleString('en-US')} درهم</div>
+              </div>
+              <div class="summary-card">
+                <div>عدد الطلبات</div>
+                <div class="summary-value">${totalOrders}</div>
+              </div>
+              <div class="summary-card">
+                <div>متوسط قيمة الطلب</div>
+                <div class="summary-value">${avgOrderValue.toLocaleString('en-US', { maximumFractionDigits: 0 })} درهم</div>
+              </div>
+            </div>
+            
+            ${performanceComparison}
+            
+            <h3 style="border-bottom: 2px solid #1A1A2E; padding-bottom: 5px;">المبيعات اليومية</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>التاريخ</th>
+                  <th>عدد الطلبات</th>
+                  <th>إجمالي المبيعات</th>
+                  <th>متوسط قيمة الطلب</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
+
+      // إضافة بيانات المبيعات اليومية
+      dailySalesData.forEach(day => {
+        const avgOrderValue = day.count > 0 ? day.total / day.count : 0;
+        printContent += `
+          <tr>
+            <td>${formatDateForDisplay(day.date)}</td>
+            <td>${day.count}</td>
+            <td>${day.total.toLocaleString('en-US')} درهم</td>
+            <td>${avgOrderValue.toLocaleString('en-US', { maximumFractionDigits: 0 })} درهم</td>
+          </tr>
+        `;
+      });
+
+      printContent += `
+              </tbody>
+            </table>
+            
+            <h3 style="border-bottom: 2px solid #1A1A2E; padding-bottom: 5px; margin-top: 30px;">الأطباق الأكثر مبيعاً</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>اسم الطبق</th>
+                  <th>الكمية</th>
+                  <th>إجمالي المبيعات</th>
+                  <th>متوسط السعر</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
+
+      // إضافة الأطباق الأكثر مبيعاً
+      popularItemsData.slice(0, 10).forEach(item => {
+        printContent += `
+          <tr>
+            <td>${item.name}</td>
+            <td>${item.quantity}</td>
+            <td>${item.total.toLocaleString('en-US')} درهم</td>
+            <td>${Math.round(item.total / item.quantity).toLocaleString('en-US')} درهم</td>
+          </tr>
+        `;
+      });
+
+      printContent += `
+              </tbody>
+            </table>
+            
+            <div style="margin-top: 30px; text-align: left; font-size: 12px; color: #666;">
+              <p>تم إنشاء هذا التقرير تلقائياً من نظام إدارة المطعم Demo</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      // كتابة المحتوى إلى نافذة الطباعة
+      printWindow.document.open();
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+
+      // تأخير الطباعة لضمان تحميل المحتوى
+      printWindow.onload = function() {
+        setTimeout(() => {
+          try {
+            printWindow.focus();
+            printWindow.print();
+            setTimeout(() => {
+              if (!printWindow.closed) {
+                printWindow.close();
+              }
+            }, 1000);
+          } catch (error) {
+            Swal.fire({
+              icon: 'error',
+              title: 'خطأ في الطباعة',
+              text: 'حدث خطأ أثناء الطباعة: ' + error.message,
+              confirmButtonColor: '#D4AF37'
+            });
+            if (!printWindow.closed) {
+              printWindow.close();
+            }
+          }
+        }, 1000);
+      };
+    }
+
+    // دالة تبديل الصفحات
+    function togglePages(showStats) {
+      const ordersPage = document.querySelector('.main-content');
+      const statsPage = document.getElementById('statsPage');
+      const ordersLink = document.getElementById('ordersLink');
+      const statsLink = document.getElementById('statsLink');
+      
+      if (showStats) {
+        ordersPage.style.display = 'none';
+        statsPage.style.display = 'block';
+        ordersLink.classList.remove('active');
+        statsLink.classList.add('active');
+        loadStatistics();
+      } else {
+        ordersPage.style.display = 'block';
+        statsPage.style.display = 'none';
+        ordersLink.classList.add('active');
+        statsLink.classList.remove('active');
+      }
+    }
+
+    // دالة فتح ملف modification.html في نفس النافذة
     function openModificationFile() {
-      window.open('modification.html', '_blank');
+      window.location.href = 'modification.html';
     }
 
     // دالة إظهار إشعار للطلب الجديد مع صوت
@@ -1235,24 +2331,10 @@
         toastr.info(`طلب جديد في الطاولة رقم ${order.table || 'غير معروف'}`, 'تنبيه', {
           onclick: function() {
             filterOrdersByStatus('pending');
-            openOrderCard(order);
+            openOrderModal(order);
           }
         });
       }
-    }
-
-    // دالة عرض تأكيد جميل
-    function showConfirm(title, message, callback) {
-      document.getElementById('confirmHeader').textContent = title;
-      document.getElementById('confirmMessage').textContent = message;
-      confirmCallback = callback;
-      document.getElementById('confirmOverlay').classList.add('active');
-    }
-
-    // دالة إخفاء تأكيد
-    function hideConfirm() {
-      document.getElementById('confirmOverlay').classList.remove('active');
-      confirmCallback = null;
     }
 
     // دالة طباعة السجل الكامل مع الإحصائيات
@@ -1260,18 +2342,23 @@
       const printWindow = window.open('', '_blank', 'width=900,height=700');
       
       if (!printWindow || printWindow.closed) {
-        toastr.error('لم يتم فتح نافذة الطباعة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع');
+        Swal.fire({
+          icon: 'error',
+          title: 'خطأ في الطباعة',
+          text: 'لم يتم فتح نافذة الطباعة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع',
+          confirmButtonColor: '#D4AF37'
+        });
         return;
       }
 
       // حساب الإحصائيات
-      const today = new Date().toLocaleDateString('ar-EG');
+      const today = new Date().toLocaleDateString('en-US');
       let todayOrders = 0;
       let todaySales = 0;
       const popularItems = {};
       
       orders.forEach(order => {
-        const orderDate = new Date(order.timestamp).toLocaleDateString('ar-EG');
+        const orderDate = new Date(order.timestamp).toLocaleDateString('en-US');
         if (orderDate === today) {
           todayOrders++;
           todaySales += order.total || 0;
@@ -1329,7 +2416,7 @@
               <h2 style="color: #1A1A2E; margin-top: 0;">تقرير الطلبات والإحصائيات</h2>
             </div>
             
-            <div class="print-date">تاريخ الطباعة: ${new Date().toLocaleString('ar-EG')}</div>
+            <div class="print-date">تاريخ الطباعة: ${new Date().toLocaleString('en-US')}</div>
             
             <div class="stats-section">
               <h3 style="border-bottom: 2px solid #1A1A2E; padding-bottom: 5px;">إحصائيات اليوم (${today})</h3>
@@ -1435,7 +2522,12 @@
               }
             }, 1000);
           } catch (error) {
-            toastr.error('حدث خطأ أثناء الطباعة: ' + error.message);
+            Swal.fire({
+              icon: 'error',
+              title: 'خطأ في الطباعة',
+              text: 'حدث خطأ أثناء الطباعة: ' + error.message,
+              confirmButtonColor: '#D4AF37'
+            });
             if (!printWindow.closed) {
               printWindow.close();
             }
@@ -1444,108 +2536,215 @@
       };
     }
 
-    // دالة حساب الإحصائيات المتقدمة
-    function calculateAdvancedStats() {
-      const today = new Date().toLocaleDateString('ar-EG');
-      let todayOrders = 0;
-      let todaySales = 0;
-      const popularItems = {};
+    // دالة طباعة طلب واحد
+    function printOrder() {
+      if (!currentOrder) return;
+
+      const printWindow = window.open('', '_blank', 'width=800,height=600');
       
-      orders.forEach(order => {
-        const orderDate = new Date(order.timestamp).toLocaleDateString('ar-EG');
-        if (orderDate === today) {
-          todayOrders++;
-          todaySales += order.total || 0;
-        }
-        
-        if (order.items) {
-          order.items.forEach(item => {
-            if (popularItems[item.plat]) {
-              popularItems[item.plat] += item.quantity;
-            } else {
-              popularItems[item.plat] = item.quantity;
-            }
-          });
-        }
-      });
-      
-      // تحويل الأطباق الشائعة إلى مصفوفة وترتيبها
-      const popularItemsArray = Object.entries(popularItems)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5); // أعلى 5 أطباق فقط
-      
-      // تحديث واجهة الأطباق الشائعة
-      const popularItemsContainer = document.getElementById('popularItems');
-      if (popularItemsArray.length > 0) {
-        popularItemsContainer.innerHTML = popularItemsArray.map(item => `
-          <div class="popular-item">
-            <span>${item[0]}</span>
-            <span>${item[1]} طلب</span>
-          </div>
-        `).join('');
-      } else {
-        popularItemsContainer.innerHTML = `
-          <div style="text-align: center; padding: 1rem; color: var(--text); opacity: 0.6;">
-            <i class="fas fa-info-circle"></i>
-            <p>لا توجد بيانات عن الأطباق المطلوبة</p>
-          </div>
-        `;
+      if (!printWindow || printWindow.closed) {
+        Swal.fire({
+          icon: 'error',
+          title: 'خطأ في الطباعة',
+          text: 'لم يتم فتح نافذة الطباعة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع',
+          confirmButtonColor: '#D4AF37'
+        });
+        return;
       }
+
+      let statusText = '';
+      let badgeClass = '';
       
-      // تحديث واجهة إحصائيات اليوم
-      const dailyStatsContainer = document.getElementById('dailyStats');
-      dailyStatsContainer.innerHTML = `
-        <div class="daily-stat">
-          <span>عدد الطلبات اليوم:</span>
-          <span>${todayOrders}</span>
-        </div>
-        <div class="daily-stat">
-          <span>إجمالي المبيعات اليوم:</span>
-          <span>${todaySales} درهم</span>
-        </div>
+      switch (currentOrder.status) {
+        case 'pending':
+          statusText = 'جديد';
+          badgeClass = 'badge-warning';
+          break;
+        case 'preparing':
+          statusText = 'قيد التحضير';
+          badgeClass = 'badge-primary';
+          break;
+        case 'completed':
+          statusText = 'مكتمل';
+          badgeClass = 'badge-success';
+          break;
+        case 'cancelled':
+          statusText = 'ملغى';
+          badgeClass = 'badge-danger';
+          break;
+        default:
+          statusText = currentOrder.status || 'غير معروف';
+          badgeClass = 'badge-secondary';
+      }
+
+      let itemsContent = '';
+      if (currentOrder.items && currentOrder.items.length > 0) {
+        currentOrder.items.forEach(item => {
+          itemsContent += `
+            <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; border-radius: 8px; margin-bottom: 8px; font-size: 14px;">
+              <div>${item.plat} × ${item.quantity}</div>
+              <div style="font-weight: bold;">${item.prix * item.quantity} درهم</div>
+            </div>
+          `;
+        });
+      } else {
+        itemsContent = '<p style="text-align: center; padding: 10px; color: #666;">لا توجد أصناف في هذا الطلب</p>';
+      }
+
+      const printContent = `
+        <!DOCTYPE html>
+        <html dir="rtl">
+        <head>
+          <meta charset="UTF-8">
+          <title>تفاصيل الطلب #${currentOrder.id} - Demo</title>
+          <style>
+            body { font-family: 'Tajawal', sans-serif; padding: 20px; }
+            h1 { color: #D4AF37; text-align: center; font-size: 24px; margin-bottom: 5px; }
+            h2 { color: #1A1A2E; text-align: center; font-size: 18px; margin-top: 0; margin-bottom: 20px; }
+            .order-details-row { display: flex; margin-bottom: 12px; font-size: 14px; }
+            .order-details-label { font-weight: bold; min-width: 120px; }
+            .badge { padding: 4px 10px; border-radius: 50px; font-size: 12px; }
+            .badge-warning { background-color: #fff3cd; color: #856404; }
+            .badge-primary { background-color: #cce5ff; color: #004085; }
+            .badge-success { background-color: #d4edda; color: #155724; }
+            .badge-danger { background-color: #f8d7da; color: #721c24; }
+            .order-total { font-weight: bold; font-size: 18px; text-align: left; margin: 20px 0; padding-top: 20px; border-top: 2px solid #ddd; }
+            .logo { text-align: center; margin-bottom: 20px; }
+            .logo img { max-width: 150px; }
+            @page { size: auto; margin: 10mm; }
+          </style>
+        </head>
+        <body>
+          <div class="logo">
+            <h1>Demo</h1>
+            <h2>تفاصيل الطلب #${currentOrder.id}</h2>
+          </div>
+          
+          <div class="order-details-row">
+            <div class="order-details-label">رقم الطاولة:</div>
+            <div>${currentOrder.table || '-'}</div>
+          </div>
+          <div class="order-details-row">
+            <div class="order-details-label">حالة الطلب:</div>
+            <div><span class="badge ${badgeClass}">${statusText}</span></div>
+          </div>
+          <div class="order-details-row">
+            <div class="order-details-label">وقت الطلب:</div>
+            <div>${formatDateTime(currentOrder.timestamp)}</div>
+          </div>
+          <div class="order-details-row">
+            <div class="order-details-label">ملاحظات:</div>
+            <div>${currentOrder.notes || 'لا توجد ملاحظات'}</div>
+          </div>
+          
+          <h3 style="border-bottom: 2px solid #1A1A2E; padding-bottom: 5px; margin-top: 20px;">الأصناف المطلوبة:</h3>
+          ${itemsContent}
+          
+          <div class="order-total">
+            المجموع: ${currentOrder.total || '0'} درهم
+          </div>
+          
+          <div style="margin-top: 30px; text-align: left; font-size: 12px; color: #666;">
+            <p>تم إنشاء هذا التقرير تلقائياً من نظام إدارة المطعم Demo</p>
+          </div>
+        </body>
+        </html>
       `;
+
+      printWindow.document.open();
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+
+      printWindow.onload = function() {
+        setTimeout(() => {
+          try {
+            printWindow.focus();
+            printWindow.print();
+            setTimeout(() => {
+              if (!printWindow.closed) {
+                printWindow.close();
+              }
+            }, 1000);
+          } catch (error) {
+            Swal.fire({
+              icon: 'error',
+              title: 'خطأ في الطباعة',
+              text: 'حدث خطأ أثناء الطباعة: ' + error.message,
+              confirmButtonColor: '#D4AF37'
+            });
+            if (!printWindow.closed) {
+              printWindow.close();
+            }
+          }
+        }, 1000);
+      };
     }
 
     // دالة إعادة تعيين جميع الطلبات
     function resetAllOrders() {
-      showConfirm('إعادة تشغيل النظام', 'هل أنت متأكد من أنك تريد حذف جميع الطلبات والإحصائيات؟ هذا الإجراء لا يمكن التراجع عنه!', () => {
-        const ordersRef = ref(database, 'orders');
-        
-        remove(ordersRef)
-          .then(() => {
-            toastr.success('تم حذف جميع الطلبات بنجاح');
-            lastOrdersCount = 0;
-            lastPendingCount = 0;
-            orders = [];
-            updateStats();
-            displayOrders([]);
-          })
-          .catch((error) => {
-            toastr.error('حدث خطأ أثناء حذف الطلبات: ' + error.message);
-          });
+      Swal.fire({
+        title: 'هل أنت متأكد؟',
+        text: "سيتم حذف جميع الطلبات والإحصائيات بشكل دائم!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#D4AF37',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'نعم، احذف الكل',
+        cancelButtonText: 'إلغاء',
+        backdrop: `
+          rgba(0,0,0,0.7)
+          url("https://i.gifer.com/7efs.gif")
+          center top
+          no-repeat
+        `
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const ordersRef = ref(database, 'orders');
+          
+          remove(ordersRef)
+            .then(() => {
+              Swal.fire(
+                'تم الحذف!',
+                'تم حذف جميع الطلبات بنجاح.',
+                'success'
+              );
+              lastOrdersCount = 0;
+              lastPendingCount = 0;
+              orders = [];
+              updateStats();
+              displayOrders([]);
+            })
+            .catch((error) => {
+              Swal.fire(
+                'خطأ!',
+                'حدث خطأ أثناء الحذف: ' + error.message,
+                'error'
+              );
+            });
+        }
       });
     }
 
-    // دالة فتح بطاقة الطلب
-    function openOrderCard(order) {
+    // دالة فتح مودال الطلب
+    function openOrderModal(order) {
       currentOrder = order;
       
-      document.getElementById('orderCardId').textContent = order.id || '-';
-      document.getElementById('orderCardTable').textContent = order.table || '-';
-      document.getElementById('orderCardTime').textContent = formatDateTime(order.timestamp);
-      document.getElementById('orderCardNotes').textContent = order.notes || 'لا توجد ملاحظات';
-      document.getElementById('orderCardTotal').textContent = order.total || '0';
+      document.getElementById('orderId').textContent = order.id || '-';
+      document.getElementById('orderTable').textContent = order.table || '-';
+      document.getElementById('orderTime').textContent = formatDateTime(order.timestamp);
+      document.getElementById('orderNotes').textContent = order.notes || 'لا توجد ملاحظات';
+      document.getElementById('orderTotal').textContent = order.total || '0';
       
       // تحديث حالة الطلب
-      updateOrderCardStatusDisplay(order.status);
+      updateOrderStatusDisplay(order.status);
       
       // تعبئة قائمة العناصر
-      const orderItemsList = document.getElementById('orderCardItemsList');
+      const orderItemsList = document.getElementById('orderItemsList');
       orderItemsList.innerHTML = '';
       if (order.items && order.items.length > 0) {
         order.items.forEach(item => {
           const itemDiv = document.createElement('div');
-          itemDiv.className = 'order-card-item';
+          itemDiv.className = 'order-item';
           itemDiv.innerHTML = `
             <div>${item.plat} × ${item.quantity}</div>
             <div style="font-weight: 700;">${item.prix * item.quantity} درهم</div>
@@ -1554,23 +2753,23 @@
         });
       } else {
         orderItemsList.innerHTML = `
-          <div style="text-align: center; padding: 0.5rem; color: var(--text); opacity: 0.6; font-size: 0.9rem;">
+          <div style="text-align: center; padding: 1rem; color: var(--text); opacity: 0.6;">
             <i class="fas fa-info-circle"></i>
             <p>لا توجد أصناف في هذا الطلب</p>
           </div>
         `;
       }
       
-      // إظهار البطاقة
-      document.getElementById('orderCardOverlay').classList.add('active');
+      // إظهار المودال
+      document.getElementById('orderModal').classList.add('active');
     }
 
-    // دالة تحديث عرض حالة الطلب في البطاقة
-    function updateOrderCardStatusDisplay(status) {
-      const statusSelect = document.getElementById('statusCardSelect');
+    // دالة تحديث عرض حالة الطلب
+    function updateOrderStatusDisplay(status) {
+      const statusSelect = document.getElementById('statusSelect');
       statusSelect.value = status;
       
-      const orderStatusSpan = document.getElementById('orderCardStatus');
+      const orderStatusSpan = document.getElementById('orderStatus');
       orderStatusSpan.innerHTML = '';
       
       let statusText = '';
@@ -1604,9 +2803,9 @@
       orderStatusSpan.appendChild(badge);
     }
 
-    // دالة إغلاق البطاقة
-    function closeOrderCard() {
-      document.getElementById('orderCardOverlay').classList.remove('active');
+    // دالة إغلاق المودال
+    function closeOrderModal() {
+      document.getElementById('orderModal').classList.remove('active');
       currentOrder = null;
     }
 
@@ -1648,7 +2847,6 @@
         
         // تحديث الإحصائيات
         updateStats();
-        calculateAdvancedStats();
         
         // عرض الطلبات
         displayOrders(orders.filter(order => 
@@ -1669,7 +2867,6 @@
         });
         
         updateStats();
-        calculateAdvancedStats();
       });
     }
 
@@ -1754,7 +2951,7 @@
         btn.addEventListener('click', function() {
           const orderId = this.getAttribute('data-id');
           const order = orders.find(o => o.id === orderId);
-          if (order) openOrderCard(order);
+          if (order) openOrderModal(order);
         });
       });
       
@@ -1770,48 +2967,104 @@
         btn.addEventListener('click', function(e) {
           e.stopPropagation();
           const orderId = this.getAttribute('data-id');
-          showConfirm('إلغاء الطلب', 'هل أنت متأكد من إلغاء هذا الطلب؟', () => {
-            updateOrderStatus(orderId, 'cancelled');
-          });
+          updateOrderStatus(orderId, 'cancelled');
         });
       });
     }
 
     // دالة تحديث حالة الطلب
     function updateOrderStatus(orderId, newStatus) {
-      const orderRef = ref(database, `orders/${orderId}/status`);
-      
-      set(orderRef, newStatus)
-        .then(() => {
-          toastr.success('تم تحديث حالة الطلب بنجاح');
+      const messages = {
+        'pending': {
+          title: 'تغيير الحالة إلى "جديد"',
+          text: 'هل تريد إعادة الطلب إلى الحالة الجديدة؟',
+          icon: 'question'
+        },
+        'preparing': {
+          title: 'تغيير الحالة إلى "قيد التحضير"',
+          text: 'سيتم إعلام المطبخ ببدء التحضير',
+          icon: 'info'
+        },
+        'completed': {
+          title: 'إكمال الطلب',
+          text: 'هل تريد تأكيد إتمام هذا الطلب؟',
+          icon: 'success'
+        },
+        'cancelled': {
+          title: 'إلغاء الطلب',
+          text: 'هل أنت متأكد من إلغاء هذا الطلب؟',
+          icon: 'warning'
+        }
+      };
+
+      const { title, text, icon } = messages[newStatus] || {
+        title: 'تغيير الحالة',
+        text: 'هل تريد تغيير حالة هذا الطلب؟',
+        icon: 'question'
+      };
+
+      Swal.fire({
+        title: title,
+        text: text,
+        icon: icon,
+        showCancelButton: true,
+        confirmButtonColor: '#D4AF37',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'تأكيد',
+        cancelButtonText: 'إلغاء',
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const orderRef = ref(database, `orders/${orderId}/status`);
           
-          // إذا كان الطلب الحالي مفتوحًا، قم بتحديثه
-          if (currentOrder && currentOrder.id === orderId) {
-            currentOrder.status = newStatus;
-            updateOrderCardStatusDisplay(newStatus);
-          }
-          
-          // تحديث عرض الطلبات
-          displayOrders(orders.filter(order => 
-            currentStatusFilter === 'all' || order.status === currentStatusFilter
-          ));
-          
-          // إضافة تأثير تغيير الحالة للصف المحدث
-          const updatedRow = document.querySelector(`.order-row[data-id="${orderId}"]`);
-          if (updatedRow) {
-            updatedRow.classList.add('status-change-effect');
-            setTimeout(() => {
-              updatedRow.classList.remove('status-change-effect');
-            }, 1500);
-          }
-          
-          // تحديث الإحصائيات
-          updateStats();
-          calculateAdvancedStats();
-        })
-        .catch((error) => {
-          toastr.error('حدث خطأ أثناء تحديث حالة الطلب: ' + error.message);
-        });
+          set(orderRef, newStatus)
+            .then(() => {
+              Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'تم التحديث بنجاح!',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer);
+                  toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+              });
+
+              if (currentOrder && currentOrder.id === orderId) {
+                currentOrder.status = newStatus;
+                updateOrderStatusDisplay(newStatus);
+              }
+
+              displayOrders(orders.filter(order => 
+                currentStatusFilter === 'all' || order.status === currentStatusFilter
+              ));
+
+              const updatedRow = document.querySelector(`.order-row[data-id="${orderId}"]`);
+              if (updatedRow) {
+                updatedRow.classList.add('status-change-effect');
+                setTimeout(() => {
+                  updatedRow.classList.remove('status-change-effect');
+                }, 1500);
+              }
+
+              updateStats();
+            })
+            .catch((error) => {
+              Swal.fire(
+                'خطأ!',
+                'حدث خطأ أثناء التحديث: ' + error.message,
+                'error'
+              );
+            });
+        }
+      });
     }
 
     // دالة تصفية الطلبات حسب الحالة
@@ -1843,28 +3096,48 @@
       displayOrders(filteredOrders);
     }
 
+    // دالة تنسيق التاريخ للعرض
+    function formatDateForDisplay(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+    }
+
     // أحداث DOM
     document.addEventListener('DOMContentLoaded', function() {
       // عناصر DOM
-      const closeCardBtn = document.getElementById('closeCard');
-      const updateCardStatusBtn = document.getElementById('updateCardStatusBtn');
+      const closeModalBtn = document.getElementById('closeModal');
+      const cancelBtn = document.getElementById('cancelBtn');
+      const updateStatusBtn = document.getElementById('updateStatusBtn');
+      const printOrderBtn = document.getElementById('printOrderBtn');
       const printAllBtn = document.getElementById('printAllBtn');
       const resetAllBtn = document.getElementById('resetAllBtn');
       const openModificationBtn = document.getElementById('openModificationBtn');
       const searchOrdersInput = document.getElementById('searchOrders');
       const statusButtons = document.querySelectorAll('.status-btn');
-      const confirmCancelBtn = document.getElementById('confirmCancel');
-      const confirmOkBtn = document.getElementById('confirmOk');
+      const statsLink = document.getElementById('statsLink');
+      const ordersLink = document.getElementById('ordersLink');
+      const applyFilterBtn = document.getElementById('applyFilter');
+      const resetFilterBtn = document.getElementById('resetFilter');
+      const printStatsBtn = document.getElementById('printStatsBtn');
+      const printWeeklyChartBtn = document.getElementById('printWeeklyChartBtn');
 
       // أحداث النقر
-      closeCardBtn.addEventListener('click', closeOrderCard);
+      closeModalBtn.addEventListener('click', closeOrderModal);
+      cancelBtn.addEventListener('click', closeOrderModal);
+      printOrderBtn.addEventListener('click', printOrder);
       printAllBtn.addEventListener('click', printAllOrders);
       resetAllBtn.addEventListener('click', resetAllOrders);
       openModificationBtn.addEventListener('click', openModificationFile);
+      printStatsBtn.addEventListener('click', printStatisticsReport);
+      printWeeklyChartBtn.addEventListener('click', printWeeklyReport);
       
-      updateCardStatusBtn.addEventListener('click', () => {
+      updateStatusBtn.addEventListener('click', () => {
         if (currentOrder) {
-          const newStatus = document.getElementById('statusCardSelect').value;
+          const newStatus = document.getElementById('statusSelect').value;
           if (newStatus !== currentOrder.status) {
             updateOrderStatus(currentOrder.id, newStatus);
           } else {
@@ -1885,21 +3158,52 @@
         searchOrders(this.value.trim());
       });
 
-      // أحداث بطاقة التأكيد
-      confirmCancelBtn.addEventListener('click', hideConfirm);
-      confirmOkBtn.addEventListener('click', () => {
-        if (confirmCallback) {
-          confirmCallback();
-          hideConfirm();
-        }
+      // أحداث صفحة الإحصائيات
+      statsLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        togglePages(true);
+      });
+
+      ordersLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        togglePages(false);
+      });
+
+      applyFilterBtn.addEventListener('click', calculateStatistics);
+      resetFilterBtn.addEventListener('click', function() {
+        const today = new Date();
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(today.getMonth() - 1);
+        
+        document.getElementById('startDate').value = formatDateForInput(oneMonthAgo);
+        document.getElementById('endDate').value = formatDateForInput(today);
+        
+        calculateStatistics();
       });
 
       // تسجيل الخروج
       document.querySelector('.logout-btn').addEventListener('click', function() {
-        signOut(auth).then(() => {
-          window.location.href = 'login.html';
-        }).catch((error) => {
-          toastr.error('حدث خطأ أثناء تسجيل الخروج: ' + error.message);
+        Swal.fire({
+          title: 'تسجيل الخروج',
+          text: 'هل أنت متأكد أنك تريد تسجيل الخروج؟',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#D4AF37',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'نعم، سجل خروج',
+          cancelButtonText: 'إلغاء'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            signOut(auth).then(() => {
+              window.location.href = 'login.html';
+            }).catch((error) => {
+              Swal.fire(
+                'خطأ!',
+                'حدث خطأ أثناء تسجيل الخروج: ' + error.message,
+                'error'
+              );
+            });
+          }
         });
       });
 
@@ -1919,5 +3223,7 @@
   
   <!-- Toastr للإشعارات -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>
